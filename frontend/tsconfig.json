@@ -3,15 +3,18 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "app/_layout.jsx", "app/(tabs)/_layout.jsx", "constants/Colors.js"  ]
+    "expo-env.d.ts",
+    "app/_layout.jsx",
+    "app/(tabs)/_layout.jsx",
+    "constants/Colors.js",
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}"
+  ]
 }

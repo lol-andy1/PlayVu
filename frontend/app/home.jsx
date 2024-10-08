@@ -1,32 +1,13 @@
+import { View, Text, Button, ScrollView, TextInput } from "react-native";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import {
-  Text,
-  Button,
-  View,
-  Dimensions,
-  Link,
-  ScrollView,
-  Image,
-  Pressable,
-} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter, Tabs } from "expo-router";
-import CustomButton from "../components/CustomButton";
-import Entypo from "@expo/vector-icons/Entypo";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Colors } from "../constants/Colors";
 import GameCard from "../components/GameCard";
+import { useState } from "react";
 
-// import { images } from "../constants";
-// import { CustomButton, Loader } from "../components";
-// import { useGlobalContext } from "../context/GlobalProvider";
-
-const Welcome = () => {
-  //   const { loading, isLogged } = useGlobalContext();
-
-  //   if (!loading && isLogged) return <Redirect href="/home" />;
+const Home = () => {
   const router = useRouter();
-  const isDarkMode = false;
+  const [searchQuery, setSearchQuery] = useState("");
 
   const games = [
     {
@@ -56,14 +37,27 @@ const Welcome = () => {
     },
   ];
 
+  const filteredGames = games.filter((game) =>
+    game.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <SafeAreaView className="bg-black h-full">
-      <Text className="text-xl text-center text-white font-bold mb-3">
-        Click to join!
-      </Text>
+      <TextInput
+        className="bg-gray-800 text-white p-3 rounded border border-secondary shadow-md font-psemibold text-bases w-full"
+        placeholder="Search games"
+        placeholderTextColor="#bbb"
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+        style={{
+          paddingLeft: 20,
+          paddingRight: 20,
+          marginBottom: 20,
+        }}
+      />
       <ScrollView className="w-full">
         <View className="items-center">
-          {games.map((game, index) => (
+          {filteredGames.map((game, index) => (
             <GameCard
               key={index}
               id={index}
@@ -79,4 +73,4 @@ const Welcome = () => {
   );
 };
 
-export default Welcome;
+export default Home;
