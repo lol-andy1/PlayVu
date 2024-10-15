@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.PlayVu"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +29,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "react-native-auth0",
+        {
+          "domain": "dev-1jps85kh7htbmqki.us.auth0.com"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
