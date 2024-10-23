@@ -1,6 +1,5 @@
 package com.playvu.backend.entities;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
