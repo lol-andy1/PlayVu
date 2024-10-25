@@ -42,11 +42,11 @@ const Home = () => {
   );
 
   return (
-    <SafeAreaView className="bg-black h-full">
+    <SafeAreaView className="bg-white h-full">
       <TextInput
-        className="bg-gray-800 text-white p-3 rounded border border-secondary shadow-md font-psemibold text-bases w-full"
+        className="bg-gray-300 text-black p-3 rounded border border-secondary shadow-md font-psemibold text-bases w-full"
         placeholder="Search games"
-        placeholderTextColor="#bbb"
+        placeholderTextColor="#2C2C2C"
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(text)}
         style={{
