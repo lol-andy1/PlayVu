@@ -1,4 +1,6 @@
-package com.playvu.backend.entities;
+package com.playvu.backend.entity;
+
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,16 +10,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "game")
+@Table(name = "field_schedule")
 
-public class Game {
+public class FieldSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer game_id;
+    private Integer field_schedule_id;
 
     @Column(nullable = false)
-    private Integer sub_field_id;
+    private Integer sub_field_id;  
 
     @Column(nullable = false)
-    private Integer organizer_id;   
+    private LocalDateTime start_date;
+
+    @Column(nullable = false)
+    private LocalDateTime end_date;
 }

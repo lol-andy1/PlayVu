@@ -1,4 +1,4 @@
-package com.playvu.backend.entities;
+package com.playvu.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,13 +8,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "sub_field")
-public class SubField {
+@Table(name = "field")
+
+public class Field {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer sub_field_id;
+    private Integer field_id;
 
     @Column(nullable = false)
-    private Integer master_field_id;
+    private Integer owner_id;  
+
+    @Column(nullable = false)
+    private String location;  
     
 }

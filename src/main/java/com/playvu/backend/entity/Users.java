@@ -1,4 +1,4 @@
-package com.playvu.backend.entities;
+package com.playvu.backend.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
