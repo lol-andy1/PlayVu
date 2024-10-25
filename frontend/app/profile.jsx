@@ -37,7 +37,7 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView className="bg-black h-full">
+    <SafeAreaView className="bg-white h-full">
       <StatusBar backgroundColor="#161622" style="light" />
       <ScrollView className="w-full">
         <View className="items-center p-5">
@@ -46,12 +46,12 @@ const Profile = () => {
             className="w-32 h-32 rounded-full border-2 border-gray-500 shadow-lg"
           />
 
-          <Text className="text-white font-psemibold text-xl mt-4">
+          <Text className="text-black font-psemibold text-xl mt-4">
             {user.name}
           </Text>
           <Text className="text-gray-400 text-base">@{user.username}</Text>
           <Text className="text-gray-400 text-base mt-2">{user.email}</Text>
-          <Text className="text-white text-base mt-4 text-center">
+          <Text className="text-gray-400 text-base mt-4 text-center">
             {user.bio}
           </Text>
         </View>

@@ -195,7 +195,7 @@ const Search = () => {
   //   }, [query]);
 
   return (
-    <SafeAreaView className="bg-black h-full">
+    <SafeAreaView className="bg-white h-full">
       <ScrollView>
         <View
           className="w-full flex justify-center h-full px-4"
@@ -212,7 +212,7 @@ const Search = () => {
             source={{ uri: `https://picsum.photos/200/300?random=${query}` }}
             className="w-full h-40 rounded-lg mt-28"
           />
-          <Text className="text-lg text-white font-bold mt-2">
+          <Text className="text-lg text-black font-bold mt-2">
             Field {query}
           </Text>
           <Text className="text-sm text-gray-500">Price: ${query}</Text>

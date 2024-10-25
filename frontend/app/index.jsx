@@ -57,7 +57,7 @@ const Welcome = () => {
   ];
 
   return (
-    <SafeAreaView className="bg-black h-full">
+    <SafeAreaView className="bg-white h-full">
       <Text className="text-xl text-center text-white font-bold mb-3">
         Click to join!
       </Text>
