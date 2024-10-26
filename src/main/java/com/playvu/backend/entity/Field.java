@@ -8,17 +8,46 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "field")
-
+@Table()
 public class Field {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer field_id;
+    @Column()
+    private Integer fieldId;
 
     @Column(nullable = false)
-    private Integer owner_id;  
+    private Integer ownerId;  
 
     @Column(nullable = false)
-    private String location;  
+    private String location;
+
+    public Float latitude;
+
+    public Float longitude;
+
+    public Integer getFieldId() {
+        return fieldId;
+    }
+
+    public void setFieldId(Integer fieldId) {
+        this.fieldId = fieldId;
+    }
+
+    public Integer getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }  
     
 }

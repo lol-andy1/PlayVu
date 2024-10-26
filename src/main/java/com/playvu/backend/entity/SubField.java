@@ -8,13 +8,32 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "sub_field")
+@Table()
 public class SubField {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer sub_field_id;
+    @Column()
+    private Integer subFieldId;
 
     @Column(nullable = false)
-    private Integer master_field_id;
+    private Integer masterFieldId;
+
+    public Integer getSubFieldId() {
+        return subFieldId;
+    }
+
+    public void setSubFieldId(Integer subFieldId) {
+        this.subFieldId = subFieldId;
+    }
+
+    public Integer getMasterFieldId() {
+        return masterFieldId;
+    }
+
+    public void setMasterFieldId(Integer masterFieldId) {
+        this.masterFieldId = masterFieldId;
+    }
+    
     
 }

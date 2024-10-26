@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/public").permitAll()
                         .requestMatchers("/api/private").authenticated()
+                        .requestMatchers("/api/**").permitAll() // Just for testing, change later. 
                 )
                 .cors(withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2

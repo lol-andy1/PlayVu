@@ -8,17 +8,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "game_participant")
-
+@Table()
 public class GameParticipant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer game_participant_id;
+    @Column()
+    private Integer gameParticipantId;
 
     @Column(nullable = false)
-    private Integer game_id;
+    private Integer gameId;
 
     @Column(nullable = false)
-    private Integer participant_id;   
+    private Integer participantId;   
 }
