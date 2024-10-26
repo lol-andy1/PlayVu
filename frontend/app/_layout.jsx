@@ -114,6 +114,7 @@ const RootLayout = () => {
             ),
           }}
         />
+
         <Tabs.Screen
           name="home"
           options={{
@@ -134,7 +135,19 @@ const RootLayout = () => {
           name="profile"
           options={{
             title: "Profile",
-            headerShown: false,
+            headerStyle: {
+              backgroundColor: Colors.light.background,
+            },
+            headerTintColor: Colors.dark.black.DEFAULT,
+            headerRight: () => (
+              <View className="mr-2">
+                <MaterialIcons
+                  name="settings"
+                  size={30}
+                  color={Colors.light.primary}
+                />
+              </View>
+            ),
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 color={color}
