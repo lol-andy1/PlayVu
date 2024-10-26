@@ -2,6 +2,7 @@ package com.playvu.backend.service;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -9,20 +10,33 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.playvu.backend.entity.Field;
+import com.playvu.backend.entity.Users;
+import com.playvu.backend.repository.FieldRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class FieldService {
+
+    @Autowired 
+    private FieldRepository field_repository;
+
+    @Autowired
+    private AuthService auth_service;
 
     private static final String GEOCODING_API_KEY = "671c296419c1b876867424nil7cf9a2";
     private static final String GEOCODING_API = "https://geocode.maps.co/search?q=";
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public Map<String, String> get_coordinates_by_address(String location) throws IOException, InterruptedException{
+    public Map<String, Float> get_coordinates_by_address(String location) throws IOException, InterruptedException{
 
         String encoded_location = URLEncoder.encode(location,"UTF-8");
         String request_uri = GEOCODING_API + encoded_location + "&api_key=" + GEOCODING_API_KEY;
@@ -36,14 +50,31 @@ public class FieldService {
         JsonNode first_result = root_node.get(0);
 
         
-        String latitude = first_result.get("lat").asText();
-        String longitude = first_result.get("lon").asText();
+        Float latitude = Float.parseFloat( first_result.get("lat").asText() );
+        Float longitude = Float.parseFloat( first_result.get("lon").asText() );
 
-        Map<String, String> coordinates = new HashMap<>();
+        Map<String, Float> coordinates = new HashMap<>();
         coordinates.put("latitude", latitude);
         coordinates.put("longitude", longitude);
 
         return coordinates;
+    }
+
+    public void add_field(HttpServletRequest request, String description, String location, MultipartFile image) throws URISyntaxException, IOException, InterruptedException{
+        Users user = auth_service.find_user_by_token(request);
+        if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
+            return;
+        }
+        Field new_field = new Field();
+
+        new_field.setOwnerId(user.getUserId());
+        new_field.setLocation(location);
+
+        Map<String, Float> new_field_coordinates = get_coordinates_by_address(location);
+        new_field.setLatitude(new_field_coordinates.get("latitude"));
+        new_field.setLatitude(new_field_coordinates.get("longitude"));
+        
+        field_repository.save(new_field);
     }
 }
 

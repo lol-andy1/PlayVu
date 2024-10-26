@@ -22,6 +22,10 @@ public class Field {
     @Column(nullable = false)
     private String location;
 
+    private String description;
+
+    // TODO: Add field image field 
+
     public Float latitude;
 
     public Float longitude;
@@ -64,6 +68,14 @@ public class Field {
 
     public void setLongitude(Float longitude) {
         this.longitude = longitude;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }  
     
     

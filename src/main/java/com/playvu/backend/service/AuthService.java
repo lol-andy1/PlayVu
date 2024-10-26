@@ -6,19 +6,24 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.playvu.backend.entity.Users;
+import com.playvu.backend.repository.UsersRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-public class Auth {
-    public Map<String, String> find_user_by_token(HttpServletRequest request)
+public class AuthService {
+    @Autowired 
+    private UsersRepository users_repository;
+
+    // TODO: Haven't tested functionality
+    public Users find_user_by_token(HttpServletRequest request)
             throws URISyntaxException, IOException, InterruptedException {
         String access_token = request.getHeader("Authorization");
 
@@ -38,14 +43,9 @@ public class Auth {
 
         JsonNode responseBody = objectMapper.readTree(response.body());
         String email = responseBody.get("email").asText();
-        String first_name = responseBody.get("given_name").asText();
-        String last_name = responseBody.get("family_name").asText();
+        
+        Users user = users_repository.findByEmail(email);
 
-        Map<String, String> user_info = new HashMap<>();
-        user_info.put("email", email);
-        user_info.put("first_name", first_name);
-        user_info.put("last_name", last_name);
-
-        return user_info;
+        return user;
     }
 }

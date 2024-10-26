@@ -10,22 +10,22 @@ public class Users {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column()
     private Integer userId;
 
-    @Column(nullable = false, unique = true, name = "username")
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, unique = true, name = "email")
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, name = "first_name")
+    @Column(nullable = false)
     private String firstName;
 
-    @Column(nullable = false, name = "last_name")
+    @Column(nullable = false)
     private String lastName;
 
-    @Column(name = "role")
+    @Column()
     private String role;
 
     @CreationTimestamp
