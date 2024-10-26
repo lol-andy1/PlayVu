@@ -136,9 +136,9 @@ const RootLayout = () => {
           options={{
             title: "Profile",
             headerStyle: {
-              backgroundColor: Colors.dark.background,
+              backgroundColor: Colors.light.background,
             },
-            headerTintColor: "#fff",
+            headerTintColor: Colors.dark.black.DEFAULT,
             headerRight: () => (
               <View className="mr-2">
                 <MaterialIcons

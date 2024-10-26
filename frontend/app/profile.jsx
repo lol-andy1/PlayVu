@@ -1,11 +1,4 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  ScrollView,
-  Text,
+import {View, Image, ScrollView, Text,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -55,9 +48,9 @@ const Profile = () => {
 
   return (
     <>
-      <StatusBar backgroundColor="#161622" style="light" />
+      <StatusBar backgroundColor="#161622" style="dark" />
 
-      <ScrollView className="w-full p-4 bg-black">
+      <ScrollView className="w-full p-4 bg-grey-100">
         <View className="flex-row w-full">
           <Image
             source={{ uri: user.profilePicture }}
@@ -65,34 +58,34 @@ const Profile = () => {
           />
 
           <View className="flex-1 px-2">
-            <Text className="text-white font-psemibold text-2xl mt-2">
+            <Text className="text-black font-psemibold text-2xl mt-2">
               {user.name}
             </Text>
 
-            <Text className="text-gray-400 text-base mt-2">
+            <Text className="text-gray-100 text-base mt-2">
               @{user.username}
             </Text>
 
-            <Text className="text-white text-base mt-2">
+            <Text className="text-gray-100 text-base mt-2">
               {user.bio}
             </Text>
           </View>
         </View>
 
         <View className="items-center w-full mt-5">
-          <Text className="w-full text-center py-2 text-white text-lg font-bold">Recent Games</Text>
+          <Text className="w-full text-center py-2 text-black text-lg font-bold">Recent Games</Text>
 
           {recentGames.map(item => (
-            <View className="bg-slate-700 items-center flex-row w-full p-1 mt-2 rounded-md h-16" key={item.gameId}>
+            <View className="bg-primary items-center flex-row w-full p-1 mt-2 rounded-md h-16" key={item.gameId}>
               <View className="mx-2">
-                <FontAwesome name="soccer-ball-o" size={30} color="white" />
+                <FontAwesome name="soccer-ball-o" size={30} color="black" />
               </View>
 
-              <Text className="text-white text-base">
+              <Text className="text-black text-base">
                 {item.fieldName}
               </Text>
               
-              <Text className="text-white text-base ml-auto mr-2">
+              <Text className="text-gray-100 text-base ml-auto mr-2">
                 {item.startTime.toLocaleString()}
               </Text>
             </View>
