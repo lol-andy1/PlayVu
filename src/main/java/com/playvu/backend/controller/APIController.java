@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.playvu.backend.service.GameService;
@@ -17,7 +18,6 @@ public class APIController {
     @Autowired
     private GameService game_service;
 
-
     @GetMapping(value = "/public")
     public String publicEndpoint() {
         return "No authentication required.";
@@ -29,8 +29,8 @@ public class APIController {
     }
 
     @GetMapping(value = "/get-games")
-    public Object get_games() {
-        return game_service.get_games();
+    public Object get_games(@RequestParam Float latitude, @RequestParam Float longitude, @RequestParam Float distance) {
+        return game_service.get_games(latitude, longitude, distance);
     }
 
 }

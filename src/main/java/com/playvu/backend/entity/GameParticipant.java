@@ -20,5 +20,31 @@ public class GameParticipant {
     private Integer gameId;
 
     @Column(nullable = false)
-    private Integer participantId;   
+    private Integer participantId;
+
+    public Integer getGameParticipantId() {
+        return gameParticipantId;
+    }
+
+    public void setGameParticipantId(Integer gameParticipantId) {
+        this.gameParticipantId = gameParticipantId;
+    }
+
+    public Integer getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(Integer gameId) {
+        this.gameId = gameId;
+    }
+
+    public Integer getParticipantId() {
+        return participantId;
+    }
+
+    public void setParticipantId(Integer participantId) {
+        this.participantId = participantId;
+    }  
+    
+    
 }

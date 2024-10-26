@@ -25,4 +25,38 @@ public class FieldSchedule {
 
     @Column(nullable = false)
     private LocalDateTime endDate;
+
+    public Integer getFieldScheduleId() {
+        return fieldScheduleId;
+    }
+
+    public void setFieldScheduleId(Integer fieldScheduleId) {
+        this.fieldScheduleId = fieldScheduleId;
+    }
+
+    public Integer getSubFieldId() {
+        return subFieldId;
+    }
+
+    public void setSubFieldId(Integer subFieldId) {
+        this.subFieldId = subFieldId;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    
 }

@@ -1,56 +1,51 @@
 package com.playvu.backend.service;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.playvu.backend.repository.FieldRepository;
 import com.playvu.backend.repository.GameRepository;
-import com.playvu.backend.repository.SubFieldRepository;
-import com.playvu.backend.entity.*;
+// import com.playvu.backend.repository.SubFieldRepository;
 
 @Service
 public class GameService {
     @Autowired 
     private GameRepository game_repository;
 
-    @Autowired 
-    private SubFieldRepository sub_field_repository;
+    // @Autowired 
+    // private SubFieldRepository sub_field_repository;
 
     @Autowired 
     private FieldRepository field_repository;
 
 
-    public List<Object> get_games(){
-        Field field = new Field();
-        field.setOwnerId(1); // Set an appropriate owner ID
-        field.setLocation("Test Location");
-        field = field_repository.save(field); // Assuming fieldRepository is defined
+    public List< Map<String, Object> > get_games(float latitude, float longitude, float distance){
 
-        // Create and save the SubField
-        SubField subField = new SubField();
-        subField.setMasterFieldId(field.getFieldId()); // Link to the master field
-        subField = sub_field_repository.save(subField); // Assuming subFieldRepository is defined
+        List<Integer> nearest_fields = field_repository.findNearestFields(latitude, longitude, distance);
+        List<Object[]> game_results = game_repository.findByFieldIds(nearest_fields);
 
+        List<Map<String, Object>> game_list = new ArrayList<>();
+        for (Object game[] : game_results) {
+            Map<String, Object> gameMap = new HashMap<>();
+            
+            // Assuming the order in the query result is: game_id, sub_field_id, organizer_id, name, start_date, duration, location
+            gameMap.put("game_id", game[0]);
+            gameMap.put("sub_field_id", game[1]);
+            gameMap.put("organizer_id", game[2]);
+            gameMap.put("name", game[3]);
+            gameMap.put("start_date", game[4]);
+            gameMap.put("duration", game[5]);
+            gameMap.put("location", game[6]); 
 
+            game_list.add(gameMap);
+        }
 
-
-
-        Game test_game = new Game();
-
-        test_game.setOrganizerId(0);
-        test_game.setSubFieldId(0);
-        test_game.setStartDate(LocalDateTime.now());
-        test_game.setDuration(LocalTime.of(1, 0, 0));
-        test_game.setName("test game");
-
-        game_repository.save(test_game);
-        
-        return game_repository.findBySubFieldId(0);
-
+        return game_list;
     }
     
 }
