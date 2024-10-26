@@ -79,7 +79,7 @@ const RootLayout = () => {
           tabBarStyle: {
             backgroundColor: isDarkMode
               ? Colors.dark.black.DEFAULT
-              : Colors.light.black.DEFAULT,
+              : Colors.light.gray[200],
             borderTopWidth: 1,
             borderTopColor: Colors.dark.secondary.DEFAULT,
             height: 80,
@@ -92,7 +92,7 @@ const RootLayout = () => {
             title: "PlayVu",
             headerShown: true,
             headerStyle: {
-              backgroundColor: Colors.dark.black.DEFAULT,
+              backgroundColor: Colors.light.gray[200],
             },
             headerRight: () => (
               <Button
@@ -101,11 +101,11 @@ const RootLayout = () => {
                 onPress={() => router.push("(auth)/sign-in")}
               />
             ),
-            headerTintColor: "#ffffff",
+            headerTintColor: "#2C2C2C",
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 color={color}
-                name="PlayVue"
+                name="PlayVu"
                 focused={focused}
                 Icon={() => (
                   <FontAwesome name="soccer-ball-o" size={24} color={color} />
@@ -190,7 +190,7 @@ const RootLayout = () => {
         backgroundColor={
           isDarkMode ? Colors.dark.black.DEFAULT : Colors.light.black.DEFAULT
         }
-        style={isDarkMode ? "light" : "dark"}
+        style={isDarkMode ? "dark" : "light"}
       />
     </>
   );
