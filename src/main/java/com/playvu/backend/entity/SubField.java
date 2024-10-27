@@ -19,6 +19,9 @@ public class SubField {
     @Column(nullable = false)
     private Integer masterFieldId;
 
+    @Column(nullable = false)
+    private String name;
+
     public Integer getSubFieldId() {
         return subFieldId;
     }
@@ -34,6 +37,16 @@ public class SubField {
     public void setMasterFieldId(Integer masterFieldId) {
         this.masterFieldId = masterFieldId;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
     
     
 }

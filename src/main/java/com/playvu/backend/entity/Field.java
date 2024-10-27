@@ -20,7 +20,16 @@ public class Field {
     private Integer ownerId;  
 
     @Column(nullable = false)
-    private String location;
+    private String name;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private String zipCode;
+
+    @Column(nullable = false)
+    private String city;
 
     private String description;
 
@@ -46,14 +55,6 @@ public class Field {
         this.ownerId = ownerId;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public Float getLatitude() {
         return latitude;
     }
@@ -76,7 +77,42 @@ public class Field {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }  
+
+    
+    
     
     
 }

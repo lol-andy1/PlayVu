@@ -20,11 +20,14 @@ public class SecurityConfig {
         an OAuth2 Resource Server, using JWT validation.
         */
         return http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/public").permitAll()
                         .requestMatchers("/api/private").authenticated()
-                        .requestMatchers("/api/**").permitAll() // Just for testing, change later. 
+                         // Just for testing, change later. 
                 )
+                
                 .cors(withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(withDefaults())

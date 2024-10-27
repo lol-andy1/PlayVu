@@ -12,12 +12,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+// import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playvu.backend.entity.Field;
-import com.playvu.backend.entity.Users;
+// import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,8 +28,8 @@ public class FieldService {
     @Autowired 
     private FieldRepository field_repository;
 
-    @Autowired
-    private AuthService auth_service;
+    // @Autowired
+    // private AuthService auth_service;
 
     private static final String GEOCODING_API_KEY = "671c296419c1b876867424nil7cf9a2";
     private static final String GEOCODING_API = "https://geocode.maps.co/search?q=";
@@ -60,21 +60,57 @@ public class FieldService {
         return coordinates;
     }
 
-    public void add_field(HttpServletRequest request, String description, String location, MultipartFile image) throws URISyntaxException, IOException, InterruptedException{
-        Users user = auth_service.find_user_by_token(request);
-        if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
-            return;
-        }
+    public void add_field(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+        // Users user = auth_service.find_user_by_token(request);
+        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
+        //     return;
+        // }
         Field new_field = new Field();
 
-        new_field.setOwnerId(user.getUserId());
-        new_field.setLocation(location);
-
-        Map<String, Float> new_field_coordinates = get_coordinates_by_address(location);
+        new_field.setOwnerId(0); // TODO: Set real owner ID
+        new_field.setName(name);
+        new_field.setAddress(address);
+        new_field.setZipCode(zip_code);
+        new_field.setCity(city);
+        
+        String full_address = address + ", " + zip_code + ", " + city;
+        Map<String, Float> new_field_coordinates = get_coordinates_by_address(full_address);
         new_field.setLatitude(new_field_coordinates.get("latitude"));
-        new_field.setLatitude(new_field_coordinates.get("longitude"));
+        new_field.setLongitude(new_field_coordinates.get("longitude"));
         
         field_repository.save(new_field);
+    }
+
+    public void edit_field(HttpServletRequest request, Integer field_id, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+        // Users user = auth_service.find_user_by_token(request);
+        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
+        //     return;
+        // }
+        Field field = field_repository.findById(field_id).get();
+
+        if(name != null){
+            field.setName(name);
+        }
+        if(description != null){
+            field.setDescription(description);
+        }
+        if(address != null){
+            field.setAddress(address);
+        }
+        if(zip_code != null){
+            field.setZipCode(zip_code);
+        }
+        if(city != null){
+            field.setCity(city);
+        }
+        
+        // TODO: Decide if we need to change coordinates if address switches
+        // String full_address = address + ", " + zip_code + ", " + city;
+        // Map<String, Float> new_field_coordinates = get_coordinates_by_address(full_address);
+        // field.setLatitude(new_field_coordinates.get("latitude"));
+        // field.setLongitude(new_field_coordinates.get("longitude"));
+        
+        field_repository.save(field);
     }
 }
 

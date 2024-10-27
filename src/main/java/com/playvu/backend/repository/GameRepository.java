@@ -14,7 +14,7 @@ import com.playvu.backend.entity.Game;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
-    @Query(value = "SELECT g.game_id, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.duration, f.location " +
+    @Query(value = "SELECT g.game_id, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.duration, f.address " +
                     "FROM game g " +
                     "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
                     "JOIN field f ON sf.master_field_id = f.field_id " +
