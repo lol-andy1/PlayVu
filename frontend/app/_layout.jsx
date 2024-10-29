@@ -67,7 +67,7 @@ const RootLayout = () => {
   }
 
   return (
-  <Auth0Provider domain={"dev-1jps85kh7htbmqki.us.auth0.com"} clientId={"3AuqTtm3vGKzgR8EC8EgWpAFKluGjLyp"}>
+  <Auth0Provider domain={"dev-1jps85kh7htbmqki.us.auth0.com"} clientId={"zC8VQhr63IKYAxFgodyCQYgytnFmV6V3"}>
     <>
       <Tabs
         screenOptions={{
