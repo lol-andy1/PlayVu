@@ -11,14 +11,14 @@ export const Colors = {
     icon: "#687076",
     tabIconDefault: "#687076",
     tabIconSelected: "#0a7ea4",
-    primary: "#97FB57",
+    primary: "#088012",
     secondary: {
       DEFAULT: "#FD6326",
       100: "#262E57",
       200: "#A5E9E8",
     },
     black: {
-      DEFAULT: "#121212",
+      DEFAULT: "#2C2C2C",
     },
     gray: {
       100: "#909090",
@@ -39,11 +39,11 @@ export const Colors = {
       200: "#A5E9E8",
     },
     black: {
-      DEFAULT: "#121212",
+      DEFAULT: "#2C2C2C",
     },
     gray: {
       100: "#909090",
-      200: "#F6F2F2",
+      200: "#d9d9d9",
     },
   },
 };

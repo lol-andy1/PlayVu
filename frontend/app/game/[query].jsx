@@ -1,18 +1,10 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  Dimensions,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import {View, Text, Image, ScrollView, Alert} from "react-native";
 import CustomButton from "../../components/CustomButton";
 import Feather from "@expo/vector-icons/Feather";
 import FootballField from "react-native-football-lineup";
+
 var home = {
   name: "POR",
   module: "4-4-2",
@@ -193,42 +185,62 @@ const Search = () => {
   //   useEffect(() => {
   //     refetch();
   //   }, [query]);
+  const gameData = {
+    "startTime": new Date(2024, 9, 25, 10, 30, 0),
+    "maxPlayers": 22
+  }
+  const currPlayerCount = home.team.reduce((len, arr) => len + arr.length, 0) 
+    + away.team.reduce((len, arr) => len + arr.length, 0)
 
   return (
-    <SafeAreaView className="bg-black h-full">
-      <ScrollView>
-        <View
-          className="w-full flex justify-center h-full px-4"
-          style={{
-            minHeight: Dimensions.get("window").height - 400,
-          }}
-        >
-          <CustomButton
-            title={<Feather name="arrow-left" size={25} />}
-            handlePress={() => router.back()}
-            containerStyles="absolute top-5 left-5 px-2 py-0.5 max-h-10 max-w-10"
-          />
-          <Image
-            source={{ uri: `https://picsum.photos/200/300?random=${query}` }}
-            className="w-full h-40 rounded-lg mt-28"
-          />
-          <Text className="text-lg text-white font-bold mt-2">
-            Field {query}
-          </Text>
-          <Text className="text-sm text-gray-500">Price: ${query}</Text>
+    <View className="bg-white h-full">
+      <StatusBar className="z-50"style="black" />
 
-          <View className="mt-4">
-            <FootballField home={home} away={away} />
-          </View>
-          <CustomButton
-            title="Join"
-            handlePress={() => Alert.alert("Joined", `game in Field ${query}`)}
-            containerStyles="mt-4 max-h-10 max-w-10"
-          />
+      <View className="w-full pt-12 z-40 flex-row items-center border-solid border-b border-secondary">
+        <CustomButton
+          title={<Feather name="arrow-left" size={25} />}
+          handlePress={() => router.back()}
+          textStyles={"text-black"}
+          containerStyles="ml-2 w-12 z-50"
+        />
+
+        <Text className="top-14 absolute w-full text-center text-xl text-black font-bold">
+          Game {query}
+        </Text>
+      </View>
+
+      <ScrollView className="w-full h-full flex">
+        <Image
+          source={{ uri: `https://picsum.photos/800/200?random=${query}` }}
+          className="w-full h-40"
+        />
+
+        <View className="px-4 flex-row justify-between">
+          <Text className="text-center text-sm text-black">{gameData.startTime.toLocaleString()}</Text>
+          <Text className="text-center text-sm text-black">Price: ${query}</Text>
         </View>
-        <StatusBar backgroundColor="#161622" style="auto" />
+        
+        <View className="flex px-4 flex-row justify-between items-center">
+        <Text className="text-lg font-semibold">Roster</Text>
+          <Text className="text-sm text-black">
+            Players: {currPlayerCount}/{gameData.maxPlayers}
+          </Text>
+        </View>
+
+        <View className="bg-slate-300">
+          <FootballField home={home} away={away} />
+        </View>
+
       </ScrollView>
-    </SafeAreaView>
+      <View className="absolute bottom-3 right-3">
+        <CustomButton
+          title="Join"
+          handlePress={() => Alert.alert("Joined", `game in Field ${query}`)}
+          containerStyles="bg-success mt-4 w-20 "
+        />
+      </View>
+
+    </View>
   );
 };
 

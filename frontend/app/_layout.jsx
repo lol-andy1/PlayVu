@@ -91,7 +91,7 @@ const RootLayout = () => {
           tabBarStyle: {
             backgroundColor: isDarkMode
               ? Colors.dark.black.DEFAULT
-              : Colors.light.black.DEFAULT,
+              : Colors.light.gray[200],
             borderTopWidth: 1,
             borderTopColor: Colors.dark.secondary.DEFAULT,
             height: 80,
@@ -104,7 +104,7 @@ const RootLayout = () => {
             title: "PlayVu",
             headerShown: true,
             headerStyle: {
-              backgroundColor: Colors.dark.black.DEFAULT,
+              backgroundColor: Colors.light.gray[200],
             },
             headerRight: () => (
               <Button
@@ -113,11 +113,11 @@ const RootLayout = () => {
                 onPress={onLogout}
               />
             ),
-            headerTintColor: "#ffffff",
+            headerTintColor: "#2C2C2C",
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 color={color}
-                name="PlayVue"
+                name="PlayVu"
                 focused={focused}
                 Icon={() => (
                   <FontAwesome name="soccer-ball-o" size={24} color={color} />
@@ -126,6 +126,7 @@ const RootLayout = () => {
             ),
           }}
         />
+
         <Tabs.Screen
           name="home"
           options={{
@@ -146,7 +147,19 @@ const RootLayout = () => {
           name="profile"
           options={{
             title: "Profile",
-            headerShown: false,
+            headerStyle: {
+              backgroundColor: Colors.light.background,
+            },
+            headerTintColor: Colors.dark.black.DEFAULT,
+            headerRight: () => (
+              <View className="mr-2">
+                <MaterialIcons
+                  name="settings"
+                  size={30}
+                  color={Colors.light.primary}
+                />
+              </View>
+            ),
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 color={color}
@@ -189,7 +202,7 @@ const RootLayout = () => {
         backgroundColor={
           isDarkMode ? Colors.dark.black.DEFAULT : Colors.light.black.DEFAULT
         }
-        style={isDarkMode ? "light" : "dark"}
+        style={isDarkMode ? "dark" : "light"}
       />
     
   </>
