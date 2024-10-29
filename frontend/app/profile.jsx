@@ -9,6 +9,7 @@ import {
   Text,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { useAuth0 } from "react-native-auth0";
 
 // import { icons } from "../../constants";
 // import useAppwrite from "../../lib/useAppwrite";
@@ -17,6 +18,7 @@ import { StatusBar } from "expo-status-bar";
 // import { EmptyState, InfoBox, VideoCard } from "../../components";
 
 const Profile = () => {
+  const {authorize, clearSession, user, error, isLoading} = useAuth0();
   const onLogin = async () => {
     try {
       await authorize();
@@ -38,7 +40,7 @@ const Profile = () => {
   //   router.replace("/sign-in");
   // };
 
-  const user = {
+  const playuser = {
     name: "John Doe",
     username: "john_doe",
     email: "johndoe@example.com",
@@ -52,15 +54,15 @@ const Profile = () => {
       <ScrollView className="w-full">
         <View className="items-center p-5">
           <Image
-            source={{ uri: user.profilePicture }}
+            source={{ uri: playuser.profilePicture }}
             className="w-32 h-32 rounded-full border-2 border-gray-500 shadow-lg"
           />
 
           <Text className="text-white font-psemibold text-xl mt-4">
             {user.name}
           </Text>
-          <Text className="text-gray-400 text-base">@{user.username}</Text>
-          <Text className="text-gray-400 text-base mt-2">{user.email}</Text>
+          <Text className="text-gray-400 text-base">@{playuser.username}</Text>
+          <Text className="text-gray-400 text-base mt-2">{playuser.email}</Text>
           <Text className="text-white text-base mt-4 text-center">
             {user.bio}
           </Text>

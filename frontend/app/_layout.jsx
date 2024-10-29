@@ -35,7 +35,17 @@ const TabIcon = ({ Icon, color, name, focused }) => {
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
-  const [fontsLoaded, error] = useFonts({
+  const {authorize, clearSession, user, error, isLoading} = useAuth0();
+  
+  const onLogout = async () => {
+    try {
+      await clearSession();
+    } catch (e) {
+      console.log('Log out cancelled');
+    }
+  };
+
+  const [fontsLoaded, fontsError] = useFonts({
     "Montserrat-Black": require("../assets/fonts/Montserrat-Black.ttf"),
     "Montserrat-Bold": require("../assets/fonts/Montserrat-Bold.ttf"),
     "Montserrat-ExtraBold": require("../assets/fonts/Montserrat-ExtraBold.ttf"),
@@ -51,18 +61,18 @@ const RootLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (error) throw error;
+    if (fontsError) throw fontsError;
 
     if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, error]);
+  }, [fontsLoaded, fontsError]);
 
   if (!fontsLoaded) {
     return null;
   }
 
-  if (!fontsLoaded && !error) {
+  if (!fontsLoaded && !fontsError) {
     return null;
   }
 
@@ -98,9 +108,9 @@ const RootLayout = () => {
             },
             headerRight: () => (
               <Button
-                title="Sign In"
+                title="Sign Out"
                 color={Colors.dark.secondary.DEFAULT}
-                onPress={() => router.push("(auth)/sign-in")}
+                onPress={onLogout}
               />
             ),
             headerTintColor: "#ffffff",

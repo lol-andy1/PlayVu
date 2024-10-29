@@ -16,12 +16,14 @@ import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Colors } from "../constants/Colors";
 import GameCard from "../components/GameCard";
+import { useAuth0 } from "react-native-auth0";
 
 // import { images } from "../constants";
 // import { CustomButton, Loader } from "../components";
 // import { useGlobalContext } from "../context/GlobalProvider";
 
 const Welcome = () => {
+  const {authorize, clearSession, user, error, isLoading} = useAuth0();
   const onLogin = async () => {
     try {
       await authorize();
