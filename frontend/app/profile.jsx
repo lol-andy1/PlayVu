@@ -12,6 +12,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { useAuth0 } from "react-native-auth0";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Colors } from "../constants/Colors";
 // import { icons } from "../../constants";
 // import useAppwrite from "../../lib/useAppwrite";
 // import { getUserPosts, signOut } from "../../lib/appwrite";
@@ -125,7 +126,6 @@ const Profile = () => {
             </View>
           ))}
         </View>
-        
       </ScrollView>
     </>
   );
