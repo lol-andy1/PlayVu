@@ -8,7 +8,6 @@ import {
   ScrollView,
   Text,
   Button,
-import {View, Image, ScrollView, Text,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useAuth0 } from "react-native-auth0";
@@ -99,6 +98,11 @@ const Profile = () => {
             <Text className="text-gray-100 text-base mt-2">
               {playuser.bio}
             </Text>
+            <Button
+                title="Log Out"
+                color={Colors.dark.secondary.DEFAULT}
+                onPress={onLogout}
+              />
           </View>
         </View>
 
