@@ -22,6 +22,16 @@ import GameCard from "../components/GameCard";
 // import { useGlobalContext } from "../context/GlobalProvider";
 
 const Welcome = () => {
+  const onLogin = async () => {
+    try {
+      await authorize();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  if(!user) {
+    onLogin();
+  }
   //   const { loading, isLogged } = useGlobalContext();
 
   //   if (!loading && isLogged) return <Redirect href="/home" />;

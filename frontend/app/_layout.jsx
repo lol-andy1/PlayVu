@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useAuth0, Auth0Provider } from "react-native-auth0";
 
 // import GlobalProvider from "../context/GlobalProvider";
 
@@ -66,6 +67,7 @@ const RootLayout = () => {
   }
 
   return (
+  <Auth0Provider domain={"dev-1jps85kh7htbmqki.us.auth0.com"} clientId={"3AuqTtm3vGKzgR8EC8EgWpAFKluGjLyp"}>
     <>
       <Tabs
         screenOptions={{
@@ -179,7 +181,9 @@ const RootLayout = () => {
         }
         style={isDarkMode ? "light" : "dark"}
       />
-    </>
+    
+  </>
+  </Auth0Provider>
   );
 };
 

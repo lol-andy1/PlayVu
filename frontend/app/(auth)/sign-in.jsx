@@ -73,9 +73,7 @@ const SignIn = () => {
             handlePress={() => router.back()}
             containerStyles="absolute top-5 left-5 px-2 py-0.5 max-h-10 max-w-10"
           />      
-        <Auth0Provider domain={"dev-1jps85kh7htbmqki.us.auth0.com"} clientId={"3AuqTtm3vGKzgR8EC8EgWpAFKluGjLyp"}>
-          <Auth />
-        </Auth0Provider>
+        <Auth />
         </View>
       </ScrollView>
     </SafeAreaView>

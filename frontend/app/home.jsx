@@ -4,8 +4,20 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GameCard from "../components/GameCard";
 import { useState } from "react";
+import { useAuth0 } from "react-native-auth0";
 
 const Home = () => {
+  const {authorize, clearSession, user, error, isLoading} = useAuth0();
+  const onLogin = async () => {
+    try {
+      await authorize();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  if(!user) {
+    onLogin();
+  }
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 

@@ -17,6 +17,16 @@ import { StatusBar } from "expo-status-bar";
 // import { EmptyState, InfoBox, VideoCard } from "../../components";
 
 const Profile = () => {
+  const onLogin = async () => {
+    try {
+      await authorize();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  if(!user) {
+    onLogin();
+  }
   // const { user, setUser, setIsLogged } = useGlobalContext();
   // const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
 
