@@ -40,6 +40,14 @@ const Profile = () => {
   //   router.replace("/sign-in");
   // };
 
+  const playuser = {
+    name: "John Doe",
+    username: "john_doe",
+    email: "johndoe@example.com",
+    bio: "I like playing soccor",
+    profilePicture: "https://randomuser.me/api/portraits/men/32.jpg",
+  };
+
   return (
     <SafeAreaView className="bg-black h-full">
       <StatusBar backgroundColor="#161622" style="light" />
@@ -55,6 +63,9 @@ const Profile = () => {
           </Text>
           <Text className="text-gray-400 text-base">@{user.name}</Text>
           <Text className="text-gray-400 text-base mt-2">{user.email}</Text>
+          <Text className="text-white text-base mt-4 text-center">
+            {user.bio}
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
