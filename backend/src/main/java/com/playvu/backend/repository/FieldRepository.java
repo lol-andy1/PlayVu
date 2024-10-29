@@ -13,6 +13,7 @@ import com.playvu.backend.entity.Field;
 
 @Repository
 public interface FieldRepository extends JpaRepository<Field, Integer> {
+    
     @Query(value = "SELECT field_id " +
                    "FROM field " +
                    "WHERE (6371 * acos(cos(radians(:latitude)) * cos(radians(latitude)) * " +

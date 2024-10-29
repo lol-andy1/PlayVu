@@ -17,7 +17,7 @@ public class Field {
     private Integer fieldId;
 
     @Column(nullable = false)
-    private Integer ownerId;  
+    private Integer ownerId;
 
     @Column(nullable = false)
     private String name;

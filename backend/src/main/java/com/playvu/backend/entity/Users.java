@@ -19,17 +19,17 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column()
     private String firstName;
 
-    @Column(nullable = false)
+    @Column()
     private String lastName;
 
     @Column()
     private String role;
 
     @CreationTimestamp
-    @Column(nullable = false, updatable = false, name = "created_at")
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public Integer getUserId() {

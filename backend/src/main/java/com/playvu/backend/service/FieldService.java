@@ -79,6 +79,7 @@ public class FieldService {
         new_field.setLongitude(new_field_coordinates.get("longitude"));
         
         field_repository.save(new_field);
+        
     }
 
     public void edit_field(HttpServletRequest request, Integer field_id, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
