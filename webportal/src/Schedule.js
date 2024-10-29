@@ -1,7 +1,16 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { Scheduler } from "@bitnoi.se/react-scheduler";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import "@bitnoi.se/react-scheduler/dist/style.css";
+import styled from "styled-components";
 dayjs.extend(isBetween);
+
+export const StyledSchedulerFrame = styled.div`
+  position: relative;
+  height: 70vh;
+  width: 100%;
+`;
 
 export const mockedSchedulerData = [
   {
@@ -344,7 +353,7 @@ export const mockedSchedulerData = [
 
 const AssignAvailabilities = () => {
   const [selectedFieldId, setSelectedFieldId] = useState("1");
-  const [selectedSubfieldId, setSelectedSubfieldId] = useState("");
+  const [selectedSubfieldId, setSelectedSubfieldId] = useState("1-1");
   const [range, setRange] = useState({
     startDate: new Date("2024-10-01"),
     endDate: new Date("2024-12-01"),
@@ -420,6 +429,7 @@ const AssignAvailabilities = () => {
   };
 
   const handleItemClick = (item) => {
+    console.log("hello");
     setSelectedEvent(item);
     setAvailabilityForm({
       mode: "Edit",
@@ -478,6 +488,17 @@ const AssignAvailabilities = () => {
             {availabilityForm.mode} Availability
           </h2>
           <form onSubmit={handleFormSubmit}>
+            {/* Switch Back to Add Mode Button */}
+            {availabilityForm.mode === "Edit" && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="w-full mb-4 bg-gray-500 text-white p-3 rounded-md hover:bg-gray-600 transition-all duration-300"
+              >
+                Switch to Add Mode
+              </button>
+            )}
+
             {/* Subfield Selection */}
             <div className="mb-4">
               <label
@@ -556,56 +577,24 @@ const AssignAvailabilities = () => {
         </div>
       </div>
 
-      {/* Availability Table */}
+      {/* Bottom Row: Scheduler */}
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-4 text-center">
-          Subfields & Availabilities
-        </h2>
-        {filteredSchedulerData.map((subfield) => (
-          <div key={subfield.id} className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">
-              {subfield.label.title}
-            </h3>
-            <table className="min-w-full table-auto border-collapse text-left">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="border px-4 py-2">Availability</th>
-                  <th className="border px-4 py-2">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {subfield.data.length > 0 ? (
-                  subfield.data.map((event) => (
-                    <tr
-                      key={event.id}
-                      onClick={() => handleItemClick(event)}
-                      className="cursor-pointer hover:bg-gray-100"
-                    >
-                      <td className="border px-4 py-2 text-sm">
-                        <span className="font-medium">
-                          {dayjs(event.startDate).format("YYYY-MM-DD hh:mm A")}
-                        </span>{" "}
-                        -{" "}
-                        <span className="font-medium">
-                          {dayjs(event.endDate).format("hh:mm A")}
-                        </span>
-                      </td>
-                      <td className="border px-4 py-2 text-sm">
-                        {event.description}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="2" className="border px-4 py-2 text-center">
-                      No availability
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        ))}
+        <StyledSchedulerFrame>
+          <Scheduler
+            data={filteredSchedulerData}
+            isLoading={false}
+            onRangeChange={handleRangeChange}
+            onTileClick={handleItemClick}
+            // onItemClick={handleItemClick}
+            onFilterData={() => console.log("Filtered")}
+            onClearFilterData={() => console.log("Filter Cleared")}
+            config={{
+              zoom: 2,
+              maxRecordsPerPage: 10,
+              filterButtonState: -1,
+            }}
+          />
+        </StyledSchedulerFrame>
       </div>
     </div>
   );

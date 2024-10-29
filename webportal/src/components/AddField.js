@@ -9,16 +9,24 @@ const AddField = ({ onSendField, lastId }) => {
     description: "",
   };
 
-  let [toggleForm, setToggleForm] = useState(false);
-  let [formData, setFormData] = useState(clearData);
+  const [toggleForm, setToggleForm] = useState(false);
+  const [formData, setFormData] = useState(clearData);
+  const [errors, setErrors] = useState({});
 
-  const formDataPosted = () => {
-    if (
-      formData.name &&
-      formData.streetAddress &&
-      formData.zipCode &&
-      formData.city
-    ) {
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name) newErrors.name = "Field name is required.";
+    if (!formData.streetAddress)
+      newErrors.streetAddress = "Street address is required.";
+    if (!/^\d{5}$/.test(formData.zipCode))
+      newErrors.zipCode = "Zip Code must be 5 digits.";
+    if (!formData.city) newErrors.city = "City is required.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleFormSubmit = () => {
+    if (validateForm()) {
       const fieldInfo = {
         id: lastId + 1,
         name: formData.name,
@@ -29,9 +37,8 @@ const AddField = ({ onSendField, lastId }) => {
       };
       onSendField(fieldInfo);
       setFormData(clearData);
-      setToggleForm(!toggleForm);
-    } else {
-      alert("Please fill all required fields");
+      setToggleForm(false);
+      setErrors({});
     }
   };
 
@@ -39,142 +46,137 @@ const AddField = ({ onSendField, lastId }) => {
     <div>
       <button
         onClick={() => setToggleForm(!toggleForm)}
-        className={`bg-green-500 text-white px-2 py-3 w-full text-left  ${
+        className={`bg-green-600 text-white px-4 py-2 w-full text-left ${
           toggleForm ? "rounded-t-md" : "rounded-md"
-        }`}
+        } focus:outline-none hover:bg-green-700 transition`}
       >
-        <div>Add Field</div>
+        <div className="font-semibold">Add Field</div>
       </button>
       {toggleForm && (
-        <div className="border-r-2 border-b-2 border-l-2 border-light-blue-500 rounded-b-md pl-4 pr-4 pb-4">
+        <div className="border-2 border-green-600 rounded-b-md p-4 bg-gray-50">
           {/* Field Name */}
-          <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+          <div className="mb-4">
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              className="block text-sm font-medium text-gray-700"
             >
               Field Name
             </label>
-            <div className="mt-1 sm:mt-0 sm:col-span-2">
-              <input
-                onChange={(event) => {
-                  setFormData({ ...formData, name: event.target.value });
-                }}
-                type="text"
-                name="name"
-                id="name"
-                value={formData.name}
-                required
-                className="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-              />
-            </div>
+            <input
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              type="text"
+              name="name"
+              id="name"
+              value={formData.name}
+              className="w-full p-2 mt-1 border rounded focus:ring-green-500 focus:border-green-500"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+            )}
           </div>
 
           {/* Street Address */}
-          <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+          <div className="mb-4">
             <label
               htmlFor="streetAddress"
-              className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              className="block text-sm font-medium text-gray-700"
             >
               Street Address
             </label>
-            <div className="mt-1 sm:mt-0 sm:col-span-2">
-              <input
-                onChange={(event) => {
-                  setFormData({
-                    ...formData,
-                    streetAddress: event.target.value,
-                  });
-                }}
-                required
-                type="text"
-                name="streetAddress"
-                id="streetAddress"
-                value={formData.streetAddress}
-                className="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-              />
-            </div>
+            <input
+              onChange={(e) =>
+                setFormData({ ...formData, streetAddress: e.target.value })
+              }
+              type="text"
+              name="streetAddress"
+              id="streetAddress"
+              value={formData.streetAddress}
+              className="w-full p-2 mt-1 border rounded focus:ring-green-500 focus:border-green-500"
+            />
+            {errors.streetAddress && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.streetAddress}
+              </p>
+            )}
           </div>
 
           {/* Zip Code */}
-          <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+          <div className="mb-4">
             <label
               htmlFor="zipCode"
-              className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              className="block text-sm font-medium text-gray-700"
             >
               Zip Code
             </label>
-            <div className="mt-1 sm:mt-0 sm:col-span-2">
-              <input
-                required
-                onChange={(event) => {
-                  setFormData({ ...formData, zipCode: event.target.value });
-                }}
-                type="text"
-                name="zipCode"
-                id="zipCode"
-                value={formData.zipCode}
-                className="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-              />
-            </div>
+            <input
+              onChange={(e) =>
+                setFormData({ ...formData, zipCode: e.target.value })
+              }
+              type="text"
+              name="zipCode"
+              id="zipCode"
+              value={formData.zipCode}
+              className="w-full p-2 mt-1 border rounded focus:ring-green-500 focus:border-green-500"
+              maxLength={5}
+            />
+            {errors.zipCode && (
+              <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>
+            )}
           </div>
 
           {/* City */}
-          <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+          <div className="mb-4">
             <label
               htmlFor="city"
-              className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              className="block text-sm font-medium text-gray-700"
             >
               City
             </label>
-            <div className="mt-1 sm:mt-0 sm:col-span-2">
-              <input
-                onChange={(event) => {
-                  setFormData({ ...formData, city: event.target.value });
-                }}
-                required
-                type="text"
-                name="city"
-                id="city"
-                value={formData.city}
-                className="max-w-lg block w-full shadow-sm focus:ring-green-500 focus:border-green-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-              />
-            </div>
+            <input
+              onChange={(e) =>
+                setFormData({ ...formData, city: e.target.value })
+              }
+              type="text"
+              name="city"
+              id="city"
+              value={formData.city}
+              className="w-full p-2 mt-1 border rounded focus:ring-green-500 focus:border-green-500"
+            />
+            {errors.city && (
+              <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+            )}
           </div>
 
           {/* Description */}
-          <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+          <div className="mb-4">
             <label
               htmlFor="description"
-              className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+              className="block text-sm font-medium text-gray-700"
             >
               Description
             </label>
-            <div className="mt-1 sm:mt-0 sm:col-span-2">
-              <textarea
-                onChange={(event) => {
-                  setFormData({ ...formData, description: event.target.value });
-                }}
-                value={formData.description}
-                id="description"
-                name="description"
-                rows="3"
-                className="shadow-sm focus:ring-green-500 focus:border-green-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
-                placeholder="Enter a description"
-              ></textarea>
-            </div>
+            <textarea
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+              id="description"
+              name="description"
+              rows="3"
+              value={formData.description}
+              className="w-full p-2 mt-1 border rounded focus:ring-green-500 focus:border-green-500"
+              placeholder="Enter a description"
+            ></textarea>
           </div>
 
-          <div className="pt-5">
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                onClick={formDataPosted}
-                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                Submit
-              </button>
-            </div>
+          <div className="flex justify-end">
+            <button
+              onClick={handleFormSubmit}
+              className="bg-green-600 text-white py-2 px-4 rounded shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
+            >
+              Submit
+            </button>
           </div>
         </div>
       )}
