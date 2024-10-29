@@ -98,14 +98,6 @@ const RootLayout = () => {
             headerStyle: {
               backgroundColor: Colors.light.gray[200],
             },
-            headerTintColor: "#ffffff",
-            headerRight: () => (
-              <Button
-                title="Sign Out"
-                color={Colors.dark.secondary.DEFAULT}
-                onPress={onLogout}
-              />
-            ),
             headerTintColor: "#2C2C2C",
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
