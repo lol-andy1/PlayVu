@@ -1,4 +1,4 @@
-import { View, Text, Button, ScrollView, TextInput } from "react-native";
+import { View, Text, Button, ScrollView, TextInput, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,34 +11,34 @@ const Home = () => {
 
   const games = [
     {
-      name: "Field 1",
-      price: 20,
-      image: "https://picsum.photos/200/300?random=1",
+      duration: "00:50:00",
+      name: "Game 4",
+      location: "Location 49",
+      date: new Date("2024-10-28T16:59:56.346+00:00"),
+      price: 5
     },
     {
-      name: "Field 2",
-      price: 15,
-      image: "https://picsum.photos/200/300?random=2",
+      duration: "00:08:00",
+      name: "Game 9",
+      location: "Location 49",
+      date: new Date("2024-11-17T17:59:56.875+00:00"),
+      price: 10
     },
     {
-      name: "Field 3",
-      price: 25,
-      image: "https://picsum.photos/200/300?random=3",
-    },
-    {
-      name: "Field 4",
-      price: 18,
-      image: "https://picsum.photos/200/300?random=4",
-    },
-    {
-      name: "Field 5",
-      price: 22,
-      image: "https://picsum.photos/200/300?random=5",
+      duration: "00:16:00",
+      name: "Game 41",
+      location: "Location 49",
+      date: new Date("2024-11-13T18:00:00.134+00:00"),
+      price: 5
     },
   ];
 
+  const [filterKey, setFilterKey] = useState("name"); // Default filter by "name"
+
+  const filterKeys = ["name", "duration", "price", "date"];
+
   const filteredGames = games.filter((game) =>
-    game.name.toLowerCase().includes(searchQuery.toLowerCase())
+    game[filterKey]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -55,6 +55,23 @@ const Home = () => {
           marginBottom: 20,
         }}
       />
+      <Text style={{ fontSize: 16, fontWeight: 'bold', marginVertical: 10 }}>Filter by:</Text>
+      <View style={{ flexDirection: 'row' }}>
+        {filterKeys.map((key) => (
+          <Pressable
+            key={key}
+            onPress={() => setFilterKey(key)}
+            style={{
+              padding: 10,
+              marginHorizontal: 5,
+              backgroundColor: filterKey === key ? 'green' : 'gray',
+              borderRadius: 5
+            }}
+          >
+            <Text style={{ color: 'white' }}>{key}</Text>
+          </Pressable>
+        ))}
+      </View>
       <ScrollView className="w-full">
         <View className="items-center">
           {filteredGames.map((game, index) => (
@@ -63,7 +80,9 @@ const Home = () => {
               id={index}
               name={game.name}
               price={game.price}
-              image={game.image}
+              duration={game.duration}
+              location={game.location}
+              date={game.date.toLocaleString()}
             />
           ))}
         </View>
