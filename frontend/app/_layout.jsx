@@ -36,14 +36,6 @@ SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
   const {authorize, clearSession, user, error, isLoading} = useAuth0();
-  
-  const onLogout = async () => {
-    try {
-      await clearSession();
-    } catch (e) {
-      console.log('Log out cancelled');
-    }
-  };
 
   const [fontsLoaded, fontsError] = useFonts({
     "Montserrat-Black": require("../assets/fonts/Montserrat-Black.ttf"),
@@ -106,13 +98,6 @@ const RootLayout = () => {
             headerStyle: {
               backgroundColor: Colors.dark.black.DEFAULT,
             },
-            headerRight: () => (
-              <Button
-                title="Sign Out"
-                color={Colors.dark.secondary.DEFAULT}
-                onPress={onLogout}
-              />
-            ),
             headerTintColor: "#ffffff",
             tabBarIcon: ({ color, focused }) => (
               <TabIcon

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
+  Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useAuth0 } from "react-native-auth0";
@@ -23,6 +24,14 @@ const Profile = () => {
     try {
       await authorize();
     } catch (e) {
+      console.log(e);
+    }
+  };
+  const onLogout = async () => {
+    try {
+      await clearSession();
+    } catch (e) {
+      console.log('Log out cancelled');
       console.log(e);
     }
   };
@@ -66,6 +75,11 @@ const Profile = () => {
           <Text className="text-white text-base mt-4 text-center">
             {user.bio}
           </Text>
+          <Button
+                title="Sign Out"
+                color={Colors.dark.secondary.DEFAULT}
+                onPress={onLogout}
+              />
         </View>
       </ScrollView>
     </SafeAreaView>
