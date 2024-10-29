@@ -19,10 +19,10 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column()
     private String firstName;
 
-    @Column(nullable = false)
+    @Column()
     private String lastName;
 
     @Column()
