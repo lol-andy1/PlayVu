@@ -34,6 +34,9 @@ public class Game {
     @Column()
     private LocalTime duration;
 
+    @Column()
+    private Float price;
+
     public Integer getGameId() {
         return gameId;
     }
@@ -80,6 +83,14 @@ public class Game {
 
     public void setDuration(LocalTime duration) {
         this.duration = duration;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 
     

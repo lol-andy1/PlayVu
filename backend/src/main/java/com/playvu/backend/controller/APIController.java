@@ -69,4 +69,9 @@ public class APIController {
         return game_service.get_games(latitude, longitude, distance);
     }
 
+    @GetMapping(value = "/get-game-data")
+    public Object get_games(@RequestParam Integer game_id) {
+        return game_service.get_game_data(game_id);
+    }
+
 }

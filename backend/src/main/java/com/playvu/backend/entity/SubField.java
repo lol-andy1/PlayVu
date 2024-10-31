@@ -22,6 +22,9 @@ public class SubField {
     @Column(nullable = false)
     private String name;
 
+    @Column()
+    private Float price;
+
     public Integer getSubFieldId() {
         return subFieldId;
     }
@@ -45,6 +48,16 @@ public class SubField {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
+    
 
     
     
