@@ -15,8 +15,8 @@ public interface GameParticipantRepository extends JpaRepository<GameParticipant
     @Query(value = "SELECT gp.team , u.username " +
                "FROM game_participant gp " +
                "JOIN users u ON gp.participant_id = u.user_id " +
-               "WHERE gp.game_id = :game_id", 
+               "WHERE gp.game_id = :gameId", 
        nativeQuery = true)
-    List<Object[]> game_participants_by_game_id(@Param("game_id") Integer game_id);
+    List<Object[]> gameParticipantsByGameId(@Param("gameId") Integer gameId);
 }
     

@@ -53,7 +53,7 @@ public class GameService {
     }
 
     public Object get_game_data(Integer game_id) {
-        List<Object[]> game_participants = game_participant_repository.game_participants_by_game_id(game_id);
+        List<Object[]> game_participants = game_participant_repository.gameParticipantsByGameId(game_id);
     
         List<Object> team_1 = new ArrayList<>();
         List<Object> team_2 = new ArrayList<>();
