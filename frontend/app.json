@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "PlayVu",
-    "slug": "PlayVu",
+    "slug": "playvu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.PlayVu"
+      "bundleIdentifier": "com.playvu"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.PlayVu"
+      "package": "com.playvu"
     },
     "web": {
       "bundler": "metro",
@@ -33,7 +33,8 @@
       [
         "react-native-auth0",
         {
-          "domain": "dev-1jps85kh7htbmqki.us.auth0.com"
+          "domain": "dev-1jps85kh7htbmqki.us.auth0.com",
+          "clientId": "3AuqTtm3vGKzgR8EC8EgWpAFKluGjLyp"
         }
       ]
     ],
@@ -42,8 +43,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "c6384d8e-20e8-4f76-88a3-2eae6d592534"
+        "projectId": "ed4f8cb2-fb5b-4d1f-bb53-6c6c5c4b8ebd"
       }
-    }
+    },
+    "owner": "ahbalbaid"
   }
 }
