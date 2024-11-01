@@ -69,6 +69,7 @@ public class FieldService {
 
         new_field.setOwnerId(0); // TODO: Set real owner ID
         new_field.setName(name);
+        new_field.setDescription(description);
         new_field.setAddress(address);
         new_field.setZipCode(zip_code);
         new_field.setCity(city);

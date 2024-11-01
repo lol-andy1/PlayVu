@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 // import org.springframework.web.multipart.MultipartFile;
 
-import com.playvu.backend.request.FieldBody;
-import com.playvu.backend.request.SubFieldBody;
+
 import com.playvu.backend.service.FieldService;
 import com.playvu.backend.service.GameService;
 import com.playvu.backend.service.SubFieldService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import com.playvu.backend.entity.*;;
 
 @RestController
 @RequestMapping(path = "api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,18 +50,18 @@ public class APIController {
 
     // Add image either through URL and upload to storage service or @RequestParam MultipartFile image
     @PostMapping(value = "/add-field")
-    public void add_field(HttpServletRequest request, @RequestBody FieldBody field_body) throws URISyntaxException, IOException, InterruptedException {
-        field_service.add_field(request, field_body.getName(), field_body.getDescription(), field_body.getAddress(), field_body.getZip_code(), field_body.getCity());
+    public void add_field(HttpServletRequest request, @RequestBody Field field_body) throws URISyntaxException, IOException, InterruptedException {
+        field_service.add_field(request, field_body.getName(), field_body.getDescription(), field_body.getAddress(), field_body.getZipCode(), field_body.getCity());
     }
 
     @PostMapping(value = "/edit-field")
-    public void edit_field(HttpServletRequest request, @RequestBody FieldBody field_body) throws URISyntaxException, IOException, InterruptedException {
-        field_service.edit_field(request, field_body.getField_id(), field_body.getName(), field_body.getDescription(), field_body.getAddress(), field_body.getZip_code(), field_body.getCity());
+    public void edit_field(HttpServletRequest request, @RequestBody Field field_body) throws URISyntaxException, IOException, InterruptedException {
+        field_service.edit_field(request, field_body.getFieldId(), field_body.getName(), field_body.getDescription(), field_body.getAddress(), field_body.getZipCode(), field_body.getCity());
     }
 
     @PostMapping(value = "/add-subfield")
-    public void add_subfield(HttpServletRequest request, @RequestBody SubFieldBody subfield_body) throws URISyntaxException, IOException, InterruptedException {
-        subfield_service.add_subfield(request, subfield_body.getMaster_field_id(), subfield_body.getName());
+    public void add_subfield(HttpServletRequest request, @RequestBody SubField subfield_body) throws URISyntaxException, IOException, InterruptedException {
+        subfield_service.add_subfield(request, subfield_body.getMasterFieldId(), subfield_body.getName());
     }
 
     @GetMapping(value = "/get-games")
