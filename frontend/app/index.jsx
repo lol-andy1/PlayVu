@@ -16,6 +16,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Colors } from "../constants/Colors";
 import GameCard from "../components/GameCard";
+import AppHeader from "../components/AppHeader";
 
 // import { images } from "../constants";
 // import { CustomButton, Loader } from "../components";
@@ -57,7 +58,18 @@ const Welcome = () => {
   ];
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <View className="bg-white h-full">
+      <AppHeader
+        title="PlayVu"
+        rightComp={
+          <Button
+            title="Sign In"
+            color={Colors.dark.secondary.DEFAULT}
+            onPress={() => router.push("(auth)/sign-in")}
+          />
+        }
+      />
+
       <Text className="text-xl text-center text-white font-bold mb-3">
         Click to join!
       </Text>
@@ -75,7 +87,7 @@ const Welcome = () => {
         </View>
       </ScrollView>
       <StatusBar backgroundColor="#161622" style="auto" />
-    </SafeAreaView>
+    </View>
   );
 };
 

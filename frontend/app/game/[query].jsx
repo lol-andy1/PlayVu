@@ -4,6 +4,7 @@ import {View, Text, Image, ScrollView, Alert} from "react-native";
 import CustomButton from "../../components/CustomButton";
 import Feather from "@expo/vector-icons/Feather";
 import FootballField from "react-native-football-lineup";
+import AppHeader from "../../components/AppHeader";
 
 var home = {
   name: "POR",
@@ -194,20 +195,19 @@ const Search = () => {
 
   return (
     <View className="bg-white h-full">
+      <AppHeader 
+        title={`Game ${query}`}
+        leftComp={
+          <CustomButton
+            title={<Feather name="arrow-left" size={25} />}
+            handlePress={() => router.back()}
+            textStyles={"text-black"}
+            containerStyles="w-12"
+          />
+        }
+      />
+
       <StatusBar className="z-50"style="black" />
-
-      <View className="w-full pt-12 z-40 flex-row items-center border-solid border-b border-secondary">
-        <CustomButton
-          title={<Feather name="arrow-left" size={25} />}
-          handlePress={() => router.back()}
-          textStyles={"text-black"}
-          containerStyles="ml-2 w-12 z-50"
-        />
-
-        <Text className="top-14 absolute w-full text-center text-xl text-black font-bold">
-          Game {query}
-        </Text>
-      </View>
 
       <ScrollView className="w-full h-full flex">
         <Image
