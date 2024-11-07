@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#97FB57",
+        primary: "#088012",
         secondary: {
           DEFAULT: "#FD6326",
           100: "#262E57",
@@ -17,6 +17,7 @@ module.exports = {
           100: "#909090",
           200: "#F6F2F2",
         },
+        success: "#22c55e"
       },
       fontFamily: {
         pthin: ["Montserrat-Thin", "sans-serif"],
