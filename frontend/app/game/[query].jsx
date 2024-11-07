@@ -62,7 +62,7 @@ const Search = () => {
   useEffect(() => {
     const getGameData = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/api/get-game-data',{
+        const res = await axios.get('https://playvubackend.icysand-c7acd929.eastus.azurecontainerapps.io/api/get-game-data',{
           params: {
             gameId: query
           }
@@ -123,7 +123,7 @@ const Search = () => {
           </Text>
         </View>
 
-        <View className="bg-slate-300">
+        <View className="bg-slate-300 h-full">
           <FootballField home={home} away={away} />
         </View>
 
