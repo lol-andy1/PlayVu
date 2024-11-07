@@ -90,17 +90,8 @@ const RootLayout = () => {
           name="index"
           options={{
             title: "PlayVu",
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: Colors.light.gray[200],
-            },
-            headerRight: () => (
-              <Button
-                title="Sign In"
-                color={Colors.dark.secondary.DEFAULT}
-                onPress={() => router.push("(auth)/sign-in")}
-              />
-            ),
+            headerShown: false,
+
             headerTintColor: "#2C2C2C",
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
@@ -135,19 +126,9 @@ const RootLayout = () => {
           name="profile"
           options={{
             title: "Profile",
-            headerStyle: {
-              backgroundColor: Colors.light.background,
-            },
+            headerShown: false,
+
             headerTintColor: Colors.dark.black.DEFAULT,
-            headerRight: () => (
-              <View className="mr-2">
-                <MaterialIcons
-                  name="settings"
-                  size={30}
-                  color={Colors.light.primary}
-                />
-              </View>
-            ),
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 color={color}
