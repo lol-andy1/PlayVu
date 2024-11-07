@@ -35,7 +35,7 @@ const Home = () => {
 
   const [filterKey, setFilterKey] = useState("name"); // Default filter by "name"
 
-  const filterKeys = ["name", "duration", "price", "date"];
+  const filterKeys = ["name", "duration", "price", "date", "location"];
 
   const filteredGames = games.filter((game) =>
     game[filterKey]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
@@ -82,7 +82,12 @@ const Home = () => {
               price={game.price}
               duration={game.duration}
               location={game.location}
-              date={game.date.toLocaleString()}
+              date={game.date.toLocaleString([], {
+                month: "long",
+                day: "numeric", 
+                hour: '2-digit', 
+                minute:'2-digit'
+              })}
             />
           ))}
         </View>
