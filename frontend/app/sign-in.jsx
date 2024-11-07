@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useRouter } from "expo-router";
+import { Link, useRouter, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   View,
@@ -23,6 +23,7 @@ const Auth = () => {
   const onLogin = async() => {
     try {
       await authorize();
+      router.replace('/');
     }
     catch (e) {
       console.log(e);
