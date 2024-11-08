@@ -7,7 +7,9 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playvu.backend.entity.Field;
 // import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
+import com.playvu.backend.repository.GameRepository;
+import com.playvu.backend.repository.SubFieldRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -27,6 +31,12 @@ public class FieldService {
 
     @Autowired 
     private FieldRepository field_repository;
+
+    @Autowired 
+    private SubFieldRepository subFieldRepository;
+
+    @Autowired 
+    private GameRepository gameRepository;
 
     // @Autowired
     // private AuthService auth_service;
@@ -114,7 +124,41 @@ public class FieldService {
         
         field_repository.save(field);
     }
-}
+
+    public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+      // Users user = auth_service.find_user_by_token(request);
+      // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
+      //     return;
+      // }
+  
+      List<Map<String, Object>> fields = new ArrayList<>();
+      
+      List<Map<String, Object>> originalFields = field_repository.findByOwnerId(5);
+  
+      for (Map<String, Object> originalField : originalFields) {
+
+          Map<String, Object> field = new HashMap<>(originalField);
+          Integer fieldId = (Integer) field.get("fieldId");
+  
+          List<Map<String, Object>> subFields = new ArrayList<>();
+          List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
+  
+          for (Map<String, Object> originalSubField : originalSubFields) {
+
+              Map<String, Object> subField = new HashMap<>(originalSubField);
+              Integer subFieldId = (Integer) subField.get("subFieldId");
+  
+              subField.put("data", gameRepository.findAllBySubFieldId(subFieldId));
+              subFields.add(subField);
+          }
+  
+          field.put("subFields", subFields);
+          fields.add(field);
+      }
+  
+      return fields;
+    }
+  }
 
 
 

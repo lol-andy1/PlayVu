@@ -2,6 +2,7 @@ package com.playvu.backend.repository;
 
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,17 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
                "WHERE g.game_id = :game_id", 
        nativeQuery = true)
     Map<String, Object> findByGameId(@Param("game_id") Integer game_id);
+
+    @Query(value = "SELECT game_id AS \"gameId\", sub_field_id AS \"subFieldId\", organizer_id AS \"organizerId\", " +
+               "name, start_date AS \"startDate\", end_date AS \"endDate\", price " +
+               "FROM game WHERE sub_field_id = :subFieldId", nativeQuery = true)
+    List< Map<String, Object> > findAllBySubFieldId(@Param("subFieldId") Integer subFieldId);
+
+    @Query(value = "SELECT COUNT(*) = 0 FROM field_schedule fs " +
+               "WHERE fs.sub_field_id = :subFieldId " +
+               "AND NOT (:endDate <= fs.start_date OR :startDate >= fs.end_date)",
+       nativeQuery = true)
+    Boolean checkNoGameConflict(@Param("subFieldId") Integer subFieldId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
     
 }
     

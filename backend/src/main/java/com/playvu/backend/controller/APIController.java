@@ -82,4 +82,15 @@ public class APIController {
         return gameService.get_game_data(gameId);
     }
 
+    @PostMapping(value = "/add-game")
+    public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
+        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());
+    }
+
+    @GetMapping(value = "/get-owner-fields")
+    public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return fieldService.getOwnerFields(request);
+    }
+    
+
 }
