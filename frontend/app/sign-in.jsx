@@ -19,6 +19,7 @@ import { useAuth0, Auth0Provider } from "react-native-auth0";
 
 const Auth = () => {
   const {authorize, clearSession, user, error, isLoading} = useAuth0();
+  const router = useRouter();
 
   const onLogin = async() => {
     try {
@@ -59,10 +60,8 @@ const Auth = () => {
 }
 
 const SignIn = () => {
-  const router = useRouter();
   return (
     <SafeAreaView className="bg-black h-full">
-
       <ScrollView>
         <View
           className="w-full flex justify-center h-full px-4"
@@ -74,7 +73,6 @@ const SignIn = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
-    
   );
 };
 

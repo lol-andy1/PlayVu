@@ -12,7 +12,6 @@ const AuthLayout = () => {
 
   return (
     <Auth0Provider domain={"dev-1jps85kh7htbmqki.us.auth0.com"} clientId={"zC8VQhr63IKYAxFgodyCQYgytnFmV6V3"}>
-      <>
       <Stack>
         <Stack.Screen
           name="sign-in"
@@ -21,8 +20,6 @@ const AuthLayout = () => {
           }}
         />
       </Stack>
-      </>
-
     </Auth0Provider>
   );
 };
