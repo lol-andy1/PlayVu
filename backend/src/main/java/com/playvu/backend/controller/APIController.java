@@ -2,6 +2,7 @@ package com.playvu.backend.controller;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 // import org.springframework.web.multipart.MultipartFile;
 
-import com.playvu.backend.service.FieldScheduleService;
-import com.playvu.backend.service.FieldService;
-import com.playvu.backend.service.GameService;
-import com.playvu.backend.service.SubFieldService;
+import com.playvu.backend.service.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import com.playvu.backend.entity.*;;
@@ -27,6 +25,9 @@ import com.playvu.backend.entity.*;;
 // Allow all origins for simplicity, change for production.
 @CrossOrigin(origins = "*")
 public class APIController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private GameService gameService;
@@ -90,6 +91,16 @@ public class APIController {
     @GetMapping(value = "/get-owner-fields")
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
         return fieldService.getOwnerFields(request);
+    }
+
+    @GetMapping(value = "/get-user")
+    public Map<String, Object> getUser(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+        return userService.getUser(request);
+    }
+
+    @PostMapping(value = "/edit-user")
+    public void editUser(HttpServletRequest request, @RequestBody Users userBody) throws URISyntaxException, IOException, InterruptedException {
+        userService.editUser(request, userBody.getFirstName(), userBody.getLastName(), userBody.getUsername(), userBody.getBio(), userBody.getProfilePicture());
     }
     
 
