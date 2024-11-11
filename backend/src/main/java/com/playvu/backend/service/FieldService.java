@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playvu.backend.entity.Field;
+import com.playvu.backend.entity.Users;
 // import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
 import com.playvu.backend.repository.GameRepository;
@@ -38,8 +39,8 @@ public class FieldService {
     @Autowired 
     private GameRepository gameRepository;
 
-    // @Autowired
-    // private AuthService auth_service;
+    @Autowired
+    private UserService userService;
 
     private static final String GEOCODING_API_KEY = "671c296419c1b876867424nil7cf9a2";
     private static final String GEOCODING_API = "https://geocode.maps.co/search?q=";
@@ -71,13 +72,13 @@ public class FieldService {
     }
 
     public void add_field(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
-        // Users user = auth_service.find_user_by_token(request);
-        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
-        //     return;
-        // }
+        Users user = userService.findUserByToken(request);
+        if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
+            return;
+        }
         Field new_field = new Field();
 
-        new_field.setOwnerId(0); // TODO: Set real owner ID
+        new_field.setOwnerId(user.getUserId()); // TODO: Set real owner ID
         new_field.setName(name);
         new_field.setDescription(description);
         new_field.setAddress(address);
