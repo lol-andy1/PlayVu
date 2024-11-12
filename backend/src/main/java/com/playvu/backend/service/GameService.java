@@ -34,7 +34,7 @@ public class GameService {
     private FieldScheduleRepository fieldScheduleRepository;
 
 
-    public List< Map<String, Object> > get_games(float latitude, float longitude, float distance){
+    public List< Map<String, Object> > getGames(float latitude, float longitude, float distance){
 
         List<Integer> nearest_fields = field_repository.findNearestFields(latitude, longitude, distance);
         List<Object[]> game_results = gameRepository.findByFieldIds(nearest_fields);
@@ -58,7 +58,7 @@ public class GameService {
         return game_list;
     }
 
-    public Object get_game_data(Integer game_id) {
+    public Object getGameData(Integer game_id) {
         List<Object[]> game_participants = game_participant_repository.gameParticipantsByGameId(game_id);
     
         List<Object> team_1 = new ArrayList<>();

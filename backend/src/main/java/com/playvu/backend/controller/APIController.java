@@ -55,32 +55,32 @@ public class APIController {
     // Add image either through URL and upload to storage service or @RequestParam MultipartFile image
     @PostMapping(value = "/add-field")
     public void addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        fieldService.add_field(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+        fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
     @PostMapping(value = "/edit-field")
     public void editField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        fieldService.edit_field(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+        fieldService.editField(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
     @PostMapping(value = "/add-subfield")
     public void addSubfield(HttpServletRequest request, @RequestBody SubField subfieldBody) throws URISyntaxException, IOException, InterruptedException {
-        subFieldService.add_subfield(request, subfieldBody.getMasterFieldId(), subfieldBody.getName());
+        subFieldService.addSubField(request, subfieldBody.getMasterFieldId(), subfieldBody.getName());
     }
 
     @PostMapping(value = "/add-field-schedule")
     public void addFieldSchedule(HttpServletRequest request, @RequestBody FieldSchedule fieldScheduleBody) throws URISyntaxException, IOException, InterruptedException {
-        fieldScheduleService.add_field_schedule(request, fieldScheduleBody.getSubFieldId(), fieldScheduleBody.getStartDate(), fieldScheduleBody.getEndDate());
+        fieldScheduleService.addFieldSchedule(request, fieldScheduleBody.getSubFieldId(), fieldScheduleBody.getStartDate(), fieldScheduleBody.getEndDate());
     }
 
     @GetMapping(value = "/get-games")
     public Object getGames(@RequestParam Float latitude, @RequestParam Float longitude, @RequestParam Float distance) {
-        return gameService.get_games(latitude, longitude, distance);
+        return gameService.getGames(latitude, longitude, distance);
     }
 
     @GetMapping(value = "/get-game-data")
     public Object getGameData(@RequestParam Integer gameId) {
-        return gameService.get_game_data(gameId);
+        return gameService.getGameData(gameId);
     }
 
     @PostMapping(value = "/add-game")
