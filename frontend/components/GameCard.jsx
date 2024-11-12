@@ -8,7 +8,6 @@ const GameCard = ({ id, name, price, duration, location, date }) => {
       <View style={{backgroundColor: Colors.light.gray[200]}} className="bg-black m-4 rounded-lg p-4 w-80">
         <Text className="text-lg font-bold mt-2">{name}</Text>
         <Text className="text-lg text-base">{duration}</Text>
-        <Text className="text-lg text-base">{location}</Text>
         <Text className="text-lg text-base">{date}</Text>
         <Text className="text-lg text-gray-500 ml-auto mr-2">Price: ${price}</Text>
       </View>

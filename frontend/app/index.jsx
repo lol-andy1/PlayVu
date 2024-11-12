@@ -66,7 +66,6 @@ const Welcome = () => {
               name={game.name}
               price={game.price}
               duration={game.duration}
-              location={game.location}
               date={game.date.toLocaleString()}
             />
           ))}

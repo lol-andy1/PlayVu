@@ -4,33 +4,47 @@
     "slug": "PlayVu",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.connerk2001.PlayVu",
+      "infoPlist": {
+      "UIBackgroundModes": ["location", "fetch", "remote-notification"],
+      "NSLocationAlwaysAndWhenInUseUsageDescription": "App requires geolocation to improve the quality of the service",
+      "NSLocationAlwaysUsageDescription": "App requires geolocation to improve the quality of the service",
+      "NSLocationWhenInUseUsageDescription": "App requires geolocation to improve the quality of the service"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.connerk2001.PlayVu"
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "output": "static"
     },
     "plugins": [
-      "expo-router"
+      [
+        "expo-router"
+      ] 
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4834b0a2-7233-4459-9f51-f2f2f6d0bc76"
+      }
     }
   }
 }
