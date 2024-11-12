@@ -71,7 +71,7 @@ public class FieldService {
         return coordinates;
     }
 
-    public void addField(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+    public Integer addField(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.findUserByToken(request);
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -91,6 +91,7 @@ public class FieldService {
         new_field.setLongitude(new_field_coordinates.get("longitude"));
         
         field_repository.save(new_field);
+        return new_field.getFieldId();
         
     }
 
