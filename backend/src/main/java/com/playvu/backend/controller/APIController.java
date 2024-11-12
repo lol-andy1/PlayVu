@@ -93,6 +93,11 @@ public class APIController {
         return fieldService.getOwnerFields(request);
     }
 
+    @GetMapping(value = "/get-subfield-schedule")
+    public Object getSubFieldSchedule(HttpServletRequest request, @RequestParam Integer subFieldId) throws URISyntaxException, IOException, InterruptedException {
+        return fieldScheduleService.getSubFieldSchedule(request, subFieldId);
+    }
+
     @PostMapping(value = "/add-game")
     public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
         gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());

@@ -5,6 +5,8 @@ package com.playvu.backend.service;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,23 @@ public class FieldScheduleService {
 
 
         fieldScheduleRepository.save(new_schedule);
+    }
+
+    public List<Map<String, Object>> getSubFieldSchedule(HttpServletRequest request, Integer subFieldId) throws URISyntaxException, IOException, InterruptedException{
+
+        // Users user = userService.findUserByToken(request);
+        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
+        //     return;
+        // }
+        SubField subField = subFieldRepository.findBySubFieldId(subFieldId);
+        Integer masterFieldId = subField.getMasterFieldId();
+        // if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
+        //     return null;
+        // }
+
+        
+
+        return fieldScheduleRepository.findBySubFieldId(subFieldId);
     }
     
 }
