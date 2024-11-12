@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class SubFieldService {
     @Autowired
-    private SubFieldRepository subfield_repository;
+    private SubFieldRepository subFieldRepository;
 
     @Autowired
     private FieldRepository fieldRepository;
@@ -45,7 +45,21 @@ public class SubFieldService {
 
         new_subfield.setName(name);
 
-        subfield_repository.save(new_subfield);
+        subFieldRepository.save(new_subfield);
+    }
+
+    public void deleteSubField(HttpServletRequest request, Integer subFieldId) throws URISyntaxException, IOException, InterruptedException{
+
+        Users user = userService.findUserByToken(request);
+        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
+        //     return;
+        // }
+        Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
+        if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
+            return;
+        }
+
+        subFieldRepository.deleteById(subFieldId);
     }
     
 }
