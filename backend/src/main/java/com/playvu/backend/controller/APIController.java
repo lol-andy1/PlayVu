@@ -54,8 +54,8 @@ public class APIController {
 
     // Add image either through URL and upload to storage service or @RequestParam MultipartFile image
     @PostMapping(value = "/add-field")
-    public void addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+    public Integer addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
+        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
     @PostMapping(value = "/edit-field")
@@ -64,8 +64,8 @@ public class APIController {
     }
 
     @PostMapping(value = "/add-subfield")
-    public void addSubfield(HttpServletRequest request, @RequestBody SubField subfieldBody) throws URISyntaxException, IOException, InterruptedException {
-        subFieldService.addSubField(request, subfieldBody.getMasterFieldId(), subfieldBody.getName());
+    public Integer addSubfield(HttpServletRequest request, @RequestBody SubField subfieldBody) throws URISyntaxException, IOException, InterruptedException {
+        return subFieldService.addSubField(request, subfieldBody.getMasterFieldId(), subfieldBody.getName());
     }
 
     @PostMapping(value = "/delete-subfield")
