@@ -69,8 +69,8 @@ public class APIController {
     }
 
     @PostMapping(value = "/delete-subfield")
-    public void deleteSubField(HttpServletRequest request, @RequestParam Integer subFieldId) throws URISyntaxException, IOException, InterruptedException {
-        subFieldService.deleteSubField(request, subFieldId);
+    public void deleteSubField(HttpServletRequest request, @RequestBody SubField subfieldBody) throws URISyntaxException, IOException, InterruptedException {
+        subFieldService.deleteSubField(request, subfieldBody.getSubFieldId());
     }
 
     @PostMapping(value = "/add-field-schedule")
