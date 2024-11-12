@@ -35,7 +35,7 @@ public class FieldScheduleService {
     @Autowired
     private UserService userService;
 
-    public void addFieldSchedule(HttpServletRequest request, Integer subfield_id, LocalDateTime start_date, LocalDateTime end_date) throws URISyntaxException, IOException, InterruptedException{
+    public void addFieldSchedule(HttpServletRequest request, Integer subfield_id, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
 
         Users user = userService.findUserByToken(request);
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
@@ -49,16 +49,50 @@ public class FieldScheduleService {
         FieldSchedule new_schedule = new FieldSchedule(); 
         new_schedule.setSubFieldId(subfield_id); // TODO: do checks
         
-        if(start_date.isAfter(end_date)){
+        if(startDate.isAfter(endDate)){
             return;
         }
 
-        new_schedule.setStartDate(start_date);
-        new_schedule.setEndDate(end_date);
+        new_schedule.setStartDate(startDate);
+        new_schedule.setEndDate(endDate);
 
 
 
         fieldScheduleRepository.save(new_schedule);
+    }
+
+    public void editFieldSchedule(HttpServletRequest request, Integer fieldScheduleId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
+
+        Users user = userService.findUserByToken(request);
+        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
+        //     return;
+        // }
+        FieldSchedule fieldSchedule = fieldScheduleRepository.findByFieldScheduleId(fieldScheduleId);
+
+        Integer subFieldId = fieldSchedule.getSubFieldId();
+        Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
+        if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
+            return;
+        }
+
+        if(startDate != null){
+            if(startDate.isAfter(fieldSchedule.getEndDate())){
+                return;
+            }
+            fieldSchedule.setStartDate(startDate);
+        }
+        if(endDate != null){
+            if(endDate.isBefore(fieldSchedule.getStartDate())){
+                return;
+            }
+            fieldSchedule.setEndDate(endDate);
+        }
+        
+        if(startDate.isAfter(endDate)){
+            return;
+        }
+
+        fieldScheduleRepository.save(fieldSchedule);
     }
     
 }
