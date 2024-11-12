@@ -79,6 +79,11 @@ public class APIController {
         fieldScheduleService.addFieldSchedule(request, fieldScheduleBody.getSubFieldId(), fieldScheduleBody.getStartDate(), fieldScheduleBody.getEndDate());
     }
 
+    @PostMapping(value = "/edit-field-schedule")
+    public void editFieldSchedule(HttpServletRequest request, @RequestBody FieldSchedule fieldScheduleBody) throws URISyntaxException, IOException, InterruptedException {
+        fieldScheduleService.editFieldSchedule(request, fieldScheduleBody.getFieldScheduleId(), fieldScheduleBody.getStartDate(), fieldScheduleBody.getEndDate());
+    }
+
     @GetMapping(value = "/get-games")
     public Object getGames(@RequestParam Float latitude, @RequestParam Float longitude, @RequestParam Float distance) {
         return gameService.getGames(latitude, longitude, distance);

@@ -1,6 +1,8 @@
 package com.playvu.backend.entity;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,6 +58,11 @@ public class FieldSchedule {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public Optional<Field> findById(Integer fieldScheduleId2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 
     
