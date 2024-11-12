@@ -73,9 +73,9 @@ public class FieldService {
 
     public void add_field(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.findUserByToken(request);
-        if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
-            return;
-        }
+        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
+        //     return;
+        // }
         Field new_field = new Field();
 
         new_field.setOwnerId(user.getUserId()); // TODO: Set real owner ID
