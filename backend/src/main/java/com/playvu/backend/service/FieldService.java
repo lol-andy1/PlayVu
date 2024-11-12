@@ -187,7 +187,7 @@ public class FieldService {
 
           Map<String, Object> subField = new HashMap<>(originalSubField);
           Integer subFieldId = (Integer) subField.get("subFieldId");
-
+        
           subField.put("data", fieldScheduleRepository.findBySubFieldId(subFieldId));
           subFields.add(subField);
       }

@@ -24,7 +24,10 @@ public interface FieldScheduleRepository extends JpaRepository<FieldSchedule, In
        nativeQuery = true)
     Boolean checkScheduleAvailability(@Param("subFieldId") Integer subFieldId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query(value = "SELECT fs.field_schedule_id AS \"fieldScheduleId\", fs.start_date AS \"startDate\", fs.end_date AS \"endDate\" FROM field_schedule fs WHERE fs.sub_field_id = :subFieldId", nativeQuery = true)
+    @Query(value = "SELECT fs.field_schedule_id AS \"fieldScheduleId\", " +
+               "fs.start_date AT TIME ZONE 'UTC' AS \"startDate\", " +
+               "fs.end_date AT TIME ZONE 'UTC' AS \"endDate\" " +
+               "FROM field_schedule fs WHERE fs.sub_field_id = :subFieldId", nativeQuery = true)
     List< Map<String, Object> > findBySubFieldId(@Param("subFieldId") Integer subFieldId);
 
     
