@@ -47,7 +47,7 @@ public class FieldService {
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public Map<String, Float> get_coordinates_by_address(String location) throws IOException, InterruptedException{
+    public Map<String, Float> getCoordinatesByAddress(String location) throws IOException, InterruptedException{
 
         String encoded_location = URLEncoder.encode(location,"UTF-8");
         String request_uri = GEOCODING_API + encoded_location + "&api_key=" + GEOCODING_API_KEY;
@@ -71,7 +71,7 @@ public class FieldService {
         return coordinates;
     }
 
-    public void add_field(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+    public void addField(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.findUserByToken(request);
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -86,7 +86,7 @@ public class FieldService {
         new_field.setCity(city);
         
         String full_address = address + ", " + zip_code + ", " + city;
-        Map<String, Float> new_field_coordinates = get_coordinates_by_address(full_address);
+        Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
         new_field.setLatitude(new_field_coordinates.get("latitude"));
         new_field.setLongitude(new_field_coordinates.get("longitude"));
         
@@ -94,12 +94,16 @@ public class FieldService {
         
     }
 
-    public void edit_field(HttpServletRequest request, Integer field_id, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
-        // Users user = auth_service.find_user_by_token(request);
+    public void editField(HttpServletRequest request, Integer field_id, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+        Users user = userService.findUserByToken(request);
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
         // }
+        
         Field field = field_repository.findById(field_id).get();
+        if(field.getOwnerId() != user.getUserId()){
+          return;
+        }
 
         if(name != null){
             field.setName(name);
@@ -119,7 +123,7 @@ public class FieldService {
         
         // TODO: Decide if we need to change coordinates if address switches
         // String full_address = address + ", " + zip_code + ", " + city;
-        // Map<String, Float> new_field_coordinates = get_coordinates_by_address(full_address);
+        // Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
         // field.setLatitude(new_field_coordinates.get("latitude"));
         // field.setLongitude(new_field_coordinates.get("longitude"));
         
@@ -127,14 +131,14 @@ public class FieldService {
     }
 
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-      // Users user = auth_service.find_user_by_token(request);
+      Users user = userService.findUserByToken(request);
       // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
       //     return;
       // }
   
       List<Map<String, Object>> fields = new ArrayList<>();
       
-      List<Map<String, Object>> originalFields = field_repository.findByOwnerId(5);
+      List<Map<String, Object>> originalFields = field_repository.findByOwnerId(user.getUserId());
   
       for (Map<String, Object> originalField : originalFields) {
 
