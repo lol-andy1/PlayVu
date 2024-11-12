@@ -22,7 +22,7 @@ public class Game {
     @Column(nullable = false)
     private Integer subFieldId;
 
-    @Column(nullable = false)
+    @Column()
     private Integer organizerId;   
 
     @Column(nullable = false)
@@ -31,8 +31,11 @@ public class Game {
     @Column(nullable = false)
     private LocalDateTime startDate;
 
+    @Column(nullable = false)
+    private LocalDateTime endDate;
+
     @Column()
-    private LocalTime duration;
+    private Float price;
 
     public Integer getGameId() {
         return gameId;
@@ -74,15 +77,20 @@ public class Game {
         this.startDate = startDate;
     }
 
-    public LocalTime getDuration() {
-        return duration;
+    public Float getPrice() {
+        return price;
     }
 
-    public void setDuration(LocalTime duration) {
-        this.duration = duration;
+    public void setPrice(Float price) {
+        this.price = price;
     }
 
-    
-    
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }    
     
 }

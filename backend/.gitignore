@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 /target
+=======
+/target
+/src/main/java/com/playvu/backend/service/DatabaseSeeder.java
+>>>>>>> 4fc49d5910c9bafe9fbfd71d32af89b514aab663

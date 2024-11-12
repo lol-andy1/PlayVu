@@ -22,6 +22,9 @@ public class GameParticipant {
     @Column(nullable = false)
     private Integer participantId;
 
+    @Column()
+    private Integer team;
+
     public Integer getGameParticipantId() {
         return gameParticipantId;
     }
@@ -44,7 +47,17 @@ public class GameParticipant {
 
     public void setParticipantId(Integer participantId) {
         this.participantId = participantId;
+    }
+
+    public Integer getTeam() {
+        return team;
+    }
+
+    public void setTeam(Integer team) {
+        this.team = team;
     }  
+
+    
     
     
 }

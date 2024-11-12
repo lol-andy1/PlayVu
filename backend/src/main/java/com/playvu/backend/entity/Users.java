@@ -13,7 +13,7 @@ public class Users {
     @Column()
     private Integer userId;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -27,6 +27,13 @@ public class Users {
 
     @Column()
     private String role;
+
+    @Column()
+    private String bio;
+
+
+    @Column()
+    private String profilePicture; // Will be stored as URL
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -86,6 +93,29 @@ public class Users {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    @Override
+    public String toString() {
+        return "Users [userId=" + userId + ", username=" + username + ", email=" + email + ", firstName=" + firstName
+                + ", lastName=" + lastName + ", role=" + role + ", bio=" + bio + ", profilePicture=" + profilePicture
+                + ", createdAt=" + createdAt + "]";
     }
 
     
