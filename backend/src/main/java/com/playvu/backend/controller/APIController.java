@@ -2,6 +2,7 @@ package com.playvu.backend.controller;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,9 +94,9 @@ public class APIController {
         return fieldService.getOwnerFields(request);
     }
 
-    @GetMapping(value = "/get-subfield-schedule")
-    public Object getSubFieldSchedule(HttpServletRequest request, @RequestParam Integer subFieldId) throws URISyntaxException, IOException, InterruptedException {
-        return fieldScheduleService.getSubFieldSchedule(request, subFieldId);
+    @GetMapping(value = "/get-field-schedules")
+    public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, @RequestParam Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
+        return fieldService.getFieldSchedules(request, fieldId);
     }
 
     @PostMapping(value = "/add-game")

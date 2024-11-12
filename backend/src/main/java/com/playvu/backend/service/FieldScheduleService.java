@@ -60,22 +60,5 @@ public class FieldScheduleService {
 
         fieldScheduleRepository.save(new_schedule);
     }
-
-    public List<Map<String, Object>> getSubFieldSchedule(HttpServletRequest request, Integer subFieldId) throws URISyntaxException, IOException, InterruptedException{
-
-        // Users user = userService.findUserByToken(request);
-        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
-        //     return;
-        // }
-        SubField subField = subFieldRepository.findBySubFieldId(subFieldId);
-        Integer masterFieldId = subField.getMasterFieldId();
-        // if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
-        //     return null;
-        // }
-
-        
-
-        return fieldScheduleRepository.findBySubFieldId(subFieldId);
-    }
     
 }
