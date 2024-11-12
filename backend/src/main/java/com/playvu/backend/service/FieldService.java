@@ -19,9 +19,11 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playvu.backend.entity.Field;
+import com.playvu.backend.entity.SubField;
 import com.playvu.backend.entity.Users;
 // import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
+import com.playvu.backend.repository.FieldScheduleRepository;
 import com.playvu.backend.repository.GameRepository;
 import com.playvu.backend.repository.SubFieldRepository;
 
@@ -31,10 +33,13 @@ import jakarta.servlet.http.HttpServletRequest;
 public class FieldService {
 
     @Autowired 
-    private FieldRepository field_repository;
+    private FieldRepository fieldRepository;
 
     @Autowired 
     private SubFieldRepository subFieldRepository;
+
+    @Autowired 
+    private FieldScheduleRepository fieldScheduleRepository;
 
     @Autowired 
     private GameRepository gameRepository;
@@ -90,7 +95,7 @@ public class FieldService {
         new_field.setLatitude(new_field_coordinates.get("latitude"));
         new_field.setLongitude(new_field_coordinates.get("longitude"));
         
-        field_repository.save(new_field);
+        fieldRepository.save(new_field);
         return new_field.getFieldId();
         
     }
@@ -101,7 +106,7 @@ public class FieldService {
         //     return;
         // }
         
-        Field field = field_repository.findById(field_id).get();
+        Field field = fieldRepository.findById(field_id).get();
         if(field.getOwnerId() != user.getUserId()){
           return;
         }
@@ -128,7 +133,7 @@ public class FieldService {
         // field.setLatitude(new_field_coordinates.get("latitude"));
         // field.setLongitude(new_field_coordinates.get("longitude"));
         
-        field_repository.save(field);
+        fieldRepository.save(field);
     }
 
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
@@ -139,7 +144,7 @@ public class FieldService {
   
       List<Map<String, Object>> fields = new ArrayList<>();
       
-      List<Map<String, Object>> originalFields = field_repository.findByOwnerId(user.getUserId());
+      List<Map<String, Object>> originalFields = fieldRepository.findByOwnerId(user.getUserId());
   
       for (Map<String, Object> originalField : originalFields) {
 
@@ -164,6 +169,32 @@ public class FieldService {
   
       return fields;
     }
+
+    public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
+      Users user = userService.findUserByToken(request);
+      // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
+      //     return;
+      // }
+
+      if(fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()){
+          return null;
+      }
+  
+      List<Map<String, Object>> subFields = new ArrayList<>();
+      List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
+
+      for (Map<String, Object> originalSubField : originalSubFields) {
+
+          Map<String, Object> subField = new HashMap<>(originalSubField);
+          Integer subFieldId = (Integer) subField.get("subFieldId");
+
+          subField.put("data", fieldScheduleRepository.findBySubFieldId(subFieldId));
+          subFields.add(subField);
+      }
+  
+      return subFields;
+    }
+    
   }
 
 
