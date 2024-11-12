@@ -72,7 +72,7 @@ const Home = () => {
       console.error(err);
     }
   };
-
+  getGames();
   return (
     <SafeAreaView className="bg-white h-full">
       <TextInput
