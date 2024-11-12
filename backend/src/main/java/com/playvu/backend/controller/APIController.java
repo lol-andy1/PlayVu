@@ -68,6 +68,11 @@ public class APIController {
         subFieldService.addSubField(request, subfieldBody.getMasterFieldId(), subfieldBody.getName());
     }
 
+    @PostMapping(value = "/delete-subfield")
+    public void deleteSubField(HttpServletRequest request, @RequestBody SubField subfieldBody) throws URISyntaxException, IOException, InterruptedException {
+        subFieldService.deleteSubField(request, subfieldBody.getSubFieldId());
+    }
+
     @PostMapping(value = "/add-field-schedule")
     public void addFieldSchedule(HttpServletRequest request, @RequestBody FieldSchedule fieldScheduleBody) throws URISyntaxException, IOException, InterruptedException {
         fieldScheduleService.addFieldSchedule(request, fieldScheduleBody.getSubFieldId(), fieldScheduleBody.getStartDate(), fieldScheduleBody.getEndDate());
@@ -83,14 +88,14 @@ public class APIController {
         return gameService.getGameData(gameId);
     }
 
-    @PostMapping(value = "/add-game")
-    public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
-        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());
-    }
-
     @GetMapping(value = "/get-owner-fields")
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
         return fieldService.getOwnerFields(request);
+    }
+
+    @PostMapping(value = "/add-game")
+    public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
+        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());
     }
 
     @GetMapping(value = "/get-user")
