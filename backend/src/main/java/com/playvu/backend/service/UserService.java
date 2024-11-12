@@ -30,7 +30,7 @@ public class UserService {
 
         if (access_token == null) {return null;}
 
-        String url = "https://dev-1jps85kh7htbmqki.us.access_token0.com/userinfo";
+        String url = "https://dev-1jps85kh7htbmqki.us.auth0.com/userinfo";
         HttpRequest find_user_request = HttpRequest.newBuilder()
                 .uri(new URI(url))
                 .header("Authorization", access_token)
