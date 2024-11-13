@@ -14,6 +14,13 @@ const FieldModal = ({
 }) => {
   if (!isOpen) return null;
 
+  const handleFieldChange = (field, value) => {
+    setSelectedField((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   return (
     <div
       id="select-modal"
@@ -33,7 +40,8 @@ const FieldModal = ({
                 </label>
                 <input
                   type="text"
-                  defaultValue={selectedField?.name}
+                  value={selectedField?.name || ""}
+                  onChange={(e) => handleFieldChange("name", e.target.value)}
                   className="block w-full p-2 border border-gray-200 rounded-lg"
                 />
               </li>
@@ -43,7 +51,10 @@ const FieldModal = ({
                 </label>
                 <input
                   type="text"
-                  defaultValue={selectedField?.streetAddress}
+                  value={selectedField?.streetAddress || ""}
+                  onChange={(e) =>
+                    handleFieldChange("streetAddress", e.target.value)
+                  }
                   className="block w-full p-2 border border-gray-200 rounded-lg"
                 />
               </li>
@@ -53,7 +64,8 @@ const FieldModal = ({
                 </label>
                 <input
                   type="text"
-                  defaultValue={selectedField?.zipCode}
+                  value={selectedField?.zipCode || ""}
+                  onChange={(e) => handleFieldChange("zipCode", e.target.value)}
                   className="block w-full p-2 border border-gray-200 rounded-lg"
                 />
               </li>
@@ -63,7 +75,8 @@ const FieldModal = ({
                 </label>
                 <input
                   type="text"
-                  defaultValue={selectedField?.city}
+                  value={selectedField?.city || ""}
+                  onChange={(e) => handleFieldChange("city", e.target.value)}
                   className="block w-full p-2 border border-gray-200 rounded-lg"
                 />
               </li>

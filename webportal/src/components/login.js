@@ -1,8 +1,6 @@
 import React from "react";
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
-
+import { useAuth0 } from "@auth0/auth0-react";
+import { Navigate } from "react-router-dom";
 
 export function LoginButton() {
   const { loginWithRedirect } = useAuth0();
@@ -22,11 +20,11 @@ export function LogoutButton() {
 
 // TODO: adding role base routes
 export const ProtectedRoute = ({ children }) => {
-    const { isAuthenticated, isLoading } = useAuth0();
-  
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
-  
-    return isAuthenticated ? children : <Navigate to="/" replace />;
-  };
+  const { isAuthenticated, isLoading } = useAuth0();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return isAuthenticated ? children : <Navigate to="/" replace />;
+};
