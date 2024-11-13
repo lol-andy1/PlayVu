@@ -90,5 +90,20 @@ public class FieldScheduleService {
 
         fieldScheduleRepository.save(fieldSchedule);
     }
+
+    public void deleteFieldSchedule(HttpServletRequest request, Integer fieldScheduleId) throws URISyntaxException, IOException, InterruptedException{
+
+        Users user = userService.getUserFromJwt();
+
+        FieldSchedule fieldSchedule = fieldScheduleRepository.findByFieldScheduleId(fieldScheduleId);
+
+        Integer subFieldId = fieldSchedule.getSubFieldId();
+        Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
+        if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
+            return;
+        }
+
+        fieldScheduleRepository.deleteById(fieldScheduleId);
+    }
     
 }
