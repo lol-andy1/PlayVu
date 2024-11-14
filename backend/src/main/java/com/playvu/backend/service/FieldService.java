@@ -77,7 +77,7 @@ public class FieldService {
     }
 
     public Integer addField(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
-        Users user = userService.findUserByToken(request);
+        Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
         // }
@@ -101,7 +101,7 @@ public class FieldService {
     }
 
     public void editField(HttpServletRequest request, Integer field_id, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
-        Users user = userService.findUserByToken(request);
+        Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
         // }
@@ -137,7 +137,7 @@ public class FieldService {
     }
 
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
-      Users user = userService.findUserByToken(request);
+      Users user = userService.getUserFromJwt();
       // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
       //     return;
       // }
@@ -171,7 +171,7 @@ public class FieldService {
     }
 
     public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
-      Users user = userService.findUserByToken(request);
+      Users user = userService.getUserFromJwt();
       // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
       //     return;
       // }

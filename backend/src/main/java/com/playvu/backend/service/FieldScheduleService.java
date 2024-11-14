@@ -37,17 +37,15 @@ public class FieldScheduleService {
 
     public void addFieldSchedule(HttpServletRequest request, Integer subfield_id, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
 
-        Users user = userService.findUserByToken(request);
-        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
-        //     return;
-        // }
+        Users user = userService.getUserFromJwt();
+
         Integer masterFieldId = subFieldRepository.findBySubFieldId(subfield_id).getMasterFieldId();
         if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
             return;
         }
 
         FieldSchedule new_schedule = new FieldSchedule(); 
-        new_schedule.setSubFieldId(subfield_id); // TODO: do checks
+        new_schedule.setSubFieldId(subfield_id); 
         
         if(startDate.isAfter(endDate)){
             return;
@@ -63,10 +61,8 @@ public class FieldScheduleService {
 
     public void editFieldSchedule(HttpServletRequest request, Integer fieldScheduleId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
 
-        Users user = userService.findUserByToken(request);
-        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
-        //     return;
-        // }
+        Users user = userService.getUserFromJwt();
+
         FieldSchedule fieldSchedule = fieldScheduleRepository.findByFieldScheduleId(fieldScheduleId);
 
         Integer subFieldId = fieldSchedule.getSubFieldId();
@@ -93,6 +89,21 @@ public class FieldScheduleService {
         }
 
         fieldScheduleRepository.save(fieldSchedule);
+    }
+
+    public void deleteFieldSchedule(HttpServletRequest request, Integer fieldScheduleId) throws URISyntaxException, IOException, InterruptedException{
+
+        Users user = userService.getUserFromJwt();
+
+        FieldSchedule fieldSchedule = fieldScheduleRepository.findByFieldScheduleId(fieldScheduleId);
+
+        Integer subFieldId = fieldSchedule.getSubFieldId();
+        Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
+        if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
+            return;
+        }
+
+        fieldScheduleRepository.deleteById(fieldScheduleId);
     }
     
 }

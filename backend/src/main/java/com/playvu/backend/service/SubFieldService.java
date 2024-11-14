@@ -38,10 +38,8 @@ public class SubFieldService {
 
     public Integer addSubField(HttpServletRequest request, Integer field_id, String name) throws URISyntaxException, IOException, InterruptedException{
 
-        Users user = userService.findUserByToken(request);
-        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
-        //     return;
-        // }
+        Users user = userService.getUserFromJwt();
+
         if(fieldRepository.findById(field_id).get().getOwnerId() != user.getUserId()){
             return null;
         }
@@ -58,10 +56,8 @@ public class SubFieldService {
 
     public void deleteSubField(HttpServletRequest request, Integer subFieldId) throws URISyntaxException, IOException, InterruptedException{
 
-        Users user = userService.findUserByToken(request);
-        // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
-        //     return;
-        // }
+        Users user = userService.getUserFromJwt();
+
         Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
         if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
             return;
