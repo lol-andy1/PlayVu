@@ -19,19 +19,11 @@ const Home = () => {
       </header>
 
       <section className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-2xl font-semibold text-green-500 mb-2">
-            Field Management
-          </h2>
-          <p className="text-gray-600">
-            Update availability, assign subfields, and keep schedules organized
-            with ease.
-          </p>
-        </div>
-
         <FeatureCard
-          name="Field Management"
-          description="Update availability, assign subfields, and keep schedules organized with ease."
+          name={"Field Management"}
+          description={
+            "Update availability, assign subfields, and keep schedules organized with ease."
+          }
         />
 
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
