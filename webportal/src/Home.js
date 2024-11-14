@@ -1,4 +1,5 @@
 import React from "react";
+import FeatureCard from "./components/FeatureCard";
 
 const Home = () => {
   return (
@@ -27,6 +28,11 @@ const Home = () => {
             with ease.
           </p>
         </div>
+
+        <FeatureCard
+          name="Field Management"
+          description="Update availability, assign subfields, and keep schedules organized with ease."
+        />
 
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h2 className="text-2xl font-semibold text-green-500 mb-2">
