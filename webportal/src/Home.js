@@ -26,35 +26,29 @@ const Home = () => {
           }
         />
 
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-2xl font-semibold text-green-500 mb-2">
-            Game Coordination
-          </h2>
-          <p className="text-gray-600">
-            Effortlessly schedule games and notify team captains to keep
-            everyone in sync.
-          </p>
-        </div>
+        <FeatureCard
+          name={"Game Coordination"}
+          description={
+            "Effortlessly schedule games and notify team captains to keep \
+        everyone in sync."
+          }
+        />
 
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-2xl font-semibold text-green-500 mb-2">
-            Availability Optimization
-          </h2>
-          <p className="text-gray-600">
-            Enable captains to reserve fields based on real-time availability,
-            simplifying booking for all teams.
-          </p>
-        </div>
+        <FeatureCard
+          name={"Availability Optimization"}
+          description={
+            "Enable captains to reserve fields based on real-time availability, \
+        simplifying booking for all teams."
+          }
+        />
 
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-2xl font-semibold text-green-500 mb-2">
-            Instant Notifications
-          </h2>
-          <p className="text-gray-600">
-            Stay informed with real-time updates for scheduling changes, field
-            availability, and more.
-          </p>
-        </div>
+        <FeatureCard
+          name={"Instant Notifications"}
+          description={
+            "Stay informed with real-time updates for scheduling changes, field \
+        availability, and more."
+          }
+        />
       </section>
     </div>
   );
