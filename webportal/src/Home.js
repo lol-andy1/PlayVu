@@ -4,12 +4,16 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-50 py-12">
       <header className="w-full max-w-3xl text-center mb-12 px-4">
-        <h1 className="text-4xl font-bold text-green-600 mb-4">
-          Welcome to Your Sports Field Management Portal
+        <h1 className="text-fit text-9xl font-bold text-gray-800 mb-4">
+          PlayVu
         </h1>
         <p className="text-lg text-gray-700">
-          A powerful tool for field owners and team captains to effortlessly
-          manage field schedules, game events, and communications.
+          {/* Connecting players, game organizers (captains), and field owners to
+          effortlessly manage and streamline recreational sports activities.
+          Enabling easy joining of games, through simplified booking and
+          payments.  */}
+          Organizing and participating in casual sports is more accessible and
+          enjoyable for everyone!
         </p>
       </header>
 
