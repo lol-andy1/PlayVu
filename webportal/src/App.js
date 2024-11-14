@@ -5,6 +5,7 @@ import Home from "./Home";
 import Schedule from "./Schedule";
 import Fields from "./Fields";
 import Games from "./Games";
+import Search from "./Search";
 import Navbar from "./components/navbar";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
@@ -56,6 +57,12 @@ function App() {
             <ProtectedRoute>
               <Games />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <Search />
           }
         />
       </Routes>
