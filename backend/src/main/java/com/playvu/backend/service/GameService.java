@@ -50,7 +50,8 @@ public class GameService {
             game_map.put("name", game[3]);
             game_map.put("start_date", game[4]);
             game_map.put("duration", game[5]);
-            game_map.put("location", game[6]); 
+            game_map.put("location", game[6]);
+            game_map.put("price", game[7]);
 
             game_list.add(game_map);
         }

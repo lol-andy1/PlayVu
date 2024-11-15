@@ -19,7 +19,7 @@ const Search = () => {
     const getGames = async () => {
       try {
         const res = await axios.get(
-          `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance}`
+          `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance*1.609}`
         );
         setGames(
           res.data.map((game) => ({
@@ -83,11 +83,6 @@ const Search = () => {
         Search Near My Location
       </button>
       
-      {location && (
-        <p>
-          Latitude: {location.latitude}, Longitude: {location.longitude}
-        </p>
-      )}
       </div>
       <div style={{ fontWeight: "bold" }}>To Futher Narrow Your Search:</div>
       <input
