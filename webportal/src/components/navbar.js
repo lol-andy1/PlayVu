@@ -148,6 +148,23 @@ const Navbar = () => {
             {isAuthenticated && (
               <li>
                 <Link
+                  to="/profile"
+                  className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
+                    location.pathname === "/games"
+                      ? "bg-green-100 dark:bg-green-800"
+                      : ""
+                  }`}
+                >
+                  Profile
+                  {location.pathname === "/profile" && (
+                    <span className="sr-only">(current)</span>
+                  )}
+                </Link>
+              </li>
+            )}
+            {isAuthenticated && (
+              <li>
+                <Link
                   to="/search"
                   className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
                     location.pathname === "/search"

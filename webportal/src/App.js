@@ -5,6 +5,7 @@ import Home from "./Home";
 import Schedule from "./Schedule";
 import Fields from "./Fields";
 import Games from "./Games";
+import Profile from "./Profile"
 import Search from "./Search";
 import Navbar from "./components/navbar";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -56,6 +57,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Games />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
