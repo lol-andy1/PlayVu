@@ -4,16 +4,14 @@ import FeatureCard from "./components/FeatureCard";
 const Home = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-50 py-12">
-      <header className="w-full max-w-3xl text-center mb-12 px-4">
-        <div className="flex flex-row items-center justify-center">
-          <div className="w-1/2">
-            <p className="text-4xl font-bold text-gray-700">
-              {/* Connecting players, game organizers (captains), and field owners to
-          effortlessly manage and streamline recreational sports activities.
-          Enabling easy joining of games, through simplified booking and
-          payments.  */}
-              Organizing and participating in casual sports is more accessible
-              and enjoyable for everyone!
+      <header className="w-full max-w-5xl text-center mb-12">
+        <div className="flex flex-col md:flex-row items-center justify-center bg-white rounded-3xl shadow-xl py-10">
+          <div className="max-w-sm">
+            <h1 className="text-4xl font-extrabold mb-6">Playtime made eazy</h1>
+            <p className="text-xl text-gray-700">
+              Organizing and participating in casual sports is now easier and
+              more enjoyable than ever! Join the community, find games, and make
+              the most of your playtime.
             </p>
           </div>
           <div className="w-1/2 flex justify-center">
