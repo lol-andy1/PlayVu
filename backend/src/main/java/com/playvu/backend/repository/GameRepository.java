@@ -56,6 +56,12 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
                "AND NOT (:endDate <= fs.start_date OR :startDate >= fs.end_date)",
        nativeQuery = true)
     Boolean checkNoGameConflict(@Param("subFieldId") Integer subFieldId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query(value = "SELECT CASE WHEN (SELECT COUNT(*) FROM game_participant gp WHERE gp.game_id = :gameId) >= g.max_players THEN true ELSE false END " +
+               "FROM game g " +
+               "WHERE g.game_id = :gameId", 
+       nativeQuery = true)
+       Boolean isGameFull(@Param("gameId") Integer gameId);
     
 }
     

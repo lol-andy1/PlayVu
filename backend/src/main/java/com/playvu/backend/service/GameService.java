@@ -121,6 +121,10 @@ public class GameService {
         if(team != 1 && team != 2){
             return;
         }
+        if( gameRepository.isGameFull(gameId) ){
+            System.out.println("Game with ID " + gameId + " is full.");
+            return;
+        }
 
         Users user = userService.getUserFromJwt();
 
