@@ -118,7 +118,7 @@ public class GameService {
 
     public void joinGame(Integer gameId, Integer team){
         gameRepository.findById(gameId).get(); // check if game is present 
-        if(team != 1 && team != 2){
+        if(team != 0 && team != 1 && team != 2){
             return;
         }
         if( gameRepository.isGameFull(gameId) ){

@@ -35,8 +35,8 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
        nativeQuery = true)
     List< Map<String, Object> > findByGameParticipant(@Param("participantId") Integer participantId);
 
-    @Query(value = "SELECT g.game_id, g.name, g.start_date, " +
-               "g.price, " +
+    @Query(value = "SELECT g.game_id, g.max_players, g.name, g.start_date, g.price, mf.address AS \"location\", " +
+               "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\", " + 
                "sf.name AS sub_field_name, " +
                "mf.name AS master_field_name " +
                "FROM game g " +
