@@ -5,17 +5,25 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-50 py-12">
       <header className="w-full max-w-3xl text-center mb-12 px-4">
-        <h1 className="text-fit text-9xl font-bold text-gray-800 mb-4">
-          PlayVu
-        </h1>
-        <p className="text-lg text-gray-700">
-          {/* Connecting players, game organizers (captains), and field owners to
+        <div className="flex flex-row items-center justify-center">
+          <div className="w-1/2">
+            <p className="text-4xl font-bold text-gray-700">
+              {/* Connecting players, game organizers (captains), and field owners to
           effortlessly manage and streamline recreational sports activities.
           Enabling easy joining of games, through simplified booking and
           payments.  */}
-          Organizing and participating in casual sports is more accessible and
-          enjoyable for everyone!
-        </p>
+              Organizing and participating in casual sports is more accessible
+              and enjoyable for everyone!
+            </p>
+          </div>
+          <div className="w-1/2 flex justify-center">
+            <img
+              src="logo.jpg"
+              alt="PlayVu logo"
+              className="h-80 w-80 object-contain"
+            />
+          </div>
+        </div>
       </header>
 
       <section className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
