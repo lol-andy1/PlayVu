@@ -136,38 +136,50 @@ public class FieldService {
         fieldRepository.save(field);
     }
 
+    public Object getSubfields(List<Map<String, Object>> originalFields){
+      List<Map<String, Object>> fields = new ArrayList<>();
+
+      for (Map<String, Object> originalField : originalFields) {
+
+        Map<String, Object> field = new HashMap<>(originalField);
+        Integer fieldId = (Integer) field.get("fieldId");
+
+        List<Map<String, Object>> subFields = new ArrayList<>();
+        List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
+
+        for (Map<String, Object> originalSubField : originalSubFields) {
+
+            Map<String, Object> subField = new HashMap<>(originalSubField);
+            Integer subFieldId = (Integer) subField.get("subFieldId");
+
+            subField.put("data", gameRepository.findAllBySubFieldId(subFieldId));
+            subFields.add(subField);
+        }
+
+        field.put("subFields", subFields);
+        fields.add(field);
+      }
+
+      return fields;
+    }
+
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
       // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
       //     return;
       // }
   
-      List<Map<String, Object>> fields = new ArrayList<>();
+      //List<Map<String, Object>> fields = new ArrayList<>();
       
       List<Map<String, Object>> originalFields = fieldRepository.findByOwnerId(user.getUserId());
-  
-      for (Map<String, Object> originalField : originalFields) {
+      
+      return getSubfields(originalFields);
+    }
+    
+    public Object getFieldsByName(String name) throws URISyntaxException, IOException, InterruptedException {
+      List<Map<String, Object>> originalFields = fieldRepository.findFieldsByName(name);
 
-          Map<String, Object> field = new HashMap<>(originalField);
-          Integer fieldId = (Integer) field.get("fieldId");
-  
-          List<Map<String, Object>> subFields = new ArrayList<>();
-          List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
-  
-          for (Map<String, Object> originalSubField : originalSubFields) {
-
-              Map<String, Object> subField = new HashMap<>(originalSubField);
-              Integer subFieldId = (Integer) subField.get("subFieldId");
-  
-              subField.put("data", gameRepository.findAllBySubFieldId(subFieldId));
-              subFields.add(subField);
-          }
-  
-          field.put("subFields", subFields);
-          fields.add(field);
-      }
-  
-      return fields;
+      return getSubfields(originalFields);
     }
 
     public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
@@ -194,7 +206,6 @@ public class FieldService {
   
       return subFields;
     }
-    
   }
 
 

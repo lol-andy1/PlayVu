@@ -10,6 +10,10 @@ import Search from "./Search";
 import Navbar from "./components/navbar";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import Organize from "./organizerView/Organize";
+import SelectField from "./organizerView/SelectField";
+import OrganizeGames from "./organizerView/OrganizeGames";
+import SelectTimeslot from "./organizerView/[subfieldId]";
 
 function App() {
   // TODO: adding role base routes
@@ -68,6 +72,41 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/organize"
+          element={
+            <ProtectedRoute>
+              <Organize/>
+            </ProtectedRoute>
+          }
+        >
+          <Route 
+            path="games"
+            element={
+              <ProtectedRoute>
+                <OrganizeGames/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="select-field"
+            element={
+              <ProtectedRoute>
+                <SelectField/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="select-time"
+            element={
+              <ProtectedRoute>
+                <SelectTimeslot />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
         <Route
           path="/search"
           element={
