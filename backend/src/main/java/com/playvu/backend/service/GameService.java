@@ -142,6 +142,11 @@ public class GameService {
 
         Users user = userService.getUserFromJwt();
 
+        if( gameParticipantRepository.findByGameIdAndParticipantId(gameId, user.getUserId()) != null){
+            System.out.println("User with ID " + user.getUserId() + " has already joined the game with ID " + gameId);
+            return;
+        }
+
         GameParticipant gameParticipant = new GameParticipant();
         gameParticipant.setGameId(gameId);
         gameParticipant.setParticipantId(user.getUserId());
