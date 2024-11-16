@@ -5,18 +5,14 @@ package com.playvu.backend.service;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.playvu.backend.entity.FieldSchedule;
-import com.playvu.backend.entity.SubField;
 import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
 import com.playvu.backend.repository.FieldScheduleRepository;
-// import com.playvu.backend.repository.FieldRepository;
 import com.playvu.backend.repository.SubFieldRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
