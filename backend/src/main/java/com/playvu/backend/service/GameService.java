@@ -42,25 +42,7 @@ public class GameService {
     public List< Map<String, Object> > getGames(float latitude, float longitude, float distance){
 
         List<Integer> nearest_fields = field_repository.getNearestFields(latitude, longitude, distance);
-        List<Object[]> game_results = gameRepository.findByFieldIds(nearest_fields);
-
-        List<Map<String, Object>> game_list = new ArrayList<>();
-        for (Object game[] : game_results) {
-            Map<String, Object> game_map = new HashMap<>();
-            
-            // Assuming the order in the query result is: game_id, sub_field_id, organizer_id, name, start_date, duration, location
-            game_map.put("game_id", game[0]);
-            game_map.put("sub_field_id", game[1]);
-            game_map.put("organizer_id", game[2]);
-            game_map.put("name", game[3]);
-            game_map.put("start_date", game[4]);
-            game_map.put("duration", game[5]);
-            game_map.put("location", game[6]); 
-
-            game_list.add(game_map);
-        }
-
-        return game_list;
+        return gameRepository.findByFieldIds(nearest_fields);
     }
 
     public List< Map<String, Object> > getUserGames(){
