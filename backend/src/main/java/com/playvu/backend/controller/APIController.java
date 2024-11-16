@@ -42,18 +42,6 @@ public class APIController {
     @Autowired
     private FieldScheduleService fieldScheduleService;
 
-
-    @GetMapping(value = "/public")
-    public String publicEndpoint() {
-        return "No authentication required.";
-    }
-
-    @GetMapping(value = "/private")
-    public Message privateEndpoint() {
-        return new Message("All good. You can see this because you are Authenticated.");
-    }
-
-    // Add image either through URL and upload to storage service or @RequestParam MultipartFile image
     @PostMapping(value = "/add-field")
     public Integer addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
         return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
@@ -94,6 +82,11 @@ public class APIController {
         return gameService.getGames(latitude, longitude, distance);
     }
 
+    @GetMapping(value = "/get-user-games")
+    public Object getUserGames() {
+        return gameService.getUserGames();
+    }
+
     @GetMapping(value = "/get-game-data")
     public Object getGameData(@RequestParam Integer gameId) {
         return gameService.getGameData(gameId);
@@ -112,6 +105,21 @@ public class APIController {
     @PostMapping(value = "/add-game")
     public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
         gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());
+    }
+
+    @PostMapping(value = "/delete-game")
+    public void deleteGame(HttpServletRequest request, @RequestBody Game gameBody) {
+        gameService.deleteGame(gameBody.getGameId());
+    }
+
+    @PostMapping(value = "/join-game")
+    public void joinGame(HttpServletRequest request, @RequestBody GameParticipant gameParticipantBody) {
+        gameService.joinGame(gameParticipantBody.getGameId(), gameParticipantBody.getTeam());
+    }
+
+    @PostMapping(value = "/switch-team")
+    public void switchTeam(HttpServletRequest request, @RequestBody Game gameBody) {
+        gameService.switchTeam(gameBody.getGameId());
     }
 
     @GetMapping(value = "/get-user")

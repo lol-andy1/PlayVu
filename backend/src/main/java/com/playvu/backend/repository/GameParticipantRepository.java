@@ -18,5 +18,8 @@ public interface GameParticipantRepository extends JpaRepository<GameParticipant
                "WHERE gp.game_id = :gameId", 
        nativeQuery = true)
     List<Object[]> gameParticipantsByGameId(@Param("gameId") Integer gameId);
+
+    GameParticipant findByGameIdAndParticipantId(Integer gameId, Integer participantId);
+
 }
     

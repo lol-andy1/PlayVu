@@ -11,13 +11,9 @@ import org.springframework.stereotype.Service;
 import com.playvu.backend.entity.SubField;
 import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
-import com.playvu.backend.repository.FieldScheduleRepository;
-// import com.playvu.backend.repository.FieldRepository;
 import com.playvu.backend.repository.SubFieldRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Map;
-import java.util.List;
 
 @Service
 public class SubFieldService {
@@ -29,12 +25,6 @@ public class SubFieldService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private FieldScheduleRepository fieldScheduleRepository;
-
-    // @Autowired
-    // private FieldRepository field_repository;
 
     public Integer addSubField(HttpServletRequest request, Integer field_id, String name) throws URISyntaxException, IOException, InterruptedException{
 

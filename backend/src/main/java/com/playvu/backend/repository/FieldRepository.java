@@ -25,9 +25,10 @@ public interface FieldRepository extends JpaRepository<Field, Integer> {
                    "sin(radians(:latitude)) * sin(radians(latitude)))) " +
                    "LIMIT 10", 
            nativeQuery = true)
-    List<Integer> findNearestFields(@Param("latitude") Float latitude, @Param("longitude") Float longitude, @Param("distance") Float distance);
+    List<Integer> getNearestFields(@Param("latitude") Float latitude, @Param("longitude") Float longitude, @Param("distance") Float distance);
 
-    @Query(value = "SELECT f.name AS \"fieldName\", f.address AS \"address\", f.zip_code AS \"zipCode\", f.city AS \"city\", f.field_id AS \"fieldId\" FROM field f WHERE f.owner_id = :ownerId", nativeQuery = true)
+    @Query(value = "SELECT f.name AS \"fieldName\", f.address AS \"address\", f.zip_code AS \"zipCode\", f.city AS \"city\", f.field_id AS \"fieldId\" FROM field f " +
+                   "WHERE f.owner_id = :ownerId", nativeQuery = true)
     List < Map<String, Object> > findByOwnerId(@Param("ownerId") Integer ownerId);
 
 }

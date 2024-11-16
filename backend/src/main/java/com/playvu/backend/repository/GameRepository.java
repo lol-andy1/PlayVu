@@ -25,6 +25,15 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             nativeQuery = true)
     List<Object[]> findByFieldIds(@Param("fieldIds") List<Integer> fieldIds);
 
+    @Query(value = "SELECT g.game_id, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.duration, f.address AS \"location\" " +
+               "FROM game g " +
+               "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
+               "JOIN field f ON sf.master_field_id = f.field_id " +
+               "JOIN game_participant gp ON g.game_id = gp.game_id " +
+               "WHERE gp.participant_id = :participantId", 
+       nativeQuery = true)
+    List< Map<String, Object> > findByGameParticipant(@Param("participantId") Integer participantId);
+
     @Query(value = "SELECT g.game_id, g.name, g.start_date, " +
                "g.price, " +
                "sf.name AS sub_field_name, " +
