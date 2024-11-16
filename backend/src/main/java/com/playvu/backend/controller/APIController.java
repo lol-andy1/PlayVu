@@ -102,6 +102,11 @@ public class APIController {
         return fieldService.getFieldSchedules(request, fieldId);
     }
 
+    @GetMapping(value = "/get-subfield-schedules")
+    public List<Map<String, Object>> getSubfieldSchedules(@RequestParam Integer subFieldId){
+        return subFieldService.getSubFieldSchedules(subFieldId);
+    }
+
     @PostMapping(value = "/add-game")
     public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
         gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());
