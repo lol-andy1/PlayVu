@@ -92,9 +92,15 @@ public class GameService {
         }
         Users user = userService.getUserFromJwt();
 
-        if( !(fieldScheduleRepository.checkScheduleAvailability(subFieldId, startDate, endDate) && gameRepository.checkNoGameConflict(subFieldId, startDate, endDate))){
+        if( !fieldScheduleRepository.checkScheduleAvailability(subFieldId, startDate, endDate)){
+            System.out.println("No availability found for dates: " + startDate + ", " + endDate + "for subfield: " + subFieldId);
             return;
         }
+        if( !gameRepository.checkNoGameConflict(subFieldId, startDate, endDate)){
+            System.out.println("Game conflict for dates: " + startDate + ", " + endDate + "for subfield: " + subFieldId);
+            return;
+        }
+        
         Game newGame = new Game();
         newGame.setOrganizerId(user.getUserId());
         newGame.setSubFieldId(subFieldId);
