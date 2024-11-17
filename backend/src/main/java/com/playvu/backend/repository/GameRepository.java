@@ -17,7 +17,7 @@ import com.playvu.backend.entity.Game;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
 
-    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.end_date, f.address AS \"location\", " +
+    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.start_date AT TIME ZONE 'UTC', g.end_date AT TIME ZONE 'UTC', f.address AS \"location\", " +
                     "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\" " +
                     "FROM game g " +
                     "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
@@ -26,7 +26,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             nativeQuery = true)
     List< Map<String, Object> > findByFieldIds(@Param("fieldIds") List<Integer> fieldIds);
 
-    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.end_date, f.address AS \"location\" " +
+    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.start_date AT TIME ZONE 'UTC', g.end_date AT TIME ZONE 'UTC', f.address AS \"location\" " +
                "FROM game g " +
                "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
                "JOIN field f ON sf.master_field_id = f.field_id " +
@@ -35,7 +35,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
        nativeQuery = true)
     List< Map<String, Object> > findByGameParticipant(@Param("participantId") Integer participantId);
 
-    @Query(value = "SELECT g.game_id, g.max_players, g.name, g.start_date, g.price, mf.address AS \"location\", " +
+    @Query(value = "SELECT g.game_id, g.max_players, g.name, g.start_date AT TIME ZONE 'UTC', g.end_date AT TIME ZONE 'UTC', g.price, mf.address AS \"location\", " +
                "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\", " + 
                "sf.name AS sub_field_name, " +
                "mf.name AS master_field_name " +
