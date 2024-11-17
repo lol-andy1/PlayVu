@@ -13,7 +13,9 @@ import axios from "axios";
 import Organize from "./organizerView/Organize";
 import SelectField from "./organizerView/SelectField";
 import OrganizeGames from "./organizerView/OrganizeGames";
-import SelectTimeslot from "./organizerView/[subfieldId]";
+import SelectTimeslot from "./organizerView/SelectTimeslot";
+import ConfigureGame from "./organizerView/ConfigureGame";
+import OrganizeConfirm from "./organizerView/OrganizeConfirm";
 
 function App() {
   // TODO: adding role base routes
@@ -101,7 +103,23 @@ function App() {
             path="select-time"
             element={
               <ProtectedRoute>
-                <SelectTimeslot />
+                <SelectTimeslot/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="configure"
+            element={
+              <ProtectedRoute>
+                <ConfigureGame/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="confirm"
+            element={
+              <ProtectedRoute>
+                <OrganizeConfirm/>
               </ProtectedRoute>
             }
           />
