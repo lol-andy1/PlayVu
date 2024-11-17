@@ -17,7 +17,7 @@ import com.playvu.backend.entity.Game;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
 
-    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.duration, f.address AS \"location\", " +
+    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.end_date, f.address AS \"location\", " +
                     "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\" " +
                     "FROM game g " +
                     "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
@@ -26,7 +26,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             nativeQuery = true)
     List< Map<String, Object> > findByFieldIds(@Param("fieldIds") List<Integer> fieldIds);
 
-    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.duration, f.address AS \"location\" " +
+    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.start_date, g.end_date, f.address AS \"location\" " +
                "FROM game g " +
                "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
                "JOIN field f ON sf.master_field_id = f.field_id " +
@@ -47,7 +47,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     Map<String, Object> findByGameId(@Param("game_id") Integer game_id);
 
     @Query(value = "SELECT game_id AS \"gameId\", sub_field_id AS \"subFieldId\", organizer_id AS \"organizerId\", " +
-               "name, start_date AS \"startDate\", end_date AS \"endDate\", price " +
+               "name, start_date AT TIME ZONE 'UTC' AS \"startDate\", end_date AT TIME ZONE 'UTC' AS \"endDate\", price " +
                "FROM game WHERE sub_field_id = :subFieldId", nativeQuery = true)
     List< Map<String, Object> > findAllBySubFieldId(@Param("subFieldId") Integer subFieldId);
 
