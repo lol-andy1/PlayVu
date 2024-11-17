@@ -30,7 +30,7 @@ const GameCard = ({ id, name, price, duration, date }) => {
             marginRight: "8px",
           }}
         >
-          Price: ${price}
+          Price: {price ? `$${price}` : "Free"}
         </p>
       </div>
     </button>

@@ -8,12 +8,28 @@ const Search = () => {
   const [filterKey, setFilterKey] = useState("name");
   const [location, setLocation] = useState(null);
   const [distance, setDistance] = useState("");
-  const filterKeys = ["name", "duration", "price", "date"];
 
-  // Filter games based on search query and selected filter key
-  const filteredGames = games.filter((game) =>
-    game[filterKey]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [sortKey, setSortKey] = useState("id");
+
+  const timeToSeconds = (time) => {
+    if (!time) return 0; // Handle undefined or null durations
+    const parts = time.split(":").map(Number); // Split by ":" and convert to numbers
+    const [hours = 0, minutes = 0, seconds = 0] = parts;
+    return hours * 3600 + minutes * 60 + seconds;
+  };
+
+  // Sorting logic
+  const filteredGames = [...games].sort((a, b) => {
+    if (sortKey === "price") {
+      return (a.price || 0) - (b.price || 0);
+    } else if (sortKey === "date") {
+      return new Date(a.date) - new Date(b.date);
+    } else if (sortKey === "duration") {
+      return timeToSeconds(a.duration) - timeToSeconds(b.duration);
+    } else {
+      return 0;
+    }
+  });
 
   useEffect(() => {
     const getGames = async () => {
@@ -25,12 +41,7 @@ const Search = () => {
           res.data.map((game) => ({
             duration: game.duration,
             name: game.name,
-            date: new Date(game.start_date).toLocaleString("en-US", {
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
+            date: game.start_date,
             price: game.price,
           }))
         );
@@ -78,44 +89,35 @@ const Search = () => {
 
       <button
         onClick={requestLocation}
-        style={{ padding: "10px 15px", marginBottom: "10px" }}
+        style={{
+          padding: "10px",
+          margin: "0 5px",
+          backgroundColor: "gray",
+          color: "white",
+          borderRadius: "5px",
+          border: "none",
+          cursor: "pointer",
+          marginBottom: "16px"
+        }}
       >
         Search Near My Location
       </button>
       
       </div>
-      <div style={{ fontWeight: "bold" }}>To Futher Narrow Your Search:</div>
-      <input
-        type="text"
-        placeholder="Search games"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        style={{
-          padding: "10px",
-          width: "100%",
-          borderRadius: "5px",
-          border: "1px solid #ddd",
-        }}
-      />
-      <div style={{ fontWeight: "bold" }}>Filter by:</div>
-      <div style={{ display: "flex", marginBottom: "20px" }}>
-        {filterKeys.map((key) => (
-          <button
-            key={key}
-            onClick={() => setFilterKey(key)}
-            style={{
-              padding: "10px",
-              margin: "0 5px",
-              backgroundColor: filterKey === key ? "green" : "gray",
-              color: "white",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            {key}
-          </button>
-        ))}
+      {/* Dropdown or buttons for selecting sorting criteria */}
+      <div style={{ marginBottom: "16px" }}>
+        <label htmlFor="sort" style={{ marginRight: "8px" }}>
+          Sort By:
+        </label>
+        <select
+          id="sort"
+          value={sortKey}
+          onChange={(e) => setSortKey(e.target.value)}
+        >
+          <option value="date">Date</option>
+          <option value="price">Price</option>
+          <option value="duration">Duration</option>
+        </select>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -126,7 +128,12 @@ const Search = () => {
             name={game.name}
             price={game.price}
             duration={game.duration}
-            date={game.date}
+            date={new Date(game.date).toLocaleString("en-US", {
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           />
         ))}
       </div>
