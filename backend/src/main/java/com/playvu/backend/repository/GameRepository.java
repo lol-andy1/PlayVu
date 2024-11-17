@@ -51,9 +51,9 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
                "FROM game WHERE sub_field_id = :subFieldId", nativeQuery = true)
     List< Map<String, Object> > findAllBySubFieldId(@Param("subFieldId") Integer subFieldId);
 
-    @Query(value = "SELECT COUNT(*) = 0 FROM field_schedule fs " +
-               "WHERE fs.sub_field_id = :subFieldId " +
-               "AND NOT (:endDate <= fs.start_date OR :startDate >= fs.end_date)",
+    @Query(value = "SELECT COUNT(*) = 0 FROM game g " +
+               "WHERE g.sub_field_id = :subFieldId " +
+               "AND NOT (:endDate <= g.start_date OR :startDate >= g.end_date)",
        nativeQuery = true)
     Boolean checkNoGameConflict(@Param("subFieldId") Integer subFieldId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
