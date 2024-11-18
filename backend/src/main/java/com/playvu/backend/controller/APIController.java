@@ -87,6 +87,11 @@ public class APIController {
         return gameService.getUserGames();
     }
 
+    @GetMapping(value = "/get-organizer-games")
+    public Object getOrganizerGames() {
+        return gameService.getOrganizerGames();
+    }
+
     @GetMapping(value = "/get-game-data")
     public Object getGameData(@RequestParam Integer gameId) {
         return gameService.getGameData(gameId);
@@ -114,7 +119,7 @@ public class APIController {
 
     @PostMapping(value = "/add-game")
     public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
-        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());
+        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getPrice(), gameBody.getStartDate(), gameBody.getEndDate());
     }
 
     @PostMapping(value = "/delete-game")
