@@ -92,6 +92,11 @@ public class APIController {
         return gameService.getGameData(gameId);
     }
 
+    @GetMapping(value = "/owner-get-game-data")
+    public Map<String, Object> ownerGetGameData(@RequestParam Integer gameId) {
+        return gameService.ownerGetGameData(gameId);
+    }
+
     @GetMapping(value = "/get-owner-fields")
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
         return fieldService.getOwnerFields(request);

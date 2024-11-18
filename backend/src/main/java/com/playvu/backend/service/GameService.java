@@ -83,6 +83,11 @@ public class GameService {
         return game_data;
     }
 
+    public Map<String, Object> ownerGetGameData(Integer gameId){
+        return gameRepository.ownerFindByGameId(gameId);
+
+    }
+
     public void addGame(Integer subFieldId, String name, LocalDateTime startDate, LocalDateTime endDate){
         if (subFieldId == null || name == null || startDate == null || endDate == null) {
             return;
