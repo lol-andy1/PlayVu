@@ -13,15 +13,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 // import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playvu.backend.entity.Field;
 import com.playvu.backend.entity.SubField;
+// import com.playvu.backend.entity.SubField;
 import com.playvu.backend.entity.Users;
-// import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
 import com.playvu.backend.repository.FieldScheduleRepository;
 import com.playvu.backend.repository.GameRepository;
@@ -54,20 +56,20 @@ public class FieldService {
 
     public Map<String, Float> getCoordinatesByAddress(String location) throws IOException, InterruptedException{
 
-        String encoded_location = URLEncoder.encode(location,"UTF-8");
-        String request_uri = GEOCODING_API + encoded_location + "&api_key=" + GEOCODING_API_KEY;
+        String encodedLocation = URLEncoder.encode(location,"UTF-8");
+        String requestUri = GEOCODING_API + encodedLocation + "&api_key=" + GEOCODING_API_KEY;
 
-        HttpRequest geocoding_request = HttpRequest.newBuilder().GET().uri(URI.create(request_uri)).build();
+        HttpRequest geocodingRequest = HttpRequest.newBuilder().GET().uri(URI.create(requestUri)).build();
 
-        HttpResponse<String> geocoding_response = HTTP_CLIENT.send(geocoding_request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> geocodingResponse = HTTP_CLIENT.send(geocodingRequest, HttpResponse.BodyHandlers.ofString());
 
-        JsonNode root_node = OBJECT_MAPPER.readTree(geocoding_response.body());
+        JsonNode rootNode = OBJECT_MAPPER.readTree(geocodingResponse.body());
 
-        JsonNode first_result = root_node.get(0);
+        JsonNode geocodingFirstResult = rootNode.get(0);
 
         
-        Float latitude = Float.parseFloat( first_result.get("lat").asText() );
-        Float longitude = Float.parseFloat( first_result.get("lon").asText() );
+        Float latitude = Float.parseFloat( geocodingFirstResult.get("lat").asText() );
+        Float longitude = Float.parseFloat( geocodingFirstResult.get("lon").asText() );
 
         Map<String, Float> coordinates = new HashMap<>();
         coordinates.put("latitude", latitude);
@@ -76,27 +78,28 @@ public class FieldService {
         return coordinates;
     }
 
-    public Integer addField(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+    public Integer addField(HttpServletRequest request, String name, String description, String address, String zipCode, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
         // }
-        Field new_field = new Field();
+        Field newField = new Field();
 
-        new_field.setOwnerId(user.getUserId()); // TODO: Set real owner ID
-        new_field.setName(name);
-        new_field.setDescription(description);
-        new_field.setAddress(address);
-        new_field.setZipCode(zip_code);
-        new_field.setCity(city);
+        newField.setOwnerId(user.getUserId());
+        newField.setName(name);
+        newField.setDescription(description);
+        newField.setAddress(address);
+        newField.setZipCode(zipCode);
+        newField.setCity(city);
+        newField.setAvailable(true);
         
-        String full_address = address + ", " + zip_code + ", " + city;
+        String full_address = address + ", " + zipCode + ", " + city;
         Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
-        new_field.setLatitude(new_field_coordinates.get("latitude"));
-        new_field.setLongitude(new_field_coordinates.get("longitude"));
+        newField.setLatitude(new_field_coordinates.get("latitude"));
+        newField.setLongitude(new_field_coordinates.get("longitude"));
         
-        fieldRepository.save(new_field);
-        return new_field.getFieldId();
+        fieldRepository.save(newField);
+        return newField.getFieldId();
         
     }
 
@@ -136,6 +139,25 @@ public class FieldService {
         fieldRepository.save(field);
     }
 
+
+    public void deleteField(Integer fieldId){
+
+        Users user = userService.getUserFromJwt();
+
+        if(fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control field: " + fieldId);
+        }
+        List<Integer> subFieldIds = subFieldRepository.findIdsByMasterFieldId(fieldId);
+        
+        if(gameRepository.isPendingGames(subFieldIds)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Pending game in field: " + fieldId);
+        }
+        
+        Field field = fieldRepository.findById(fieldId).get();
+        field.setAvailable(false);
+        return;
+    }
+
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
       // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
@@ -172,28 +194,48 @@ public class FieldService {
 
     public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
-      // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
-      //     return;
-      // }
-
-      if(fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()){
+  
+      if (fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()) {
           return null;
       }
   
       List<Map<String, Object>> subFields = new ArrayList<>();
       List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
-
+  
       for (Map<String, Object> originalSubField : originalSubFields) {
-
           Map<String, Object> subField = new HashMap<>(originalSubField);
           Integer subFieldId = (Integer) subField.get("subFieldId");
-        
-          subField.put("data", fieldScheduleRepository.findBySubFieldId(subFieldId));
+  
+          List<Map<String, Object>> schedules = fieldScheduleRepository.findBySubFieldId(subFieldId);
+          List<Map<String, Object>> modifiableSchedules = new ArrayList<>();
+          for (Map<String, Object> schedule : schedules) {
+              Map<String, Object> modifiableSchedule = new HashMap<>(schedule);
+              modifiableSchedule.put("type", "schedule");
+              modifiableSchedules.add(modifiableSchedule);
+          }
+  
+          List<Map<String, Object>> games = gameRepository.findAllBySubFieldId(subFieldId);
+          List<Map<String, Object>> modifiableGames = new ArrayList<>();
+          for (Map<String, Object> game : games) {
+              Map<String, Object> modifiableGame = new HashMap<>(game);
+              modifiableGame.put("type", "game");
+              modifiableGames.add(modifiableGame);
+          }
+  
+          List<Map<String, Object>> combinedData = new ArrayList<>();
+          combinedData.addAll(modifiableSchedules);
+          combinedData.addAll(modifiableGames);
+  
+          subField.put("data", combinedData);
           subFields.add(subField);
       }
   
       return subFields;
-    }
+
+      
+  }
+
+    
     
   }
 

@@ -42,18 +42,6 @@ public class APIController {
     @Autowired
     private FieldScheduleService fieldScheduleService;
 
-
-    @GetMapping(value = "/public")
-    public String publicEndpoint() {
-        return "No authentication required.";
-    }
-
-    @GetMapping(value = "/private")
-    public Message privateEndpoint() {
-        return new Message("All good. You can see this because you are Authenticated.");
-    }
-
-    // Add image either through URL and upload to storage service or @RequestParam MultipartFile image
     @PostMapping(value = "/add-field")
     public Integer addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
         return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
@@ -62,6 +50,11 @@ public class APIController {
     @PostMapping(value = "/edit-field")
     public void editField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
         fieldService.editField(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+    }
+
+    @PostMapping(value = "/delete-field")
+    public void deleteSubField(@RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
+        fieldService.deleteField(fieldBody.getFieldId());
     }
 
     @PostMapping(value = "/add-subfield")
@@ -94,9 +87,24 @@ public class APIController {
         return gameService.getGames(latitude, longitude, distance);
     }
 
+    @GetMapping(value = "/get-user-games")
+    public Object getUserGames() {
+        return gameService.getUserGames();
+    }
+
+    @GetMapping(value = "/get-organizer-games")
+    public Object getOrganizerGames() {
+        return gameService.getOrganizerGames();
+    }
+
     @GetMapping(value = "/get-game-data")
     public Object getGameData(@RequestParam Integer gameId) {
         return gameService.getGameData(gameId);
+    }
+
+    @GetMapping(value = "/owner-get-game-data")
+    public Map<String, Object> ownerGetGameData(@RequestParam Integer gameId) {
+        return gameService.ownerGetGameData(gameId);
     }
 
     @GetMapping(value = "/get-owner-fields")
@@ -109,14 +117,39 @@ public class APIController {
         return fieldService.getFieldSchedules(request, fieldId);
     }
 
+    @GetMapping(value = "/get-subfield-schedules")
+    public List<Map<String, Object>> getSubfieldSchedules(@RequestParam Integer subFieldId){
+        return subFieldService.getSubFieldSchedules(subFieldId);
+    }
+
     @PostMapping(value = "/add-game")
     public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
-        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());
+        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getPrice(), gameBody.getMaxPlayers(), gameBody.getStartDate(), gameBody.getEndDate());
+    }
+
+    @PostMapping(value = "/delete-game")
+    public void deleteGame(HttpServletRequest request, @RequestBody Game gameBody) {
+        gameService.deleteGame(gameBody.getGameId());
+    }
+
+    @PostMapping(value = "/join-game")
+    public void joinGame(HttpServletRequest request, @RequestBody GameParticipant gameParticipantBody) {
+        gameService.joinGame(gameParticipantBody.getGameId(), gameParticipantBody.getTeam());
+    }
+
+    @PostMapping(value = "/switch-team")
+    public void switchTeam(HttpServletRequest request, @RequestBody Game gameBody) {
+        gameService.switchTeam(gameBody.getGameId());
     }
 
     @GetMapping(value = "/get-user")
     public Map<String, Object> getUser(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
         return userService.getUser(request);
+    }
+
+    @GetMapping(value = "/get-users")
+    public List < Map<String, Object> > getUsers() throws URISyntaxException, IOException, InterruptedException {
+        return userService.getUsers();
     }
 
     @PostMapping(value = "/edit-user")
