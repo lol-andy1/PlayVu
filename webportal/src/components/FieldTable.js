@@ -1,6 +1,6 @@
 import React from "react";
 
-const FieldTable = ({ fields, onEditField }) => {
+const FieldTable = ({ fields, onEditField, onDeleteField }) => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
       <table className="w-full text-sm text-left text-gray-500">
@@ -38,9 +38,15 @@ const FieldTable = ({ fields, onEditField }) => {
               <td className="px-6 py-4 text-right">
                 <button
                   onClick={() => onEditField(field)}
-                  className="font-medium text-green-600 hover:underline"
+                  className="font-medium text-green-600 mr-4 hover:underline"
                 >
                   Edit
+                </button>
+                <button
+                  onClick={() => onDeleteField(field)}
+                  className="font-medium text-red-600 hover:underline"
+                >
+                  Delete
                 </button>
               </td>
             </tr>
