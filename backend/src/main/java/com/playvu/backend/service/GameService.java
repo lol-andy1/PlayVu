@@ -54,6 +54,12 @@ public class GameService {
         return userGames;
     }
 
+    public List< Map<String, Object> > getOrganizerGames(){
+        Users user = userService.getUserFromJwt();
+        List< Map<String, Object> > organizerGames = gameRepository.findByOrganizerId(user.getUserId());
+        return organizerGames;
+    }
+
     public Object getGameData(Integer game_id) {
         List<Object[]> game_participants = gameParticipantRepository.gameParticipantsByGameId(game_id);
     
@@ -98,7 +104,7 @@ public class GameService {
 
     }
 
-    public void addGame(Integer subFieldId, String name, LocalDateTime startDate, LocalDateTime endDate){
+    public void addGame(Integer subFieldId, String name, Float price, Integer maxPlayers, LocalDateTime startDate, LocalDateTime endDate){
         if (subFieldId == null || name == null || startDate == null || endDate == null) {
             return;
         }
@@ -123,7 +129,13 @@ public class GameService {
         newGame.setStartDate(startDate);
         newGame.setEndDate(endDate);
         newGame.setMaxPlayers(maxPlayers);
-        newGame.setPrice(price);
+
+        if(price == null){
+            newGame.setPrice(0.f);
+        }
+        else{
+            newGame.setPrice(price);
+        }
 
         gameRepository.save(newGame);
         

@@ -52,6 +52,11 @@ public class APIController {
         fieldService.editField(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
+    @PostMapping(value = "/delete-field")
+    public void deleteSubField(@RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
+        fieldService.deleteField(fieldBody.getFieldId());
+    }
+
     @PostMapping(value = "/add-subfield")
     public Integer addSubfield(HttpServletRequest request, @RequestBody SubField subfieldBody) throws URISyntaxException, IOException, InterruptedException {
         return subFieldService.addSubField(request, subfieldBody.getMasterFieldId(), subfieldBody.getName());
@@ -92,6 +97,11 @@ public class APIController {
         return gameService.getUserGames();
     }
 
+    @GetMapping(value = "/get-organizer-games")
+    public Object getOrganizerGames() {
+        return gameService.getOrganizerGames();
+    }
+
     @GetMapping(value = "/get-game-data")
     public Object getGameData(@RequestParam Integer gameId) {
         return gameService.getGameData(gameId);
@@ -119,7 +129,7 @@ public class APIController {
 
     @PostMapping(value = "/add-game")
     public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
-        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate(), gameBody.getMaxPlayers(), gameBody.getPrice());
+        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getPrice(), gameBody.getMaxPlayers(), gameBody.getStartDate(), gameBody.getEndDate());
     }
 
     @PostMapping(value = "/delete-game")
@@ -140,6 +150,11 @@ public class APIController {
     @GetMapping(value = "/get-user")
     public Map<String, Object> getUser(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
         return userService.getUser(request);
+    }
+
+    @GetMapping(value = "/get-users")
+    public List < Map<String, Object> > getUsers() throws URISyntaxException, IOException, InterruptedException {
+        return userService.getUsers();
     }
 
     @PostMapping(value = "/edit-user")

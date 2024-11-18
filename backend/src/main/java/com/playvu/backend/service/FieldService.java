@@ -13,12 +13,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 // import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playvu.backend.entity.Field;
+import com.playvu.backend.entity.SubField;
 // import com.playvu.backend.entity.SubField;
 import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
@@ -88,6 +91,7 @@ public class FieldService {
         newField.setAddress(address);
         newField.setZipCode(zipCode);
         newField.setCity(city);
+        newField.setAvailable(true);
         
         String full_address = address + ", " + zipCode + ", " + city;
         Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
@@ -162,6 +166,24 @@ public class FieldService {
       return fields;
     }
 
+    public void deleteField(Integer fieldId){
+
+        Users user = userService.getUserFromJwt();
+
+        if(fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control field: " + fieldId);
+        }
+        List<Integer> subFieldIds = subFieldRepository.findIdsByMasterFieldId(fieldId);
+        
+        if(gameRepository.isPendingGames(subFieldIds)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Pending game in field: " + fieldId);
+        }
+        
+        Field field = fieldRepository.findById(fieldId).get();
+        field.setAvailable(false);
+        return;
+    }
+
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
       // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
@@ -220,6 +242,8 @@ public class FieldService {
       }
   
       return subFields;
+
+      
   }
 
     
