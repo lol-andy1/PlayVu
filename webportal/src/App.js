@@ -7,6 +7,7 @@ import Fields from "./Fields";
 import Games from "./Games";
 import Search from "./Search";
 import Navbar from "./components/navbar";
+import GameDetails from "./components/GameDetails"
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
@@ -63,6 +64,14 @@ function App() {
           path="/search"
           element={
             <Search />
+          }
+        />
+        <Route
+          path="/game-details/:slug"
+          element={
+            <ProtectedRoute>
+              <GameDetails/>
+            </ProtectedRoute>
           }
         />
       </Routes>

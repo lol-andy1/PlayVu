@@ -24,6 +24,8 @@ const Search = () => {
         setGames(
           res.data.map((game) => ({
             duration: game.duration,
+            id: game.game_id,
+            location: game.location,
             name: game.name,
             date: new Date(game.start_date).toLocaleString("en-US", {
               month: "long",
@@ -32,8 +34,10 @@ const Search = () => {
               minute: "2-digit",
             }),
             price: game.price,
+            sub_field_id: game.field,
           }))
         );
+        console.log(res.data)
       } catch (err) {
         console.error(err);
       }
@@ -121,12 +125,12 @@ const Search = () => {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {filteredGames.map((game, index) => (
           <GameCard
-            key={index}
-            id={index}
+            id={game.id}
             name={game.name}
             price={game.price}
             duration={game.duration}
             date={game.date}
+            field={game.field}
           />
         ))}
       </div>

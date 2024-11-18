@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
-const GameCard = ({ id, name, price, duration, date }) => {
+const GameCard = ({ id, name, price, duration, date, field }) => {
   const navigate = useNavigate();
 
   return (
     <button
-      onClick={() => navigate(`/game/${id}`)}
+      onClick={() => navigate(`/game-details/${id}`)}
       style={{
         backgroundColor: "#f3f3f3",
         margin: "16px",
@@ -20,6 +20,7 @@ const GameCard = ({ id, name, price, duration, date }) => {
         <h3 style={{ fontSize: "18px", fontWeight: "bold", marginTop: "8px" }}>
           {name}
         </h3>
+        <p style={{ fontSize: "16px", marginBottom: "4px" }}>{id}</p>
         <p style={{ fontSize: "16px", marginBottom: "4px" }}>{duration}</p>
         <p style={{ fontSize: "16px", marginBottom: "4px" }}>{date}</p>
         <p
