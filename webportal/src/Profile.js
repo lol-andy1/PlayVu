@@ -134,7 +134,7 @@ const Profile = () => {
             {
               picIds.map((picId, index) => 
                 <button key={index} onClick={() => changePic(picId)}>
-                  <img src={`https://avatar.iran.liara.run/public/${picId}`} />
+                  <img src={`https://avatar.iran.liara.run/public/${picId}`} alt="Profile"/>
                 </button>
               )
             }

@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from "react";
-import TouchableButton from "../components/TouchableButton";
-import { useFetcher, useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { GameContext } from "./Organize"
+
+import Button from '@mui/material/Button';
 
 const Organize = () => {
   const navigate = useNavigate()
@@ -12,17 +13,13 @@ const Organize = () => {
     setCurrStep(0)
   }
 
-  useEffect(() => {
-    setCurrStep(-1)
-  }, [])
-
   return (
-    <div className="flex justify-center">
-      <TouchableButton 
-        onClick={createNewGame}
-        label="Create New Game"
-        twStyle="bg-green-300 p-2 rounded-md"
-      />
+    <div className="flex justify-center mt-4">
+      <Button 
+        onClick={createNewGame} variant="contained" color="success" disableElevation 
+      >
+        Create New Game
+      </Button>
     </div>
   )
 }

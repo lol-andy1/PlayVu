@@ -83,7 +83,7 @@ public class GameService {
         return game_data;
     }
 
-    public void addGame(Integer subFieldId, String name, LocalDateTime startDate, LocalDateTime endDate){
+    public void addGame(Integer subFieldId, String name, LocalDateTime startDate, LocalDateTime endDate, Integer maxPlayers, float price){
         if (subFieldId == null || name == null || startDate == null || endDate == null) {
             return;
         }
@@ -107,6 +107,8 @@ public class GameService {
         newGame.setName(name);
         newGame.setStartDate(startDate);
         newGame.setEndDate(endDate);
+        newGame.setMaxPlayers(maxPlayers);
+        newGame.setPrice(price);
 
         gameRepository.save(newGame);
         

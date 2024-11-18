@@ -114,7 +114,7 @@ public class APIController {
 
     @PostMapping(value = "/add-game")
     public void addGame(HttpServletRequest request, @RequestBody Game gameBody) {
-        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate());
+        gameService.addGame(gameBody.getSubFieldId(), gameBody.getName(), gameBody.getStartDate(), gameBody.getEndDate(), gameBody.getMaxPlayers(), gameBody.getPrice());
     }
 
     @PostMapping(value = "/delete-game")

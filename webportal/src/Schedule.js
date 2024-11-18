@@ -575,7 +575,7 @@ const AssignAvailabilities = () => {
   return (
     <div className="flex flex-col gap-8 bg-gray-100 p-8 min-h-screen">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {fields?.length == 0 || !fields ? (
+        {fields?.length === 0 || !fields ? (
           <>No Fields</>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -596,8 +596,8 @@ const AssignAvailabilities = () => {
           </div>
         )}
 
-        {fields.filter((field) => field.fieldId == Number(selectedFieldId))[0]
-          ?.subfields?.length == 0 ? (
+        {fields.filter((field) => field.fieldId === Number(selectedFieldId))[0]
+          ?.subfields?.length === 0 ? (
           <>No subfields</>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -651,8 +651,8 @@ const AssignAvailabilities = () => {
         )}
       </div>
 
-      {fields.filter((field) => field.fieldId == Number(selectedFieldId))[0]
-        ?.subfields?.length == 0 ? (
+      {fields.filter((field) => field.fieldId === Number(selectedFieldId))[0]
+        ?.subfields?.length === 0 ? (
         <>No subfields</>
       ) : (
         <div className="bg-white p-6 rounded-lg shadow-md">
