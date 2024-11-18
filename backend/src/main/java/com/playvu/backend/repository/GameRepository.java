@@ -22,7 +22,8 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
                     "FROM game g " +
                     "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
                     "JOIN field f ON sf.master_field_id = f.field_id " +
-                    "WHERE f.field_id IN (:fieldIds)", 
+                    "WHERE f.field_id IN (:fieldIds)" + 
+                    "AND g.start_date > CURRENT_TIMESTAMP AT TIME ZONE 'UTC'", 
             nativeQuery = true)
     List< Map<String, Object> > findByFieldIds(@Param("fieldIds") List<Integer> fieldIds);
 
@@ -79,6 +80,20 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
                "WHERE g.game_id = :gameId", 
        nativeQuery = true)
        Boolean isGameFull(@Param("gameId") Integer gameId);
+
+       @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END " +
+                "FROM game g " +
+                "WHERE g.sub_field_id = :subFieldId AND g.start_date > CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
+        nativeQuery = true)
+        boolean isPendingGame(@Param("subFieldId") Integer subFieldId);
+
+        @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END " +
+                "FROM game g " +
+                "WHERE g.sub_field_id IN (:subFieldId) AND g.start_date > CURRENT_TIMESTAMP AT TIME ZONE 'UTC'",
+        nativeQuery = true)
+        boolean isPendingGames(@Param("subFieldId") List<Integer> subFieldIds);
+
+
     
 }
     

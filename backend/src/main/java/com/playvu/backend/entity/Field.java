@@ -43,6 +43,9 @@ public class Field {
     @Column()
     public Float longitude;
 
+    @Column()
+    public Boolean available;
+
     public Integer getFieldId() {
         return fieldId;
     }
@@ -121,10 +124,14 @@ public class Field {
 
     public void setPicture(String picture) {
         this.picture = picture;
-    }  
+    }
 
-    
-    
-    
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }  
     
 }

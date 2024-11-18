@@ -52,6 +52,11 @@ public class APIController {
         fieldService.editField(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
+    @PostMapping(value = "/delete-field")
+    public void deleteSubField(@RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
+        fieldService.deleteField(fieldBody.getFieldId());
+    }
+
     @PostMapping(value = "/add-subfield")
     public Integer addSubfield(HttpServletRequest request, @RequestBody SubField subfieldBody) throws URISyntaxException, IOException, InterruptedException {
         return subFieldService.addSubField(request, subfieldBody.getMasterFieldId(), subfieldBody.getName());
