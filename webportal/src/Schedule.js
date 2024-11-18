@@ -186,7 +186,6 @@ const AssignAvailabilities = () => {
   };
 
   const handleEventClick = (item) => {
-    console.log(item);
     setAvailabilityForm({
       subfieldId: selectedSubfieldId,
       id: item.id,
