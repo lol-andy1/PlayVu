@@ -31,12 +31,16 @@ public class Field {
     @Column(nullable = false)
     private String city;
 
+    @Column()
     private String description;
 
-    // TODO: Add field image field 
+    @Column()
+    private String picture; // Will be stored as URL
 
+    @Column()
     public Float latitude;
 
+    @Column()
     public Float longitude;
 
     public Integer getFieldId() {
@@ -109,6 +113,14 @@ public class Field {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }  
 
     

@@ -31,7 +31,6 @@ public class Users {
     @Column()
     private String bio;
 
-
     @Column()
     private String profilePicture; // Will be stored as URL
 
