@@ -3,12 +3,9 @@ import GameCard from "./components/GameCard";
 import axios from "axios";
 
 const Search = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [games, setGames] = useState([]);
-  const [filterKey, setFilterKey] = useState("name");
   const [location, setLocation] = useState(null);
   const [distance, setDistance] = useState("");
-
   const [sortKey, setSortKey] = useState("id");
 
   const timeToSeconds = (time) => {
@@ -37,20 +34,23 @@ const Search = () => {
         const res = await axios.get(
           `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance*1.609}`
         );
-        setGames(
-          res.data.map((game) => ({
-            duration: game.duration,
-            name: game.name,
-            date: game.start_date,
-            price: game.price,
-          }))
-        );
+        const sortedGames = res.data
+        .map((game) => ({
+          duration: game.duration,
+          name: game.name,
+          date: game.start_date,
+          price: game.price,
+        }))
+        .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by date here
+        setGames(sortedGames);
       } catch (err) {
         console.error(err);
       }
     };
 
-    getGames();
+    if (location) {
+      getGames();
+    }
   }, [location, distance]);
 
   // Request and update location using browser geolocation API
