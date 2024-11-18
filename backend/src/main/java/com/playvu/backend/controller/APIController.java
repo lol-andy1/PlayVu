@@ -137,6 +137,11 @@ public class APIController {
         return userService.getUser(request);
     }
 
+    @GetMapping(value = "/get-users")
+    public List < Map<String, Object> > getUsers() throws URISyntaxException, IOException, InterruptedException {
+        return userService.getUsers();
+    }
+
     @PostMapping(value = "/edit-user")
     public void editUser(HttpServletRequest request, @RequestBody Users userBody) throws URISyntaxException, IOException, InterruptedException {
         userService.editUser(request, userBody.getFirstName(), userBody.getLastName(), userBody.getUsername(), userBody.getBio(), userBody.getProfilePicture());

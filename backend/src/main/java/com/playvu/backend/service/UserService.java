@@ -2,12 +2,15 @@ package com.playvu.backend.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.UsersRepository;
@@ -53,6 +56,14 @@ public class UserService {
 
         usersRepository.save(user);
         
+    }
+
+    public List < Map < String, Object > > getUsers(){
+        Users user = getUserFromJwt();
+        // if(user.getRole() != "admin"){
+        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have sufficient permissions.");
+        // }
+        return usersRepository.getUsers();
     }
 
     
