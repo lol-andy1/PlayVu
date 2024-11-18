@@ -184,9 +184,9 @@ public class FieldService {
     public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
   
-      // if (fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()) {
-      //     return null;
-      // }
+      if (fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()) {
+          return null;
+      }
   
       List<Map<String, Object>> subFields = new ArrayList<>();
       List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
