@@ -188,6 +188,7 @@ public class FieldService {
           Integer subFieldId = (Integer) subField.get("subFieldId");
         
           subField.put("data", fieldScheduleRepository.findBySubFieldId(subFieldId));
+          subField.put("games", gameRepository.findAllBySubFieldId(subFieldId));
           subFields.add(subField);
       }
   
