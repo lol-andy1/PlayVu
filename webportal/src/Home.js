@@ -40,6 +40,13 @@ const Home = () => {
           />
 
           <FeatureCard
+            name={"Find and Join Nearby Games"}
+            description={
+              "Search for games in your area that you prefer, and join them with a few taps"
+            }
+          />
+
+          <FeatureCard
             name={"Instant Notifications"}
             description={
               "Stay informed with real-time updates for scheduling changes, field \
