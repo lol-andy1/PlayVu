@@ -15,7 +15,7 @@ dayjs.tz.setDefault(dayjs.tz.guess());
 
 export const StyledSchedulerFrame = styled.div`
   position: relative;
-  height: 70vh;
+  height: 60vh;
   width: 100%;
 `;
 
@@ -32,9 +32,19 @@ const AssignAvailabilities = () => {
     startDate: "",
     endDate: "",
   });
+  const [gameDetails, setGameDetails] = useState({
+    maxPlayers: null,
+    price: null,
+    playerCount: 0,
+    location: "",
+    organizerEmail: "",
+    organizerProfilePicture: null,
+    name: "",
+  });
   const [schedulerData, setSchedulerData] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isGameModalOpen, setIsGameModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchFields = async () => {
@@ -66,9 +76,6 @@ const AssignAvailabilities = () => {
 
   useEffect(() => {}, [schedulerData]);
 
-  const generateColor = (id) =>
-    `rgb(${(id * 3) % 256}, ${(id * 5) % 256}, ${(id * 7) % 256})`;
-
   const fetchSchedules = async (fieldId) => {
     try {
       const response = await axios.get(
@@ -85,16 +92,33 @@ const AssignAvailabilities = () => {
                 return {
                   ...subfield,
                   data: scheduleData
-                    ? scheduleData.data.map((event) => ({
-                        id: event.fieldScheduleId,
-                        startDate: dayjs(event.startDate).toDate(),
-                        endDate: dayjs(event.endDate).toDate(),
-                        title: "Scheduled Event",
-                        description: `Scheduled Event from ${dayjs(
-                          event.startDate
-                        ).toDate()} to ${dayjs(event.endDate).toDate()}`,
-                        bgColor: generateColor(event.fieldScheduleId),
-                      }))
+                    ? scheduleData.data.map((event) => {
+                        if (event.type === "schedule") {
+                          return {
+                            id: event.fieldScheduleId,
+                            type: event.type,
+                            startDate: dayjs(event.startDate).toDate(),
+                            endDate: dayjs(event.endDate).toDate(),
+                            title: "Available",
+                            description: `From ${dayjs(
+                              event.startDate
+                            ).toDate()} to ${dayjs(event.endDate).toDate()}`,
+                            bgColor: `rgb(85, 0, 220)`,
+                          };
+                        } else if (event.type === "game") {
+                          return {
+                            id: event.gameId,
+                            type: event.type,
+                            startDate: dayjs(event.startDate).toDate(),
+                            endDate: dayjs(event.endDate).toDate(),
+                            title: "Game",
+                            description: `From ${dayjs(
+                              event.startDate
+                            ).toDate()} to ${dayjs(event.endDate).toDate()}`,
+                            bgColor: `rgb(0, 193, 86)`,
+                          };
+                        }
+                      })
                     : [],
                 };
               }),
@@ -185,14 +209,34 @@ const AssignAvailabilities = () => {
     resetForm();
   };
 
+  const getGameDetails = async (gameId) => {
+    try {
+      const response = await axios.get(
+        `/api/owner-get-game-data?gameId=${gameId}`
+      );
+      if (response.status === 200 || response.status === 201) {
+        setIsGameModalOpen(true);
+        setGameDetails(response.data);
+      } else {
+        console.error("Failed to get game details from the server.");
+      }
+    } catch (error) {
+      console.error("Error getting game details:", error);
+    }
+  };
+
   const handleEventClick = (item) => {
-    setAvailabilityForm({
-      subfieldId: selectedSubfieldId,
-      id: item.id,
-      startDate: dayjs(item.startDate).format("YYYY-MM-DDTHH:mm"),
-      endDate: dayjs(item.endDate).format("YYYY-MM-DDTHH:mm"),
-    });
-    setIsEditModalOpen(true);
+    if (item.type === "schedule") {
+      setAvailabilityForm({
+        subfieldId: selectedSubfieldId,
+        id: item.id,
+        startDate: dayjs(item.startDate).format("YYYY-MM-DDTHH:mm"),
+        endDate: dayjs(item.endDate).format("YYYY-MM-DDTHH:mm"),
+      });
+      setIsEditModalOpen(true);
+    } else if (item.type === "game") {
+      getGameDetails(item.id);
+    }
   };
 
   const filteredSchedulerData = schedulerData
@@ -222,18 +266,27 @@ const AssignAvailabilities = () => {
           <h2 className="text-xl font-bold mb-4 text-center">
             Field Selection
           </h2>
-          <div className="flex gap-4 items-center">
-            <select
-              value={selectedFieldId}
-              onChange={handleFieldChange}
-              className="w-1/2 max-w-xs p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              {fields.map((field) => (
-                <option key={field.fieldId} value={field.fieldId}>
-                  {field.label.title}
-                </option>
-              ))}
-            </select>
+          <div className="flex gap-4 items-center mb-8">
+            <form className="w-1/2 max-w-xs">
+              <label
+                for="field_select"
+                class="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Field
+              </label>
+              <select
+                id="field_select"
+                value={selectedFieldId}
+                onChange={handleFieldChange}
+                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
+                {fields.map((field) => (
+                  <option key={field.fieldId} value={field.fieldId}>
+                    {field.label.title}
+                  </option>
+                ))}
+              </select>
+            </form>
 
             {fields.find((field) => field.fieldId === selectedFieldId)
               ?.subfields?.length === 0 ? (
@@ -249,6 +302,28 @@ const AssignAvailabilities = () => {
               </button>
             )}
           </div>
+          {filteredSchedulerData.length === 0 ? (
+            <div className="text-base font-medium text-center text-gray-500">
+              No Events Scheduled
+            </div>
+          ) : (
+            <div>
+              <StyledSchedulerFrame>
+                <Scheduler
+                  data={filteredSchedulerData}
+                  isLoading={false}
+                  onRangeChange={handleRangeChange}
+                  onTileClick={handleEventClick}
+                  config={{
+                    zoom: 2,
+                    maxRecordsPerPage: 10,
+                    showTooltip: false,
+                    filterButtonState: -1,
+                  }}
+                />
+              </StyledSchedulerFrame>
+            </div>
+          )}
         </div>
       )}
 
@@ -259,7 +334,14 @@ const AssignAvailabilities = () => {
               Add Availability
             </h2>
             <form onSubmit={handleAddFormSubmit}>
+              <label
+                for="subfield_select"
+                class="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Subfield
+              </label>
               <select
+                id="subfield_select"
                 value={selectedSubfieldId}
                 onChange={(e) => setSelectedSubfieldId(e.target.value)}
                 className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -272,7 +354,14 @@ const AssignAvailabilities = () => {
                     </option>
                   ))}
               </select>
+              <label
+                for="start_date_input"
+                class="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Start Date
+              </label>
               <input
+                id="start_date_input"
                 type="datetime-local"
                 value={availabilityForm.startDate}
                 onChange={(e) =>
@@ -283,7 +372,14 @@ const AssignAvailabilities = () => {
                 }
                 className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
+              <label
+                for="end_date_input"
+                class="block mb-2 text-sm font-medium text-gray-900"
+              >
+                End Date
+              </label>
               <input
+                id="end_date_input"
                 type="datetime-local"
                 value={availabilityForm.endDate}
                 onChange={(e) =>
@@ -319,13 +415,21 @@ const AssignAvailabilities = () => {
             </h2>
             <form onSubmit={handleEditFormSubmit}>
               <p className="text-center font-semibold mb-4 p-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+                Subfield{" "}
                 {fields
                   .find((field) => field.fieldId === selectedFieldId)
                   ?.subfields.find(
                     (subfield) => subfield.id === selectedSubfieldId
                   )?.label?.title || ""}
               </p>
+              <label
+                for="start_date_input"
+                class="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Start Date
+              </label>
               <input
+                id="start_date_input"
                 type="datetime-local"
                 value={availabilityForm.startDate}
                 onChange={(e) =>
@@ -336,7 +440,14 @@ const AssignAvailabilities = () => {
                 }
                 className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
+              <label
+                for="end_date_input"
+                class="block mb-2 text-sm font-medium text-gray-900"
+              >
+                End Date
+              </label>
               <input
+                id="end_date_input"
                 type="datetime-local"
                 value={availabilityForm.endDate}
                 onChange={(e) =>
@@ -371,24 +482,54 @@ const AssignAvailabilities = () => {
         </div>
       )}
 
-      {filteredSchedulerData.length === 0 ? (
-        <div className="text-center">No Events Scheduled</div>
-      ) : (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <StyledSchedulerFrame>
-            <Scheduler
-              data={filteredSchedulerData}
-              isLoading={false}
-              onRangeChange={handleRangeChange}
-              onTileClick={handleEventClick}
-              config={{
-                zoom: 2,
-                maxRecordsPerPage: 10,
-                showTooltip: false,
-                filterButtonState: -1,
-              }}
-            />
-          </StyledSchedulerFrame>
+      {isGameModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+            <h2 className="text-xl font-bold mb-4">
+              {gameDetails.name || "Game Details"}
+            </h2>
+            <ul className="text-gray-700 space-y-2">
+              <li>
+                <strong>Location:</strong>{" "}
+                {gameDetails.location || "Not provided"}
+              </li>
+              <li>
+                <strong>Price:</strong>{" "}
+                {gameDetails.price !== null ? `$${gameDetails.price}` : "Free"}
+              </li>
+              <li>
+                <strong>Max Players:</strong>{" "}
+                {gameDetails.maxPlayers !== null
+                  ? gameDetails.maxPlayers
+                  : "Unlimited"}
+              </li>
+              <li>
+                <strong>Player Count:</strong> {gameDetails.playerCount || 0}
+              </li>
+              <li>
+                <strong>Organizer Email:</strong>{" "}
+                {gameDetails.organizerEmail || "Not provided"}
+              </li>
+              <li>
+                <strong>Organizer Picture:</strong>{" "}
+                {gameDetails.organizerProfilePicture ? (
+                  <img
+                    src={gameDetails.organizerProfilePicture}
+                    alt="Organizer"
+                    className="w-52 h-52 rounded-full mt-2"
+                  />
+                ) : (
+                  "Not provided"
+                )}
+              </li>
+            </ul>
+            <button
+              onClick={() => setIsGameModalOpen(false)}
+              className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.playvu.backend.entity.Game;
 import com.playvu.backend.entity.GameParticipant;
@@ -17,6 +19,7 @@ import com.playvu.backend.repository.FieldScheduleRepository;
 import com.playvu.backend.repository.GameParticipantRepository;
 import com.playvu.backend.repository.GameRepository;
 // import com.playvu.backend.repository.SubFieldRepository;
+import com.playvu.backend.repository.SubFieldRepository;
 
 @Service
 public class GameService {
@@ -26,11 +29,11 @@ public class GameService {
     @Autowired 
     private GameParticipantRepository gameParticipantRepository;
 
-    // @Autowired 
-    // private SubFieldRepository sub_field_repository;
+    @Autowired 
+    private SubFieldRepository subFieldRepository;
 
     @Autowired 
-    private FieldRepository field_repository;
+    private FieldRepository fieldRepository;
 
     @Autowired 
     private FieldScheduleRepository fieldScheduleRepository;
@@ -41,7 +44,7 @@ public class GameService {
 
     public List< Map<String, Object> > getGames(float latitude, float longitude, float distance){
 
-        List<Integer> nearest_fields = field_repository.getNearestFields(latitude, longitude, distance);
+        List<Integer> nearest_fields = fieldRepository.getNearestFields(latitude, longitude, distance);
         return gameRepository.findByFieldIds(nearest_fields);
     }
 
@@ -83,7 +86,19 @@ public class GameService {
         return game_data;
     }
 
-    public void addGame(Integer subFieldId, String name, LocalDateTime startDate, LocalDateTime endDate, Integer maxPlayers, float price){
+    public Map<String, Object> ownerGetGameData(Integer gameId){
+        Users user = userService.getUserFromJwt();
+
+        Integer subFieldId = gameRepository.findById(gameId).get().getSubFieldId();
+        Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
+        if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control subfield of specified game.");
+        }
+        return gameRepository.ownerFindByGameId(gameId);
+
+    }
+
+    public void addGame(Integer subFieldId, String name, LocalDateTime startDate, LocalDateTime endDate){
         if (subFieldId == null || name == null || startDate == null || endDate == null) {
             return;
         }
