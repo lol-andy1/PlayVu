@@ -162,6 +162,40 @@ const Navbar = () => {
                 </Link>
               </li>
             )}
+            {isAuthenticated && (
+              <li>
+                <Link
+                  to="/organize/games"
+                  className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
+                    location.pathname === "/organize/games"
+                      ? "bg-green-100 dark:bg-green-800"
+                      : ""
+                  }`}
+                >
+                  Organize
+                  {location.pathname === "/organize/games" && (
+                    <span className="sr-only">(current)</span>
+                  )}
+                </Link>
+              </li>
+            )}
+            {isAuthenticated && (
+              <li>
+                <Link
+                  to="/search"
+                  className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
+                    location.pathname === "/search"
+                      ? "bg-green-100 dark:bg-green-800"
+                      : ""
+                  }`}
+                >
+                  Search
+                  {location.pathname === "/search" && (
+                    <span className="sr-only">(current)</span>
+                  )}
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>

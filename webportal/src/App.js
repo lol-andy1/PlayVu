@@ -6,9 +6,16 @@ import Schedule from "./Schedule";
 import Fields from "./Fields";
 import Games from "./Games";
 import Profile from "./Profile"
+import Search from "./Search";
 import Navbar from "./components/navbar";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import Organize from "./organizerView/Organize";
+import SelectField from "./organizerView/SelectField";
+import OrganizeGames from "./organizerView/OrganizeGames";
+import SelectTimeslot from "./organizerView/SelectTimeslot";
+import ConfigureGame from "./organizerView/ConfigureGame";
+import OrganizeConfirm from "./organizerView/OrganizeConfirm";
 
 function App() {
   // TODO: adding role base routes
@@ -65,6 +72,63 @@ function App() {
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/organize"
+          element={
+            <ProtectedRoute>
+              <Organize/>
+            </ProtectedRoute>
+          }
+        >
+          <Route 
+            path="games"
+            element={
+              <ProtectedRoute>
+                <OrganizeGames/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="select-field"
+            element={
+              <ProtectedRoute>
+                <SelectField/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="select-time"
+            element={
+              <ProtectedRoute>
+                <SelectTimeslot/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="configure"
+            element={
+              <ProtectedRoute>
+                <ConfigureGame/>
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="confirm"
+            element={
+              <ProtectedRoute>
+                <OrganizeConfirm/>
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
+        <Route
+          path="/search"
+          element={
+            <Search />
           }
         />
       </Routes>

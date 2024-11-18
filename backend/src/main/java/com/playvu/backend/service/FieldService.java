@@ -19,9 +19,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playvu.backend.entity.Field;
-import com.playvu.backend.entity.SubField;
+// import com.playvu.backend.entity.SubField;
 import com.playvu.backend.entity.Users;
-// import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
 import com.playvu.backend.repository.FieldScheduleRepository;
 import com.playvu.backend.repository.GameRepository;
@@ -54,20 +53,20 @@ public class FieldService {
 
     public Map<String, Float> getCoordinatesByAddress(String location) throws IOException, InterruptedException{
 
-        String encoded_location = URLEncoder.encode(location,"UTF-8");
-        String request_uri = GEOCODING_API + encoded_location + "&api_key=" + GEOCODING_API_KEY;
+        String encodedLocation = URLEncoder.encode(location,"UTF-8");
+        String requestUri = GEOCODING_API + encodedLocation + "&api_key=" + GEOCODING_API_KEY;
 
-        HttpRequest geocoding_request = HttpRequest.newBuilder().GET().uri(URI.create(request_uri)).build();
+        HttpRequest geocodingRequest = HttpRequest.newBuilder().GET().uri(URI.create(requestUri)).build();
 
-        HttpResponse<String> geocoding_response = HTTP_CLIENT.send(geocoding_request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> geocodingResponse = HTTP_CLIENT.send(geocodingRequest, HttpResponse.BodyHandlers.ofString());
 
-        JsonNode root_node = OBJECT_MAPPER.readTree(geocoding_response.body());
+        JsonNode rootNode = OBJECT_MAPPER.readTree(geocodingResponse.body());
 
-        JsonNode first_result = root_node.get(0);
+        JsonNode geocodingFirstResult = rootNode.get(0);
 
         
-        Float latitude = Float.parseFloat( first_result.get("lat").asText() );
-        Float longitude = Float.parseFloat( first_result.get("lon").asText() );
+        Float latitude = Float.parseFloat( geocodingFirstResult.get("lat").asText() );
+        Float longitude = Float.parseFloat( geocodingFirstResult.get("lon").asText() );
 
         Map<String, Float> coordinates = new HashMap<>();
         coordinates.put("latitude", latitude);
@@ -76,27 +75,27 @@ public class FieldService {
         return coordinates;
     }
 
-    public Integer addField(HttpServletRequest request, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+    public Integer addField(HttpServletRequest request, String name, String description, String address, String zipCode, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
         // }
-        Field new_field = new Field();
+        Field newField = new Field();
 
-        new_field.setOwnerId(user.getUserId()); // TODO: Set real owner ID
-        new_field.setName(name);
-        new_field.setDescription(description);
-        new_field.setAddress(address);
-        new_field.setZipCode(zip_code);
-        new_field.setCity(city);
+        newField.setOwnerId(user.getUserId());
+        newField.setName(name);
+        newField.setDescription(description);
+        newField.setAddress(address);
+        newField.setZipCode(zipCode);
+        newField.setCity(city);
         
-        String full_address = address + ", " + zip_code + ", " + city;
+        String full_address = address + ", " + zipCode + ", " + city;
         Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
-        new_field.setLatitude(new_field_coordinates.get("latitude"));
-        new_field.setLongitude(new_field_coordinates.get("longitude"));
+        newField.setLatitude(new_field_coordinates.get("latitude"));
+        newField.setLongitude(new_field_coordinates.get("longitude"));
         
-        fieldRepository.save(new_field);
-        return new_field.getFieldId();
+        fieldRepository.save(newField);
+        return newField.getFieldId();
         
     }
 
@@ -136,38 +135,50 @@ public class FieldService {
         fieldRepository.save(field);
     }
 
+    public Object getSubfields(List<Map<String, Object>> originalFields){
+      List<Map<String, Object>> fields = new ArrayList<>();
+
+      for (Map<String, Object> originalField : originalFields) {
+
+        Map<String, Object> field = new HashMap<>(originalField);
+        Integer fieldId = (Integer) field.get("fieldId");
+
+        List<Map<String, Object>> subFields = new ArrayList<>();
+        List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
+
+        for (Map<String, Object> originalSubField : originalSubFields) {
+
+            Map<String, Object> subField = new HashMap<>(originalSubField);
+            Integer subFieldId = (Integer) subField.get("subFieldId");
+
+            subField.put("data", gameRepository.findAllBySubFieldId(subFieldId));
+            subFields.add(subField);
+        }
+
+        field.put("subFields", subFields);
+        fields.add(field);
+      }
+
+      return fields;
+    }
+
     public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
       // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
       //     return;
       // }
   
-      List<Map<String, Object>> fields = new ArrayList<>();
+      //List<Map<String, Object>> fields = new ArrayList<>();
       
       List<Map<String, Object>> originalFields = fieldRepository.findByOwnerId(user.getUserId());
-  
-      for (Map<String, Object> originalField : originalFields) {
+      
+      return getSubfields(originalFields);
+    }
+    
+    public Object getFieldsByName(String name) throws URISyntaxException, IOException, InterruptedException {
+      List<Map<String, Object>> originalFields = fieldRepository.findFieldsByName(name);
 
-          Map<String, Object> field = new HashMap<>(originalField);
-          Integer fieldId = (Integer) field.get("fieldId");
-  
-          List<Map<String, Object>> subFields = new ArrayList<>();
-          List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
-  
-          for (Map<String, Object> originalSubField : originalSubFields) {
-
-              Map<String, Object> subField = new HashMap<>(originalSubField);
-              Integer subFieldId = (Integer) subField.get("subFieldId");
-  
-              subField.put("data", gameRepository.findAllBySubFieldId(subFieldId));
-              subFields.add(subField);
-          }
-  
-          field.put("subFields", subFields);
-          fields.add(field);
-      }
-  
-      return fields;
+      return getSubfields(originalFields);
     }
 
     public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
@@ -194,7 +205,6 @@ public class FieldService {
   
       return subFields;
     }
-    
   }
 
 

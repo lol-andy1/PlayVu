@@ -19,6 +19,345 @@ export const StyledSchedulerFrame = styled.div`
   width: 100%;
 `;
 
+export const mockedSchedulerData = [
+  {
+    fieldId: "1",
+    label: {
+      title: "Soccer Field 1",
+    },
+    subfields: [
+      {
+        id: "1-1",
+        label: {
+          title: "Subfield A",
+        },
+        data: [
+          {
+            id: "1-1-1",
+            startDate: new Date("2024-10-26T09:00:00"),
+            endDate: new Date("2024-10-26T10:00:00"),
+            title: "Youth Training Session",
+            description: "Training for the youth soccer team",
+            bgColor: "rgb(254,165,177)",
+          },
+        ],
+      },
+      {
+        id: "1-2",
+        label: {
+          title: "Subfield B",
+        },
+        data: [
+          {
+            id: "1-2-1",
+            startDate: new Date("2024-10-26T11:00:00"),
+            endDate: new Date("2024-10-26T12:00:00"),
+            title: "Adult League Match",
+            description: "Adult league match",
+            bgColor: "rgb(254,205,165)",
+          },
+        ],
+      },
+      {
+        id: "1-3",
+        label: {
+          title: "Subfield C",
+        },
+        data: [
+          {
+            id: "1-3-1",
+            startDate: new Date("2024-10-26T12:00:00"),
+            endDate: new Date("2024-10-26T13:00:00"),
+            title: "High School Practice",
+            description: "High school soccer practice",
+            bgColor: "rgb(165,105,254)",
+          },
+        ],
+      },
+      {
+        id: "1-4",
+        label: {
+          title: "Subfield D",
+        },
+        data: [
+          {
+            id: "1-4-1",
+            startDate: new Date("2024-10-26T13:00:00"),
+            endDate: new Date("2024-10-26T14:00:00"),
+            title: "Local Tournament",
+            description: "Local soccer tournament round 1",
+            bgColor: "rgb(105,205,165)",
+          },
+        ],
+      },
+      {
+        id: "1-5",
+        label: {
+          title: "Subfield E",
+        },
+        data: [
+          {
+            id: "1-5-1",
+            startDate: new Date("2024-10-26T14:00:00"),
+            endDate: new Date("2024-10-26T15:00:00"),
+            title: "Kids Soccer Clinic",
+            description: "Beginner soccer clinic for kids",
+            bgColor: "rgb(105,165,205)",
+          },
+        ],
+      },
+      {
+        id: "1-6",
+        label: {
+          title: "Subfield F",
+        },
+        data: [
+          {
+            id: "1-6-1",
+            startDate: new Date("2024-10-26T15:00:00"),
+            endDate: new Date("2024-10-26T16:00:00"),
+            title: "Referee Training",
+            description: "Training session for referees",
+            bgColor: "rgb(205,105,254)",
+          },
+        ],
+      },
+      {
+        id: "1-7",
+        label: {
+          title: "Subfield G",
+        },
+        data: [
+          {
+            id: "1-7-1",
+            startDate: new Date("2024-10-26T16:00:00"),
+            endDate: new Date("2024-10-26T17:00:00"),
+            title: "Women's League Game",
+            description: "Women's soccer league game",
+            bgColor: "rgb(165,254,205)",
+          },
+        ],
+      },
+      {
+        id: "1-8",
+        label: {
+          title: "Subfield H",
+        },
+        data: [
+          {
+            id: "1-8-1",
+            startDate: new Date("2024-10-26T17:00:00"),
+            endDate: new Date("2024-10-26T18:00:00"),
+            title: "U18 Championship",
+            description: "U18 soccer championship game",
+            bgColor: "rgb(254,165,105)",
+          },
+        ],
+      },
+      {
+        id: "1-9",
+        label: {
+          title: "Subfield I",
+        },
+        data: [
+          {
+            id: "1-9-1",
+            startDate: new Date("2024-10-26T18:00:00"),
+            endDate: new Date("2024-10-26T19:00:00"),
+            title: "Youth Friendly Match",
+            description: "Youth friendly soccer match",
+            bgColor: "rgb(254,205,105)",
+          },
+        ],
+      },
+      {
+        id: "1-10",
+        label: {
+          title: "Subfield J",
+        },
+        data: [
+          {
+            id: "1-10-1",
+            startDate: new Date("2024-10-26T19:00:00"),
+            endDate: new Date("2024-10-26T20:00:00"),
+            title: "High School Game",
+            description: "High school soccer game",
+            bgColor: "rgb(205,254,105)",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    fieldId: "2",
+    label: {
+      title: "Soccer Field 2",
+    },
+    subfields: [
+      {
+        id: "2-1",
+        label: {
+          title: "Subfield K",
+        },
+        data: [
+          {
+            id: "2-1-1",
+            startDate: new Date("2024-10-27T09:00:00"),
+            endDate: new Date("2024-10-27T10:00:00"),
+            title: "Youth League Match",
+            description: "Youth soccer league match",
+            bgColor: "rgb(165,254,177)",
+          },
+        ],
+      },
+      {
+        id: "2-2",
+        label: {
+          title: "Subfield L",
+        },
+        data: [
+          {
+            id: "2-2-1",
+            startDate: new Date("2024-10-27T11:00:00"),
+            endDate: new Date("2024-10-27T12:00:00"),
+            title: "Advanced Training Session",
+            description: "Training session for advanced players",
+            bgColor: "rgb(165,205,254)",
+          },
+        ],
+      },
+      {
+        id: "2-3",
+        label: {
+          title: "Subfield M",
+        },
+        data: [
+          {
+            id: "2-3-1",
+            startDate: new Date("2024-10-27T12:00:00"),
+            endDate: new Date("2024-10-27T13:00:00"),
+            title: "Youth Scrimmage",
+            description: "Youth soccer scrimmage match",
+            bgColor: "rgb(205,165,254)",
+          },
+        ],
+      },
+      {
+        id: "2-4",
+        label: {
+          title: "Subfield N",
+        },
+        data: [
+          {
+            id: "2-4-1",
+            startDate: new Date("2024-10-27T13:00:00"),
+            endDate: new Date("2024-10-27T14:00:00"),
+            title: "Women's Friendly",
+            description: "Women's friendly soccer match",
+            bgColor: "rgb(165,254,105)",
+          },
+        ],
+      },
+      {
+        id: "2-5",
+        label: {
+          title: "Subfield O",
+        },
+        data: [
+          {
+            id: "2-5-1",
+            startDate: new Date("2024-10-27T14:00:00"),
+            endDate: new Date("2024-10-27T15:00:00"),
+            title: "College Practice",
+            description: "College soccer practice",
+            bgColor: "rgb(254,105,205)",
+          },
+        ],
+      },
+      {
+        id: "2-6",
+        label: {
+          title: "Subfield P",
+        },
+        data: [
+          {
+            id: "2-6-1",
+            startDate: new Date("2024-10-27T15:00:00"),
+            endDate: new Date("2024-10-27T16:00:00"),
+            title: "Referee Practice",
+            description: "Practice session for referees",
+            bgColor: "rgb(105,254,165)",
+          },
+        ],
+      },
+      {
+        id: "2-7",
+        label: {
+          title: "Subfield Q",
+        },
+        data: [
+          {
+            id: "2-7-1",
+            startDate: new Date("2024-10-27T16:00:00"),
+            endDate: new Date("2024-10-27T17:00:00"),
+            title: "Professional Practice",
+            description: "Professional soccer team practice",
+            bgColor: "rgb(205,105,105)",
+          },
+        ],
+      },
+      {
+        id: "2-8",
+        label: {
+          title: "Subfield R",
+        },
+        data: [
+          {
+            id: "2-8-1",
+            startDate: new Date("2024-10-27T17:00:00"),
+            endDate: new Date("2024-10-27T18:00:00"),
+            title: "Community Soccer",
+            description: "Community soccer meetup",
+            bgColor: "rgb(254,105,105)",
+          },
+        ],
+      },
+      {
+        id: "2-9",
+        label: {
+          title: "Subfield S",
+        },
+        data: [
+          {
+            id: "2-9-1",
+            startDate: new Date("2024-10-27T18:00:00"),
+            endDate: new Date("2024-10-27T19:00:00"),
+            title: "Local League Match",
+            description: "Local soccer league match",
+            bgColor: "rgb(105,105,205)",
+          },
+        ],
+      },
+      {
+        id: "2-10",
+        label: {
+          title: "Subfield T",
+        },
+        data: [
+          {
+            id: "2-10-1",
+            startDate: new Date("2024-10-27T19:00:00"),
+            endDate: new Date("2024-10-27T20:00:00"),
+            title: "Semi-Pro Match",
+            description: "Semi-professional soccer match",
+            bgColor: "rgb(105,205,105)",
+          },
+        ],
+      },
+    ],
+  },
+];
+
 const AssignAvailabilities = () => {
   const [fields, setFields] = useState([]);
   const [selectedFieldId, setSelectedFieldId] = useState("");
@@ -236,7 +575,7 @@ const AssignAvailabilities = () => {
   return (
     <div className="flex flex-col gap-8 bg-gray-100 p-8 min-h-screen">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {fields?.length == 0 || !fields ? (
+        {fields?.length === 0 || !fields ? (
           <>No Fields</>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -257,8 +596,8 @@ const AssignAvailabilities = () => {
           </div>
         )}
 
-        {fields.filter((field) => field.fieldId == Number(selectedFieldId))[0]
-          ?.subfields?.length == 0 ? (
+        {fields.filter((field) => field.fieldId === Number(selectedFieldId))[0]
+          ?.subfields?.length === 0 ? (
           <>No subfields</>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -312,8 +651,8 @@ const AssignAvailabilities = () => {
         )}
       </div>
 
-      {fields.filter((field) => field.fieldId == Number(selectedFieldId))[0]
-        ?.subfields?.length == 0 ? (
+      {fields.filter((field) => field.fieldId === Number(selectedFieldId))[0]
+        ?.subfields?.length === 0 ? (
         <>No subfields</>
       ) : (
         <div className="bg-white p-6 rounded-lg shadow-md">
