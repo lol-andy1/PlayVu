@@ -183,28 +183,47 @@ public class FieldService {
 
     public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
-      // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
-      //     return;
+  
+      // if (fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()) {
+      //     return null;
       // }
-
-      if(fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()){
-          return null;
-      }
   
       List<Map<String, Object>> subFields = new ArrayList<>();
       List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
-
+  
       for (Map<String, Object> originalSubField : originalSubFields) {
-
           Map<String, Object> subField = new HashMap<>(originalSubField);
           Integer subFieldId = (Integer) subField.get("subFieldId");
-        
-          subField.put("data", fieldScheduleRepository.findBySubFieldId(subFieldId));
+  
+          List<Map<String, Object>> schedules = fieldScheduleRepository.findBySubFieldId(subFieldId);
+          List<Map<String, Object>> modifiableSchedules = new ArrayList<>();
+          for (Map<String, Object> schedule : schedules) {
+              Map<String, Object> modifiableSchedule = new HashMap<>(schedule);
+              modifiableSchedule.put("type", "schedule");
+              modifiableSchedules.add(modifiableSchedule);
+          }
+  
+          List<Map<String, Object>> games = gameRepository.findAllBySubFieldId(subFieldId);
+          List<Map<String, Object>> modifiableGames = new ArrayList<>();
+          for (Map<String, Object> game : games) {
+              Map<String, Object> modifiableGame = new HashMap<>(game);
+              modifiableGame.put("type", "game");
+              modifiableGames.add(modifiableGame);
+          }
+  
+          List<Map<String, Object>> combinedData = new ArrayList<>();
+          combinedData.addAll(modifiableSchedules);
+          combinedData.addAll(modifiableGames);
+  
+          subField.put("data", combinedData);
           subFields.add(subField);
       }
   
       return subFields;
-    }
+  }
+
+    
+    
   }
 
 
