@@ -59,14 +59,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/games"
           element={
             <ProtectedRoute>
               <Games />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="/profile"
           element={

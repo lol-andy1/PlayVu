@@ -18,22 +18,20 @@ const Search = () => {
   useEffect(() => {
     const getGames = async () => {
       try {
-        const res = await axios.get(
-          `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance*1.609}`
-        );
-        setGames(
-          res.data.map((game) => ({
-            duration: game.duration,
-            name: game.name,
-            date: new Date(game.start_date).toLocaleString("en-US", {
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            price: game.price,
-          }))
-        );
+        if (location){
+          const res = await axios.get(
+            `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance*1.609}`
+          );
+          setGames(
+            res.data.map((game) => ({
+              duration: game.duration,
+              name: game.name,
+              startDate: new Date(game.timezone),
+              price: game.price,
+            }))
+          );
+        }
+
       } catch (err) {
         console.error(err);
       }
@@ -126,7 +124,7 @@ const Search = () => {
             name={game.name}
             price={game.price}
             duration={game.duration}
-            date={game.date}
+            startDate={game.startDate}
           />
         ))}
       </div>
