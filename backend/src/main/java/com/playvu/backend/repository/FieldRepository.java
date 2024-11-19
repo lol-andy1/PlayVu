@@ -32,5 +32,9 @@ public interface FieldRepository extends JpaRepository<Field, Integer> {
                    "WHERE f.owner_id = :ownerId AND f.available IS NOT FALSE", nativeQuery = true)
     List < Map<String, Object> > findByOwnerId(@Param("ownerId") Integer ownerId);
 
+    @Query(value = "SELECT f.name AS \"fieldName\", f.price, f.address AS \"address\", f.zip_code AS \"zipCode\", f.city AS \"city\", f.field_id AS \"fieldId\" FROM field f " +
+                    "WHERE f.name ILIKE %:name%", nativeQuery = true)
+    List<Map<String, Object>> findFieldsByName(@Param("name") String name);
+
 }
     
