@@ -35,7 +35,7 @@ public class UserService {
         return usersRepository.userDataByEmail(user.getEmail());
     }
 
-    public void editUser(HttpServletRequest request, String firstName, String lastName, String username, String bio, String profilePicture) throws URISyntaxException, IOException, InterruptedException{
+    public void editUser(String firstName, String lastName, String username, String bio, String profilePicture){
         Users user = getUserFromJwt();
 
         if (firstName != null) {
@@ -61,9 +61,37 @@ public class UserService {
     public List < Map < String, Object > > getUsers(){
         Users user = getUserFromJwt();
         // if(user.getRole() != "admin"){
-        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have sufficient permissions.");
+        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
         // }
         return usersRepository.getUsers();
+    }
+
+    public void adminEditUser(Integer userId, String role){
+        Users user = getUserFromJwt();
+        if(!user.getRole().equals("admin")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+        }
+        role = role.strip().toLowerCase();
+        if(!role.equals("admin") && !role.equals("field owner") && !role.equals("player")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Role has to be of form: admin / field owner / player");
+        }
+        Users editUser = usersRepository.findById(userId).get();
+        
+        editUser.setRole(role);
+        usersRepository.save(editUser);
+    }
+
+    public void adminDeleteUser(Integer userId){
+        Users user = getUserFromJwt();
+        if(!user.getRole().equals("admin")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+        }
+
+        Users deleteUser = usersRepository.findById(userId).get();
+        
+        deleteUser.setUsername("Deleted User");
+        deleteUser.setEmail("Deleted User");
+        usersRepository.save(deleteUser);
     }
 
     
