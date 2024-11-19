@@ -27,7 +27,7 @@ const Search = () => {
             id: game.game_id,
             location: game.location,
             name: game.name,
-            date: new Date(game.start_date).toLocaleString("en-US", {
+            date: new Date(game.timezone).toLocaleString("en-US", {
               month: "long",
               day: "numeric",
               hour: "2-digit",
