@@ -185,7 +185,9 @@ const AssignAvailabilities = () => {
 
       if (response.status === 200 || response.status === 201) {
         setIsAddModalOpen(false);
-        fetchSchedules(fields.find((field) => field.fieldId === selectedFieldId));
+        fetchSchedules(
+          fields.find((field) => field.fieldId === selectedFieldId)
+        );
       } else {
         console.error("Failed to add schedule on the server.");
       }
@@ -207,7 +209,9 @@ const AssignAvailabilities = () => {
 
       if (response.status === 200 || response.status === 201) {
         setIsEditModalOpen(false);
-        fetchSchedules(fields.find((field) => field.fieldId === selectedFieldId));
+        fetchSchedules(
+          fields.find((field) => field.fieldId === selectedFieldId)
+        );
       } else {
         console.error("Failed to edit schedule on the server.");
       }
@@ -233,7 +237,9 @@ const AssignAvailabilities = () => {
 
       if (response.status === 200 || response.status === 201) {
         setIsEditModalOpen(false);
-        fetchSchedules(fields.find((field) => field.fieldId === selectedFieldId));
+        fetchSchedules(
+          fields.find((field) => field.fieldId === selectedFieldId)
+        );
       } else {
         console.error("Failed to remove event on the server.");
       }
@@ -300,11 +306,11 @@ const AssignAvailabilities = () => {
           <h2 className="text-xl font-bold mb-4 text-center">
             Field Selection
           </h2>
-          <div className="flex gap-4 items-center mb-8">
-            <form className="w-1/2 max-w-xs">
+          <div className="flex gap-4 items-end mb-8">
+            <form className="md:w-1/4 sm:w-1/2">
               <label
-                for="field_select"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                htmlFor="field_select"
+                className="block mb-2 w-full text-sm font-medium text-gray-900"
               >
                 Field
               </label>
@@ -312,7 +318,7 @@ const AssignAvailabilities = () => {
                 id="field_select"
                 value={selectedFieldId}
                 onChange={handleFieldChange}
-                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 {fields.map((field) => (
                   <option key={field.fieldId} value={field.fieldId}>
