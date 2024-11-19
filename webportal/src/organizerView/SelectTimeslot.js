@@ -2,6 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { GameContext } from "./Organize"
 import { useNavigate } from 'react-router-dom';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -9,13 +12,17 @@ import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault(dayjs.tz.guess());
+
 const SelectTimeslot = () => {
   const { subfield, setGameData, setCurrStep } = useContext( GameContext )
   const navigate = useNavigate()
 
   const [gameStart, setGameStart] = useState('')
   const [gameEnd, setGameEnd] = useState('')
-  const [selectedDay, setSelectedDay] = useState('')
+  const [selectedDay, setSelectedDay] = useState(new Date().toISOString())
 
   const [timeslots, setTimeslots] = useState()
   const [duration, setDuration] = useState(60)
@@ -59,20 +66,12 @@ const SelectTimeslot = () => {
   }
 
   useEffect(() => {
-    if (!selectedDay){
-      const localTime = new Date()
-      const offset = localTime.getTimezoneOffset()
-      localTime.setMinutes(localTime.getMinutes() - offset)
-      setSelectedDay(localTime.toISOString())
-    }
-  }, [selectedDay])
-
-  useEffect(() => {
     const processSchedules = async () => {
       try{
         const res = await axios.get(`api/get-subfield-schedules?subFieldId=${subfield.subFieldId}`)
 
         if (res.data){
+
           const daySchedules = res.data.filter(schedule => 
             (selectedDay.slice(0, 10) >= schedule.startDate.slice(0, 10)) &&
             (selectedDay.slice(0, 10) <= schedule.endDate.slice(0, 10))
@@ -107,8 +106,6 @@ const SelectTimeslot = () => {
               })): []
             
             const localTime = new Date()
-            const offset = localTime.getTimezoneOffset()
-            localTime.setMinutes(localTime.getMinutes() - offset)
             const slots = []
 
             while (curr < end){
@@ -127,7 +124,7 @@ const SelectTimeslot = () => {
                 }
               }
         
-              if (curr < localTime){
+              if (dayjs(curr).toDate() < localTime){
                 status = 0
               }
         
@@ -135,7 +132,6 @@ const SelectTimeslot = () => {
                 "time": new Date(curr),
                 "status": status
               })
-        
               curr.setMinutes(curr.getMinutes() + 30);
             }
             setTimeslots(slots)
@@ -222,7 +218,7 @@ const SelectTimeslot = () => {
           (timeslots.length > 0 ?
             (timeslots.map((slot, index) => (
               <div className="flex px-6" key={index}>
-                <h1 className="-translate-y-2 w-20">{slot.time.toLocaleString([], { hour: '2-digit', minute: '2-digit', timeZone:"UTC" })}</h1>
+                <h1 className="-translate-y-2 w-20">{slot.time.toLocaleString([], { hour: '2-digit', minute: '2-digit'})}</h1>
                 <button 
                   className={`flex-1 h-10 border-t border-x border-black ${slot.status === 1 ? "bg-gray-100" : (slot.status === 0 ? "bg-gray-400" : "bg-green-300")}`}
                   onClick={() => handleSelect(index)}

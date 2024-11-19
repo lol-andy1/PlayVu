@@ -45,7 +45,6 @@ const GameCard = ({ id, name, price, duration, startDate, endDate }) => {
         <p style={{ fontSize: "16px", marginBottom: "4px" }}>{duration}</p>
         <p style={{ fontSize: "16px", marginBottom: "4px" }}>
           {new Intl.DateTimeFormat([], {
-            timeZone: 'UTC',
             month: "long",
             day: "numeric",
             hour: "numeric",
