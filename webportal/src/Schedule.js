@@ -45,6 +45,7 @@ const AssignAvailabilities = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
+  const [filteredSchedulerData, setFilteredSchedulerData] = useState([]);
 
   useEffect(() => {
     const fetchFields = async () => {
@@ -60,11 +61,10 @@ const AssignAvailabilities = () => {
           })),
         }));
         setFields(transformedFields);
-
         if (transformedFields.length > 0) {
+          fetchSchedules(transformedFields[0]);
           setSelectedFieldId(transformedFields[0].fieldId);
           setSelectedSubfieldId(transformedFields[0].subfields[0]?.id || "");
-          fetchSchedules(transformedFields[0].fieldId);
         }
       } catch (error) {
         console.error("Error fetching fields:", error);
@@ -76,57 +76,91 @@ const AssignAvailabilities = () => {
 
   useEffect(() => {}, [schedulerData]);
 
-  const fetchSchedules = async (fieldId) => {
+  useEffect(() => {
+    const updatedFilteredData = schedulerData
+      .filter((field) => field.fieldId === selectedFieldId)
+      .flatMap((field) => field.subfields)
+      .map((subfield) => ({
+        ...subfield,
+        data: subfield.data.filter(
+          (event) =>
+            dayjs(event.startDate).isBetween(range.startDate, range.endDate) ||
+            dayjs(event.endDate).isBetween(range.startDate, range.endDate) ||
+            (dayjs(event.startDate).isBefore(range.startDate) &&
+              dayjs(event.endDate).isAfter(range.endDate))
+        ),
+      }));
+
+    setFilteredSchedulerData(updatedFilteredData);
+  }, [schedulerData, range, selectedFieldId]);
+
+  const fetchSchedules = async (field) => {
     try {
       const response = await axios.get(
-        `/api/get-field-schedules?fieldId=${fieldId}`
+        `/api/get-field-schedules?fieldId=${field.fieldId}`
       );
-      const updatedFields = fields.map((field) =>
-        field.fieldId === fieldId
-          ? {
-              ...field,
-              subfields: field.subfields.map((subfield) => {
-                const scheduleData = response.data.find(
-                  (schedule) => schedule.subFieldId.toString() === subfield.id
-                );
-                return {
-                  ...subfield,
-                  data: scheduleData
-                    ? scheduleData.data.map((event) => {
-                        if (event.type === "schedule") {
-                          return {
-                            id: event.fieldScheduleId,
-                            type: event.type,
-                            startDate: dayjs(event.startDate).toDate(),
-                            endDate: dayjs(event.endDate).toDate(),
-                            title: "Available",
-                            description: `From ${dayjs(
-                              event.startDate
-                            ).toDate()} to ${dayjs(event.endDate).toDate()}`,
-                            bgColor: `rgb(85, 0, 220)`,
-                          };
-                        } else if (event.type === "game") {
-                          return {
-                            id: event.gameId,
-                            type: event.type,
-                            startDate: dayjs(event.startDate).toDate(),
-                            endDate: dayjs(event.endDate).toDate(),
-                            title: "Game",
-                            description: `From ${dayjs(
-                              event.startDate
-                            ).toDate()} to ${dayjs(event.endDate).toDate()}`,
-                            bgColor: `rgb(0, 193, 86)`,
-                          };
-                        }
-                      })
-                    : [],
-                };
-              }),
-            }
-          : field
-      );
-
+      const updatedFields = [
+        {
+          ...field,
+          subfields: field.subfields.map((subfield) => {
+            const scheduleData = response.data.find(
+              (schedule) => schedule.subFieldId.toString() === subfield.id
+            );
+            return {
+              ...subfield,
+              data: scheduleData
+                ? scheduleData.data.map((event) => {
+                    if (event.type === "schedule") {
+                      return {
+                        id: event.fieldScheduleId,
+                        type: event.type,
+                        startDate: dayjs(event.startDate).toDate(),
+                        endDate: dayjs(event.endDate).toDate(),
+                        title: "Available",
+                        description: `From ${dayjs(
+                          event.startDate
+                        ).toDate()} to ${dayjs(event.endDate).toDate()}`,
+                        bgColor: `rgb(85, 0, 220)`,
+                      };
+                    } else if (event.type === "game") {
+                      return {
+                        id: event.gameId,
+                        type: event.type,
+                        startDate: dayjs(event.startDate).toDate(),
+                        endDate: dayjs(event.endDate).toDate(),
+                        title: "Game",
+                        description: `From ${dayjs(
+                          event.startDate
+                        ).toDate()} to ${dayjs(event.endDate).toDate()}`,
+                        bgColor: `rgb(0, 193, 86)`,
+                      };
+                    }
+                  })
+                : [],
+            };
+          }),
+        },
+      ];
       setSchedulerData(updatedFields);
+
+      const updatedFilteredData = updatedFields
+        .filter((field) => field.fieldId === field.fieldId)
+        .flatMap((field) => field.subfields)
+        .map((subfield) => ({
+          ...subfield,
+          data: subfield.data.filter(
+            (event) =>
+              dayjs(event.startDate).isBetween(
+                range.startDate,
+                range.endDate
+              ) ||
+              dayjs(event.endDate).isBetween(range.startDate, range.endDate) ||
+              (dayjs(event.startDate).isBefore(range.startDate) &&
+                dayjs(event.endDate).isAfter(range.endDate))
+          ),
+        }));
+
+      setFilteredSchedulerData(updatedFilteredData);
     } catch (error) {
       console.error("Error fetching schedules:", error);
     }
@@ -137,7 +171,7 @@ const AssignAvailabilities = () => {
     setSelectedFieldId(fieldId);
     const selectedField = fields.find((field) => field.fieldId === fieldId);
     setSelectedSubfieldId(selectedField?.subfields[0]?.id || "");
-    fetchSchedules(fieldId);
+    fetchSchedules(selectedField);
   };
 
   const handleAddFormSubmit = async (e) => {
@@ -151,7 +185,7 @@ const AssignAvailabilities = () => {
 
       if (response.status === 200 || response.status === 201) {
         setIsAddModalOpen(false);
-        fetchSchedules(selectedFieldId);
+        fetchSchedules(fields.find((field) => field.fieldId === selectedFieldId));
       } else {
         console.error("Failed to add schedule on the server.");
       }
@@ -173,7 +207,7 @@ const AssignAvailabilities = () => {
 
       if (response.status === 200 || response.status === 201) {
         setIsEditModalOpen(false);
-        fetchSchedules(selectedFieldId);
+        fetchSchedules(fields.find((field) => field.fieldId === selectedFieldId));
       } else {
         console.error("Failed to edit schedule on the server.");
       }
@@ -199,7 +233,7 @@ const AssignAvailabilities = () => {
 
       if (response.status === 200 || response.status === 201) {
         setIsEditModalOpen(false);
-        fetchSchedules(selectedFieldId);
+        fetchSchedules(fields.find((field) => field.fieldId === selectedFieldId));
       } else {
         console.error("Failed to remove event on the server.");
       }
@@ -239,19 +273,19 @@ const AssignAvailabilities = () => {
     }
   };
 
-  const filteredSchedulerData = schedulerData
-    .filter((field) => field.fieldId === selectedFieldId)
-    .flatMap((field) => field.subfields)
-    .map((subfield) => ({
-      ...subfield,
-      data: subfield.data.filter(
-        (event) =>
-          dayjs(event.startDate).isBetween(range.startDate, range.endDate) ||
-          dayjs(event.endDate).isBetween(range.startDate, range.endDate) ||
-          (dayjs(event.startDate).isBefore(range.startDate) &&
-            dayjs(event.endDate).isAfter(range.endDate))
-      ),
-    }));
+  // const filteredSchedulerData = schedulerData
+  //   .filter((field) => field.fieldId === selectedFieldId)
+  //   .flatMap((field) => field.subfields)
+  //   .map((subfield) => ({
+  //     ...subfield,
+  //     data: subfield.data.filter(
+  //       (event) =>
+  //         dayjs(event.startDate).isBetween(range.startDate, range.endDate) ||
+  //         dayjs(event.endDate).isBetween(range.startDate, range.endDate) ||
+  //         (dayjs(event.startDate).isBefore(range.startDate) &&
+  //           dayjs(event.endDate).isAfter(range.endDate))
+  //     ),
+  //   }));
 
   const handleRangeChange = useCallback((newRange) => {
     setRange(newRange);
@@ -302,28 +336,23 @@ const AssignAvailabilities = () => {
               </button>
             )}
           </div>
-          {filteredSchedulerData.length === 0 ? (
-            <div className="text-base font-medium text-center text-gray-500">
-              No Events Scheduled
-            </div>
-          ) : (
-            <div>
-              <StyledSchedulerFrame>
-                <Scheduler
-                  data={filteredSchedulerData}
-                  isLoading={false}
-                  onRangeChange={handleRangeChange}
-                  onTileClick={handleEventClick}
-                  config={{
-                    zoom: 2,
-                    maxRecordsPerPage: 10,
-                    showTooltip: false,
-                    filterButtonState: -1,
-                  }}
-                />
-              </StyledSchedulerFrame>
-            </div>
-          )}
+
+          <div>
+            <StyledSchedulerFrame>
+              <Scheduler
+                data={filteredSchedulerData}
+                isLoading={false}
+                onRangeChange={handleRangeChange}
+                onTileClick={handleEventClick}
+                config={{
+                  zoom: 2,
+                  maxRecordsPerPage: 10,
+                  showTooltip: false,
+                  filterButtonState: -1,
+                }}
+              />
+            </StyledSchedulerFrame>
+          </div>
         </div>
       )}
 

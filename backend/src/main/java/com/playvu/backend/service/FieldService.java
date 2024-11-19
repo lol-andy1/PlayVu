@@ -78,7 +78,7 @@ public class FieldService {
         return coordinates;
     }
 
-    public Integer addField(HttpServletRequest request, String name, String description, String address, String zipCode, String city) throws URISyntaxException, IOException, InterruptedException{
+    public Integer addField(HttpServletRequest request, String name, String description, Float price, String address, String zipCode, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -91,6 +91,7 @@ public class FieldService {
         newField.setAddress(address);
         newField.setZipCode(zipCode);
         newField.setCity(city);
+        newField.setPrice(price);
         newField.setAvailable(true);
         
         String full_address = address + ", " + zipCode + ", " + city;
@@ -181,7 +182,7 @@ public class FieldService {
         Field field = fieldRepository.findById(fieldId).get();
         field.setAvailable(false);
         fieldRepository.save(field);
-        
+
         return;
     }
 

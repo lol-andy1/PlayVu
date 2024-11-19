@@ -44,7 +44,7 @@ public class APIController {
 
     @PostMapping(value = "/add-field")
     public Integer addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getPrice(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
     @PostMapping(value = "/edit-field")
@@ -145,6 +145,11 @@ public class APIController {
     @PostMapping(value = "/switch-team")
     public void switchTeam(HttpServletRequest request, @RequestBody Game gameBody) {
         gameService.switchTeam(gameBody.getGameId());
+    }
+
+    @PostMapping(value = "/leave-game")
+    public void leaveGame(@RequestBody Game gameBody) {
+        gameService.leaveGame(gameBody.getGameId());
     }
 
     @GetMapping(value = "/get-user")

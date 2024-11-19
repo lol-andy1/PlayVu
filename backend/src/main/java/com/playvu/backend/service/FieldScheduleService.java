@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,16 +37,16 @@ public class FieldScheduleService {
 
     public void addFieldSchedule(HttpServletRequest request, Integer subFieldId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
 
-        Users user = userService.getUserFromJwt();
+        // Users user = userService.getUserFromJwt();
 
-        Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
-        if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control subfield: " + subFieldId);
-        }
+        // Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
+        // if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
+        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control subfield: " + subFieldId);
+        // }
 
-        FieldSchedule new_schedule = new FieldSchedule(); 
+        FieldSchedule newSchedule = new FieldSchedule(); 
         
-        new_schedule.setSubFieldId(subFieldId); 
+        newSchedule.setSubFieldId(subFieldId); 
         
         if(startDate.isAfter(endDate)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "End date cannot be before start date");
@@ -54,12 +55,19 @@ public class FieldScheduleService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "End date cannot be before current date");
         }
 
-        new_schedule.setStartDate(startDate);
-        new_schedule.setEndDate(endDate);
+        List<FieldSchedule> overlappingSchedules = fieldScheduleRepository.findOverlappingSchedules(subFieldId, startDate, endDate);
 
+        if (!overlappingSchedules.isEmpty()) {
+            for (FieldSchedule overlap : overlappingSchedules) {
+                startDate = startDate.isBefore(overlap.getStartDate()) ? startDate : overlap.getStartDate();
+                endDate = endDate.isAfter(overlap.getEndDate()) ? endDate : overlap.getEndDate();
+                fieldScheduleRepository.delete(overlap);
+            }
+        }
+        newSchedule.setStartDate(startDate);
+        newSchedule.setEndDate(endDate);
 
-
-        fieldScheduleRepository.save(new_schedule);
+        fieldScheduleRepository.save(newSchedule);
     }
 
     public void editFieldSchedule(HttpServletRequest request, Integer fieldScheduleId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{

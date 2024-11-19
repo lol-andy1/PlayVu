@@ -30,6 +30,13 @@ public interface FieldScheduleRepository extends JpaRepository<FieldSchedule, In
                "FROM field_schedule fs WHERE fs.sub_field_id = :subFieldId", nativeQuery = true)
     List< Map<String, Object> > findBySubFieldId(@Param("subFieldId") Integer subFieldId);
 
+    @Query(value = "SELECT * FROM field_schedule fs " +
+                   "WHERE fs.start_date < :endDate " +
+                   "AND fs.end_date > :startDate " +
+                   "AND fs.sub_field_id = :subFieldId",  
+           nativeQuery = true)
+    List<FieldSchedule> findOverlappingSchedules(@Param("subFieldId") Integer subFieldId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
     
 
 }
