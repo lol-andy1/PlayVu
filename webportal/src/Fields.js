@@ -91,7 +91,7 @@ const Fields = () => {
         subFieldId: subfieldId,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         const updatedSubfields = selectedField.subfields.filter(
           (subfield) => subfield.id !== subfieldId
         );
@@ -115,7 +115,7 @@ const Fields = () => {
         city: selectedField.city,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         const updatedFields = fields.map((field) =>
           field.id === selectedField.id ? selectedField : field
         );
@@ -137,8 +137,8 @@ const Fields = () => {
         zipCode: field.zipCode,
         city: field.city,
       });
-      if (response.status === 201) {
-        setFields([...fields, response.data]);
+      if (response.status === 200 || response.status === 201) {
+        fetchFields();
       }
     } catch (error) {
       console.error("Error adding field:", error);
@@ -146,7 +146,17 @@ const Fields = () => {
   };
 
   const handleDeleteField = async () => {
-    alert("field is deleted: " + selectedField.name);
+    try {
+      const response = await axios.post("/api/delete-field", {
+        fieldId: selectedField.id,
+      });
+      if (response.status === 200 || response.status === 201) {
+        fetchFields();
+        setIsDeleteModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error deleting field:", error);
+    }
   };
 
   return (
