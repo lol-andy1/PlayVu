@@ -73,19 +73,25 @@ const Search = () => {
   return (
     <div style={{ padding: "20px", backgroundColor: "#ffffff", minHeight: "100vh" }}>
       <div>
-      <input
-        type="number"
-        placeholder="Enter distance in miles"
-        value={distance}
-        onChange={(e) => setDistance(e.target.value)}
-        style={{
-          padding: "10px",
-          marginBottom: "10px",
-          borderRadius: "5px",
-          border: "1px solid #ddd",
-          width: "100%",
-        }}
-      />
+      <p style={{ marginBottom: "8px" }}>Select Distance:</p>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+        {[10, 25, 50, 100].map((presetDistance) => (
+          <button
+            key={presetDistance}
+            onClick={() => setDistance(presetDistance)}
+            style={{
+              padding: "10px",
+              borderRadius: "5px",
+              border: "1px solid #ddd",
+              backgroundColor: distance === presetDistance ? "gray" : "white",
+              color: distance === presetDistance ? "white" : "black",
+              cursor: "pointer",
+            }}
+          >
+            {presetDistance} miles
+          </button>
+        ))}
+      </div>
 
       <button
         onClick={requestLocation}
