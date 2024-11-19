@@ -78,6 +78,7 @@ public class UserService {
         Users editUser = usersRepository.findById(userId).get();
         
         editUser.setRole(role);
+        usersRepository.save(editUser);
     }
 
     public void adminDeleteUser(Integer userId){
@@ -90,6 +91,7 @@ public class UserService {
         
         deleteUser.setUsername("Deleted User");
         deleteUser.setEmail("Deleted User");
+        usersRepository.save(deleteUser);
     }
 
     

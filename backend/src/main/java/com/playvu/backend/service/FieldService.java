@@ -167,7 +167,6 @@ public class FieldService {
     }
 
     public void deleteField(Integer fieldId){
-
         Users user = userService.getUserFromJwt();
 
         if(fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()){
@@ -181,6 +180,8 @@ public class FieldService {
         
         Field field = fieldRepository.findById(fieldId).get();
         field.setAvailable(false);
+        fieldRepository.save(field);
+        
         return;
     }
 
