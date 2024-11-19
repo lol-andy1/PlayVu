@@ -33,7 +33,8 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
                    "username AS \"username\", " +
                    "email AS \"email\", " +
                    "bio AS \"bio\", " +
-                   "profile_picture AS \"profilePicture\" " +
+                   "profile_picture AS \"profilePicture\", " +
+                   "role "+
                    "FROM users", 
            nativeQuery = true)
     List< Map<String, Object> > getUsers();

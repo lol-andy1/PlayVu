@@ -61,9 +61,35 @@ public class UserService {
     public List < Map < String, Object > > getUsers(){
         Users user = getUserFromJwt();
         // if(user.getRole() != "admin"){
-        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have sufficient permissions.");
+        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
         // }
         return usersRepository.getUsers();
+    }
+
+    public void adminEditUser(Integer userId, String role){
+        Users user = getUserFromJwt();
+        if(user.getRole() != "admin"){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+        }
+        role = role.strip().toLowerCase();
+        if(role != "admin" && role != "field owner" && role != "player" && role != "captain"){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Role has to be of form: admin / field owner / player / captain");
+        }
+        Users editUser = usersRepository.findById(userId).get();
+        
+        editUser.setRole(role);
+    }
+
+    public void adminDeleteUser(Integer userId){
+        Users user = getUserFromJwt();
+        if(user.getRole() != "admin"){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+        }
+
+        Users deleteUser = usersRepository.findById(userId).get();
+        
+        deleteUser.setUsername("Deleted User");
+        deleteUser.setEmail("Deleted User");
     }
 
     
