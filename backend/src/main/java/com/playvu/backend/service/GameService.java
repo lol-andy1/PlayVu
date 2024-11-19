@@ -197,5 +197,16 @@ public class GameService {
         
     }
 
+    public void leaveGame(Integer gameId){
+        gameRepository.findById(gameId).get(); // check if game is present 
+
+        Users user = userService.getUserFromJwt();
+
+
+        GameParticipant gameParticipant = gameParticipantRepository.findByGameIdAndParticipantId(gameId, user.getUserId());
+        gameParticipantRepository.delete(gameParticipant);
+        
+    }
+
 
 }
