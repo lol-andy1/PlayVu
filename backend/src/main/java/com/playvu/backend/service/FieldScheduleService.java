@@ -5,9 +5,12 @@ package com.playvu.backend.service;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.playvu.backend.entity.FieldSchedule;
 import com.playvu.backend.entity.Users;
@@ -31,20 +34,24 @@ public class FieldScheduleService {
     @Autowired
     private UserService userService;
 
-    public void addFieldSchedule(HttpServletRequest request, Integer subfield_id, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
+    public void addFieldSchedule(HttpServletRequest request, Integer subFieldId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
 
         Users user = userService.getUserFromJwt();
 
-        Integer masterFieldId = subFieldRepository.findBySubFieldId(subfield_id).getMasterFieldId();
+        Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
         if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
-            return;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control subfield: " + subFieldId);
         }
 
         FieldSchedule new_schedule = new FieldSchedule(); 
-        new_schedule.setSubFieldId(subfield_id); 
+        
+        new_schedule.setSubFieldId(subFieldId); 
         
         if(startDate.isAfter(endDate)){
-            return;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "End date cannot be before start date");
+        }
+        if(endDate.isBefore(LocalDateTime.now(ZoneOffset.UTC))){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "End date cannot be before current date");
         }
 
         new_schedule.setStartDate(startDate);
