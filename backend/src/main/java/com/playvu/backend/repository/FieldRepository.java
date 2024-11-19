@@ -28,7 +28,7 @@ public interface FieldRepository extends JpaRepository<Field, Integer> {
            nativeQuery = true)
     List<Integer> getNearestFields(@Param("latitude") Float latitude, @Param("longitude") Float longitude, @Param("distance") Float distance);
 
-    @Query(value = "SELECT f.name AS \"fieldName\", f.price, f.address AS \"address\", f.zip_code AS \"zipCode\", f.city AS \"city\", f.field_id AS \"fieldId\" FROM field f " +
+    @Query(value = "SELECT f.name AS \"fieldName\", f.price, f.description, f.address AS \"address\", f.zip_code AS \"zipCode\", f.city AS \"city\", f.field_id AS \"fieldId\" FROM field f " +
                    "WHERE f.owner_id = :ownerId AND f.available IS NOT FALSE", nativeQuery = true)
     List < Map<String, Object> > findByOwnerId(@Param("ownerId") Integer ownerId);
 

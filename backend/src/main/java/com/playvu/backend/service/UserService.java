@@ -35,7 +35,7 @@ public class UserService {
         return usersRepository.userDataByEmail(user.getEmail());
     }
 
-    public void editUser(HttpServletRequest request, String firstName, String lastName, String username, String bio, String profilePicture) throws URISyntaxException, IOException, InterruptedException{
+    public void editUser(String firstName, String lastName, String username, String bio, String profilePicture){
         Users user = getUserFromJwt();
 
         if (firstName != null) {
@@ -68,12 +68,12 @@ public class UserService {
 
     public void adminEditUser(Integer userId, String role){
         Users user = getUserFromJwt();
-        if(user.getRole() != "admin"){
+        if(!user.getRole().equals("admin")){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
         }
         role = role.strip().toLowerCase();
-        if(role != "admin" && role != "field owner" && role != "player" && role != "captain"){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Role has to be of form: admin / field owner / player / captain");
+        if(!role.equals("admin") && !role.equals("field owner") && !role.equals("player")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Role has to be of form: admin / field owner / player");
         }
         Users editUser = usersRepository.findById(userId).get();
         
@@ -83,7 +83,7 @@ public class UserService {
 
     public void adminDeleteUser(Integer userId){
         Users user = getUserFromJwt();
-        if(user.getRole() != "admin"){
+        if(!user.getRole().equals("admin")){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
         }
 
