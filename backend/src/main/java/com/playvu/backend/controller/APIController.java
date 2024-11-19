@@ -44,7 +44,7 @@ public class APIController {
 
     @PostMapping(value = "/add-field")
     public Integer addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getPrice(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
     @PostMapping(value = "/edit-field")
