@@ -83,6 +83,8 @@ public class FieldService {
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
         // }
+        String full_address = address + ", " + zipCode + ", " + city;
+        Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
         Field newField = new Field();
 
         newField.setOwnerId(user.getUserId());
@@ -94,8 +96,6 @@ public class FieldService {
         newField.setPrice(price);
         newField.setAvailable(true);
         
-        String full_address = address + ", " + zipCode + ", " + city;
-        Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
         newField.setLatitude(new_field_coordinates.get("latitude"));
         newField.setLongitude(new_field_coordinates.get("longitude"));
         
