@@ -1,7 +1,6 @@
 package com.playvu.backend.entity;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +35,9 @@ public class Game {
 
     @Column()
     private Float price;
+
+    @Column()
+    private Integer maxPlayers;
 
     public Integer getGameId() {
         return gameId;
@@ -91,6 +93,15 @@ public class Game {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public Integer getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public void setMaxPlayers(Integer maxPlayers) {
+        this.maxPlayers = maxPlayers;
     }    
+    
     
 }

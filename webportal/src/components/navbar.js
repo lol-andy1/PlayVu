@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link, useLocation } from "react-router-dom";
+import { useRole } from "../RoleContext";
 
 const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
   const location = useLocation();
+  const { role } = useRole();
 
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
 
@@ -94,7 +96,7 @@ const Navbar = () => {
                 Home
               </Link>
             </li>
-            {isAuthenticated && (
+            {/* {isAuthenticated && (
               <li>
                 <Link
                   to="/schedule"
@@ -110,25 +112,25 @@ const Navbar = () => {
                   )}
                 </Link>
               </li>
-            )}
-            {isAuthenticated && (
+            )} */}
+            {isAuthenticated && ["field owner", "admin"].includes(role) && (
               <li>
                 <Link
-                  to="/fields"
+                  to="/FieldOwner"
                   className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
-                    location.pathname === "/fields"
+                    location.pathname === "/FieldOwner"
                       ? "bg-green-100 dark:bg-green-800"
                       : ""
                   }`}
                 >
-                  Fields
-                  {location.pathname === "/fields" && (
+                  Field Management
+                  {location.pathname === "/FieldOwner" && (
                     <span className="sr-only">(current)</span>
                   )}
                 </Link>
               </li>
             )}
-            {isAuthenticated && (
+            {/* {isAuthenticated && (
               <li>
                 <Link
                   to="/games"
@@ -144,24 +146,77 @@ const Navbar = () => {
                   )}
                 </Link>
               </li>
-            )}
-            {isAuthenticated && (
+            )} */}
+            {isAuthenticated &&
+              ["field owner", "admin", "captain", "player"].includes(role) && (
+                <li>
+                  <Link
+                    to="/profile"
+                    className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
+                      location.pathname === "/profile"
+                        ? "bg-green-100 dark:bg-green-800"
+                        : ""
+                    }`}
+                  >
+                    Profile
+                    {location.pathname === "/profile" && (
+                      <span className="sr-only">(current)</span>
+                    )}
+                  </Link>
+                </li>
+              )}
+            {isAuthenticated && ["admin"].includes(role) && (
               <li>
                 <Link
-                  to="/search"
+                  to="/admin"
                   className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
-                    location.pathname === "/search"
+                    location.pathname === "/Admin"
                       ? "bg-green-100 dark:bg-green-800"
                       : ""
                   }`}
                 >
-                  Search
-                  {location.pathname === "/search" && (
+                  Admin
+                  {location.pathname === "/admin" && (
                     <span className="sr-only">(current)</span>
                   )}
                 </Link>
               </li>
             )}
+            {isAuthenticated && ["admin", "captain"].includes(role) && (
+              <li>
+                <Link
+                  to="/organize/games"
+                  className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
+                    location.pathname === "/organize/games"
+                      ? "bg-green-100 dark:bg-green-800"
+                      : ""
+                  }`}
+                >
+                  Organize
+                  {location.pathname === "/organize/games" && (
+                    <span className="sr-only">(current)</span>
+                  )}
+                </Link>
+              </li>
+            )}
+            {isAuthenticated &&
+              ["captain", "player", "admin"].includes(role) && (
+                <li>
+                  <Link
+                    to="/search"
+                    className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
+                      location.pathname === "/search"
+                        ? "bg-green-100 dark:bg-green-800"
+                        : ""
+                    }`}
+                  >
+                    Search
+                    {location.pathname === "/search" && (
+                      <span className="sr-only">(current)</span>
+                    )}
+                  </Link>
+                </li>
+              )}
           </ul>
         </div>
       </div>

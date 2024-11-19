@@ -31,18 +31,20 @@ const Search = () => {
   useEffect(() => {
     const getGames = async () => {
       try {
-        const res = await axios.get(
-          `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance*1.609}`
-        );
-        const sortedGames = res.data
-        .map((game) => ({
-          duration: game.duration,
-          name: game.name,
-          date: game.start_date,
-          price: game.price,
-        }))
-        .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by date here
-        setGames(sortedGames);
+        if (location){
+          const res = await axios.get(
+            `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance*1.609}`
+          );
+          setGames(
+            res.data.map((game) => ({
+              duration: game.duration,
+              name: game.name,
+              startDate: new Date(game.timezone),
+              price: game.price,
+            }))
+          );
+        }
+
       } catch (err) {
         console.error(err);
       }
@@ -134,12 +136,7 @@ const Search = () => {
             name={game.name}
             price={game.price}
             duration={game.duration}
-            date={new Date(game.date).toLocaleString("en-US", {
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            startDate={game.startDate}
           />
         ))}
       </div>

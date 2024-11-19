@@ -31,13 +31,23 @@ public class Field {
     @Column(nullable = false)
     private String city;
 
+    @Column()
     private String description;
 
-    // TODO: Add field image field 
+    @Column()
+    private String picture; // Will be stored as URL
 
+    @Column()
     public Float latitude;
 
+    @Column()
     public Float longitude;
+
+    @Column()
+    public Float price;
+
+    @Column()
+    public Boolean available;
 
     public Integer getFieldId() {
         return fieldId;
@@ -109,10 +119,31 @@ public class Field {
 
     public void setName(String name) {
         this.name = name;
-    }  
+    }
 
-    
-    
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }  
     
     
 }

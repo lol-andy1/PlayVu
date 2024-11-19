@@ -4,11 +4,13 @@ import FieldTable from "./components/FieldTable";
 import FieldModal from "./components/FieldModal";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
+import AssignAvailabilities from "./Schedule";
 
 const Fields = () => {
   const { isAuthenticated } = useAuth0();
   const [fields, setFields] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedField, setSelectedField] = useState(null);
   const [subfieldName, setSubfieldName] = useState("");
 
@@ -27,6 +29,7 @@ const Fields = () => {
         streetAddress: field.address,
         zipCode: field.zipCode,
         city: field.city,
+        price: field.price,
         description: field.description || "No description provided",
         subfields: field.subFields.map((subField) => ({
           id: subField.subFieldId,
@@ -47,6 +50,15 @@ const Fields = () => {
     };
     setSelectedField(fieldWithSubfields);
     setIsModalOpen(true);
+  };
+
+  const deleteField = (field) => {
+    const fieldWithSubfields = {
+      ...field,
+      subfields: field.subfields || [],
+    };
+    setSelectedField(fieldWithSubfields);
+    setIsDeleteModalOpen(true);
   };
 
   const addSubfield = async () => {
@@ -81,7 +93,7 @@ const Fields = () => {
         subFieldId: subfieldId,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         const updatedSubfields = selectedField.subfields.filter(
           (subfield) => subfield.id !== subfieldId
         );
@@ -101,11 +113,12 @@ const Fields = () => {
         name: selectedField.name,
         address: selectedField.streetAddress,
         zipCode: selectedField.zipCode,
+        price: selectedField.price,
         description: selectedField.description,
         city: selectedField.city,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         const updatedFields = fields.map((field) =>
           field.id === selectedField.id ? selectedField : field
         );
@@ -127,11 +140,25 @@ const Fields = () => {
         zipCode: field.zipCode,
         city: field.city,
       });
-      if (response.status === 201) {
-        setFields([...fields, response.data]);
+      if (response.status === 200 || response.status === 201) {
+        fetchFields();
       }
     } catch (error) {
       console.error("Error adding field:", error);
+    }
+  };
+
+  const handleDeleteField = async () => {
+    try {
+      const response = await axios.post("/api/delete-field", {
+        fieldId: selectedField.id,
+      });
+      if (response.status === 200 || response.status === 201) {
+        fetchFields();
+        setIsDeleteModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error deleting field:", error);
     }
   };
 
@@ -147,7 +174,11 @@ const Fields = () => {
         )}
       />
 
-      <FieldTable fields={fields} onEditField={editField} />
+      <FieldTable
+        fields={fields}
+        onEditField={editField}
+        onDeleteField={deleteField}
+      />
 
       <FieldModal
         isOpen={isModalOpen}
@@ -169,8 +200,83 @@ const Fields = () => {
         }}
         saveField={saveField}
       />
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
+            <h2 className="text-lg font-bold mb-4">Are you sure?</h2>
+            <p className="mb-6">
+              Do you really want to delete this field? This action cannot be
+              undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteField}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Fields;
+const FieldOwnerView = () => {
+  const navItems = [
+    { name: "Field Management" },
+    { name: "Schedule Management" },
+  ];
+
+  const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
+
+  const renderContent = () => {
+    switch (selectedNavItem) {
+      case "Field Management":
+        return <Fields />;
+      case "Schedule Management":
+        return <AssignAvailabilities />;
+      default:
+        return <Fields />;
+    }
+  };
+
+  return (
+    <div>
+      <div className="bg-green-600 shadow-lg flex justify-between items-center px-6 py-3">
+        <div className="flex gap-6">
+          {navItems.map((item, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedNavItem(item.name)}
+              className={`text-white text-sm font-semibold transition duration-300 ${
+                selectedNavItem === item.name
+                  ? "underline decoration-2 decoration-white"
+                  : "hover:text-gray-200"
+              }`}
+            >
+              {item.name}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-4">
+          {/* <button className="bg-white text-green-600 text-sm font-medium px-4 py-2 rounded hover:bg-gray-100 transition duration-300">
+            right side button
+          </button> */}
+        </div>
+      </div>
+
+      <div className="p-6 bg-gray-100 min-h-screen">{renderContent()}</div>
+    </div>
+  );
+};
+
+export default FieldOwnerView;
