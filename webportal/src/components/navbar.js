@@ -128,7 +128,7 @@ const Navbar = () => {
                 </Link>
               </li>
             )}
-            {isAuthenticated && (
+            {/* {isAuthenticated && (
               <li>
                 <Link
                   to="/games"
@@ -144,19 +144,36 @@ const Navbar = () => {
                   )}
                 </Link>
               </li>
-            )}
+            )} */}
             {isAuthenticated && (
               <li>
                 <Link
                   to="/profile"
                   className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
-                    location.pathname === "/games"
+                    location.pathname === "/profile"
                       ? "bg-green-100 dark:bg-green-800"
                       : ""
                   }`}
                 >
                   Profile
                   {location.pathname === "/profile" && (
+                    <span className="sr-only">(current)</span>
+                  )}
+                </Link>
+              </li>
+            )}
+            {isAuthenticated && (
+              <li>
+                <Link
+                  to="/admin"
+                  className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
+                    location.pathname === "/Admin"
+                      ? "bg-green-100 dark:bg-green-800"
+                      : ""
+                  }`}
+                >
+                  Admin
+                  {location.pathname === "/admin" && (
                     <span className="sr-only">(current)</span>
                   )}
                 </Link>

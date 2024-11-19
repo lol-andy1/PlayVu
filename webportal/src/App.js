@@ -5,7 +5,7 @@ import Home from "./Home";
 import Schedule from "./Schedule";
 import Fields from "./Fields";
 import Games from "./Games";
-import Profile from "./Profile"
+import Profile from "./Profile";
 import Search from "./Search";
 import Navbar from "./components/navbar";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -16,6 +16,7 @@ import OrganizeGames from "./organizerView/OrganizeGames";
 import SelectTimeslot from "./organizerView/SelectTimeslot";
 import ConfigureGame from "./organizerView/ConfigureGame";
 import OrganizeConfirm from "./organizerView/OrganizeConfirm";
+import Admin from "./Admin";
 
 function App() {
   // TODO: adding role base routes
@@ -74,63 +75,66 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/organize"
           element={
             <ProtectedRoute>
-              <Organize/>
+              <Organize />
             </ProtectedRoute>
           }
         >
-          <Route 
+          <Route
             path="games"
             element={
               <ProtectedRoute>
-                <OrganizeGames/>
+                <OrganizeGames />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="select-field"
             element={
               <ProtectedRoute>
-                <SelectField/>
+                <SelectField />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="select-time"
             element={
               <ProtectedRoute>
-                <SelectTimeslot/>
+                <SelectTimeslot />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="configure"
             element={
               <ProtectedRoute>
-                <ConfigureGame/>
+                <ConfigureGame />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="confirm"
             element={
               <ProtectedRoute>
-                <OrganizeConfirm/>
+                <OrganizeConfirm />
               </ProtectedRoute>
             }
           />
         </Route>
 
-        <Route
-          path="/search"
-          element={
-            <Search />
-          }
-        />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </Router>
   );
