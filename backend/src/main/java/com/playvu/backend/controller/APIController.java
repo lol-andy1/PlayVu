@@ -156,6 +156,16 @@ public class APIController {
     public void editUser(HttpServletRequest request, @RequestBody Users userBody) throws URISyntaxException, IOException, InterruptedException {
         userService.editUser(request, userBody.getFirstName(), userBody.getLastName(), userBody.getUsername(), userBody.getBio(), userBody.getProfilePicture());
     }
+
+    @PostMapping(value = "/admin-edit-user")
+    public void adminEditUser(@RequestBody Users userBody) throws URISyntaxException, IOException, InterruptedException {
+        userService.adminEditUser(userBody.getUserId(), userBody.getRole());
+    }
+
+    @PostMapping(value = "/admin-delete-user")
+    public void editUser(@RequestBody Users userBody) throws URISyntaxException, IOException, InterruptedException {
+        userService.adminDeleteUser(userBody.getUserId());
+    }
     
 
 }
