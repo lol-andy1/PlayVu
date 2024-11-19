@@ -9,13 +9,13 @@ import { loadStripe } from "@stripe/stripe-js";
 
 const domain = process.env.REACT_APP_DOMAIN;
 const clientId = process.env.REACT_APP_CLIENT_ID;
-axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
-const stripePromise = loadStripe(process.env.STRIPE_API_KEY);
+// axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+// const stripePromise = loadStripe(process.env.STRIPE_API_KEY);
 
-const stripe_options = {
-  // passing the client secret obtained from the server
-  clientSecret: "{{CLIENT_SECRET}}",
-};
+// const stripe_options = {
+//   // passing the client secret obtained from the server
+//   clientSecret: "{{CLIENT_SECRET}}",
+// };
 
 if (!domain || !clientId) {
   console.error(
@@ -41,9 +41,9 @@ root.render(
       }}
       cacheLocation="localstorage"
     >
-      <Elements stripe={stripePromise} options={stripe_options}>
-        <App />
-      </Elements>
+      {/* <Elements stripe={stripePromise} options={stripe_options}> */}
+      <App />
+      {/* </Elements> */}
     </Auth0Provider>
   </React.StrictMode>,
 );
