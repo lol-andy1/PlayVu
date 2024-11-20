@@ -57,6 +57,7 @@ const Search = () => {
             name: game.name,
             startDate: new Date(game.timezone),
             price: game.price,
+            sub_field_id: game.field,
             playerCount: game.playerCount,
             max_players: game.max_players,
           }))
@@ -159,14 +160,14 @@ const Search = () => {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {filteredGames.map((game, index) => (
           <GameCard
-            key={index}
-            id={index}
+            id={game.id}
             name={game.name}
             price={game.price}
             location={game.location}
             startDate={game.startDate}
             playerCount={game.playerCount}
             max_players={game.max_players}
+            field={game.field}
           />
         ))}
       </div>
