@@ -5,7 +5,7 @@ import Home from "./Home";
 import Schedule from "./Schedule";
 import Fields from "./Fields";
 import Games from "./Games";
-import Profile from "./Profile"
+import Profile from "./Profile";
 import Search from "./Search";
 import Navbar from "./components/navbar";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -16,10 +16,12 @@ import OrganizeGames from "./organizerView/OrganizeGames";
 import SelectTimeslot from "./organizerView/SelectTimeslot";
 import ConfigureGame from "./organizerView/ConfigureGame";
 import OrganizeConfirm from "./organizerView/OrganizeConfirm";
+import Admin from "./Admin";
+import { RoleProvider, useRole } from "./RoleContext";
 
 function App() {
-  // TODO: adding role base routes
-  const { getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
+  const { setRole } = useRole();
 
   useEffect(() => {
     axios.interceptors.request.use(
@@ -37,23 +39,40 @@ function App() {
       (error) => Promise.reject(error)
     );
   }, []);
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      if (isAuthenticated) {
+        try {
+          const response = await axios.get("/api/get-user");
+          setRole(response.data.role);
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+        }
+      } else {
+        setRole(null);
+      }
+    };
+
+    fetchUserRole();
+  }, [isAuthenticated, getAccessTokenSilently, setRole]);
   return (
     <Router>
       <Navbar />
       <Routes>
         <Route index element={<Home />} />
-        <Route
+        {/* <Route
           path="/schedule"
           element={
             <ProtectedRoute>
               <Schedule />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
-          path="/fields"
+          path="/FieldOwner"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["field owner", "admin"]}>
               <Fields />
             </ProtectedRoute>
           }
@@ -69,8 +88,16 @@ function App() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["field owner", "admin", "player"]}>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <Admin />
             </ProtectedRoute>
           }
         />
@@ -78,48 +105,48 @@ function App() {
         <Route
           path="/organize"
           element={
-            <ProtectedRoute>
-              <Organize/>
+            <ProtectedRoute allowedRoles={["admin", "player"]}>
+              <Organize />
             </ProtectedRoute>
           }
         >
-          <Route 
+          <Route
             path="games"
             element={
-              <ProtectedRoute>
-                <OrganizeGames/>
+              <ProtectedRoute allowedRoles={["admin", "player"]}>
+                <OrganizeGames />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="select-field"
             element={
-              <ProtectedRoute>
-                <SelectField/>
+              <ProtectedRoute allowedRoles={["admin", "player"]}>
+                <SelectField />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="select-time"
             element={
-              <ProtectedRoute>
-                <SelectTimeslot/>
+              <ProtectedRoute allowedRoles={["admin", "player"]}>
+                <SelectTimeslot />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="configure"
             element={
-              <ProtectedRoute>
-                <ConfigureGame/>
+              <ProtectedRoute allowedRoles={["admin", "player"]}>
+                <ConfigureGame />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="confirm"
             element={
-              <ProtectedRoute>
-                <OrganizeConfirm/>
+              <ProtectedRoute allowedRoles={["admin", "player"]}>
+                <OrganizeConfirm />
               </ProtectedRoute>
             }
           />
@@ -128,7 +155,9 @@ function App() {
         <Route
           path="/search"
           element={
-            <Search />
+            <ProtectedRoute allowedRoles={["player", "admin"]}>
+              <Search />
+            </ProtectedRoute>
           }
         />
       </Routes>
@@ -136,4 +165,10 @@ function App() {
   );
 }
 
-export default App;
+export default function AppWithProviders() {
+  return (
+    <RoleProvider>
+      <App />
+    </RoleProvider>
+  );
+}

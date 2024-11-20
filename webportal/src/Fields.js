@@ -4,6 +4,7 @@ import FieldTable from "./components/FieldTable";
 import FieldModal from "./components/FieldModal";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
+import AssignAvailabilities from "./Schedule";
 
 const Fields = () => {
   const { isAuthenticated } = useAuth0();
@@ -28,6 +29,7 @@ const Fields = () => {
         streetAddress: field.address,
         zipCode: field.zipCode,
         city: field.city,
+        price: field.price,
         description: field.description || "No description provided",
         subfields: field.subFields.map((subField) => ({
           id: subField.subFieldId,
@@ -91,7 +93,7 @@ const Fields = () => {
         subFieldId: subfieldId,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         const updatedSubfields = selectedField.subfields.filter(
           (subfield) => subfield.id !== subfieldId
         );
@@ -111,11 +113,12 @@ const Fields = () => {
         name: selectedField.name,
         address: selectedField.streetAddress,
         zipCode: selectedField.zipCode,
+        price: selectedField.price,
         description: selectedField.description,
         city: selectedField.city,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         const updatedFields = fields.map((field) =>
           field.id === selectedField.id ? selectedField : field
         );
@@ -137,8 +140,8 @@ const Fields = () => {
         zipCode: field.zipCode,
         city: field.city,
       });
-      if (response.status === 201) {
-        setFields([...fields, response.data]);
+      if (response.status === 200 || response.status === 201) {
+        fetchFields();
       }
     } catch (error) {
       console.error("Error adding field:", error);
@@ -146,7 +149,17 @@ const Fields = () => {
   };
 
   const handleDeleteField = async () => {
-    alert("field is deleted: " + selectedField.name);
+    try {
+      const response = await axios.post("/api/delete-field", {
+        fieldId: selectedField.id,
+      });
+      if (response.status === 200 || response.status === 201) {
+        fetchFields();
+        setIsDeleteModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error deleting field:", error);
+    }
   };
 
   return (
@@ -217,4 +230,53 @@ const Fields = () => {
   );
 };
 
-export default Fields;
+const FieldOwnerView = () => {
+  const navItems = [
+    { name: "Field Management" },
+    { name: "Schedule Management" },
+  ];
+
+  const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
+
+  const renderContent = () => {
+    switch (selectedNavItem) {
+      case "Field Management":
+        return <Fields />;
+      case "Schedule Management":
+        return <AssignAvailabilities />;
+      default:
+        return <Fields />;
+    }
+  };
+
+  return (
+    <div>
+      <div className="bg-green-600 shadow-lg flex justify-between items-center px-6 py-3">
+        <div className="flex gap-6">
+          {navItems.map((item, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedNavItem(item.name)}
+              className={`text-white text-sm font-semibold transition duration-300 ${
+                selectedNavItem === item.name
+                  ? "underline decoration-2 decoration-white"
+                  : "hover:text-gray-200"
+              }`}
+            >
+              {item.name}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-4">
+          {/* <button className="bg-white text-green-600 text-sm font-medium px-4 py-2 rounded hover:bg-gray-100 transition duration-300">
+            right side button
+          </button> */}
+        </div>
+      </div>
+
+      <div className="p-6 bg-gray-100 min-h-screen">{renderContent()}</div>
+    </div>
+  );
+};
+
+export default FieldOwnerView;

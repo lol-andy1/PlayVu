@@ -6,6 +6,7 @@ const AddField = ({ onSendField, lastId }) => {
     streetAddress: "",
     zipCode: "",
     city: "",
+    price: NaN,
     description: "",
   };
 
@@ -21,6 +22,7 @@ const AddField = ({ onSendField, lastId }) => {
     if (!/^\d{5}$/.test(formData.zipCode))
       newErrors.zipCode = "Zip Code must be 5 digits.";
     if (!formData.city) newErrors.city = "City is required.";
+    if (!formData.price) newErrors.price = "Price is required.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -33,6 +35,7 @@ const AddField = ({ onSendField, lastId }) => {
         streetAddress: formData.streetAddress,
         zipCode: formData.zipCode,
         city: formData.city,
+        price: formData.price,
         description: formData.description,
       };
       onSendField(fieldInfo);
@@ -146,6 +149,29 @@ const AddField = ({ onSendField, lastId }) => {
             />
             {errors.city && (
               <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+            )}
+          </div>
+
+          {/* Price */}
+          <div className="mb-4">
+            <label
+              htmlFor="price"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Price
+            </label>
+            <input
+              onChange={(e) =>
+                setFormData({ ...formData, price: e.target.value })
+              }
+              type="number"
+              name="price"
+              id="price"
+              value={formData.price}
+              className="w-full p-2 mt-1 border rounded focus:ring-green-500 focus:border-green-500"
+            />
+            {errors.price && (
+              <p className="text-red-500 text-xs mt-1">{errors.price}</p>
             )}
           </div>
 

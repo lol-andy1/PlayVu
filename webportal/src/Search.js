@@ -3,41 +3,72 @@ import GameCard from "./components/GameCard";
 import axios from "axios";
 
 const Search = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [games, setGames] = useState([]);
-  const [filterKey, setFilterKey] = useState("name");
   const [location, setLocation] = useState(null);
   const [distance, setDistance] = useState("");
-  const filterKeys = ["name", "duration", "price", "date"];
+  const [sortKey, setSortKey] = useState("id");
+  const [manualLocation, setManualLocation] = useState("");
 
-  // Filter games based on search query and selected filter key
-  const filteredGames = games.filter((game) =>
-    game[filterKey]?.toString().toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Function to geocode a manual location input
+  const geocodeLocation = async (locationInput) => {
+    try {
+      const res = await axios.get(
+        `https://api.opencagedata.com/geocode/v1/json`,
+        {
+          params: {
+            q: locationInput,
+            key: "31c7fc5d9b594087b094b82c77d6cd2f",
+          },
+        }
+      );
+      if (res.data.results.length > 0) {
+        const { lat, lng } = res.data.results[0].geometry;
+        setLocation({ latitude: lat, longitude: lng });
+      } else {
+        console.error("No results found for the provided location.");
+      }
+    } catch (err) {
+      console.error("Error while geocoding:", err);
+    }
+  };
+
+  // Sorting logic
+  const filteredGames = [...games].sort((a, b) => {
+    if (sortKey === "price") {
+      return (a.price || 0) - (b.price || 0);
+    } else if (sortKey === "date") {
+      return new Date(a.date) - new Date(b.date);
+    } else if (sortKey === "players") {
+      return a.playerCount - b.playerCount;
+    } else {
+      return 0;
+    }
+  });
 
   useEffect(() => {
     const getGames = async () => {
       try {
-        if (location){
-          const res = await axios.get(
-            `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance*1.609}`
-          );
-          setGames(
-            res.data.map((game) => ({
-              duration: game.duration,
-              name: game.name,
-              startDate: new Date(game.timezone),
-              price: game.price,
-            }))
-          );
-        }
-
+        const res = await axios.get(
+          `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance * 1.609}`
+        );
+        const sortedGames = res.data
+          .map((game) => ({
+            location: game.location,
+            name: game.name,
+            startDate: new Date(game.timezone),
+            price: game.price,
+            playerCount: game.playerCount,
+            max_players: game.max_players,
+          }))
+          .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        setGames(sortedGames);
       } catch (err) {
         console.error(err);
       }
     };
-
-    getGames();
+    if (location) {
+      getGames();
+    }
   }, [location, distance]);
 
   // Request and update location using browser geolocation API
@@ -60,60 +91,69 @@ const Search = () => {
   return (
     <div style={{ padding: "20px", backgroundColor: "#ffffff", minHeight: "100vh" }}>
       <div>
-      <input
-        type="number"
-        placeholder="Enter distance in miles"
-        value={distance}
-        onChange={(e) => setDistance(e.target.value)}
-        style={{
-          padding: "10px",
-          marginBottom: "10px",
-          borderRadius: "5px",
-          border: "1px solid #ddd",
-          width: "100%",
-        }}
-      />
+        <p style={{ marginBottom: "8px" }}>Select Distance:</p>
+        <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+          {[10, 25, 50, 100].map((presetDistance) => (
+            <button
+              key={presetDistance}
+              onClick={() => setDistance(presetDistance)}
+              style={{
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ddd",
+                backgroundColor: distance === presetDistance ? "gray" : "white",
+                color: distance === presetDistance ? "white" : "black",
+                cursor: "pointer",
+              }}
+            >
+              {presetDistance} miles
+            </button>
+          ))}
+        </div>
 
-      <button
-        onClick={requestLocation}
-        style={{ padding: "10px 15px", marginBottom: "10px" }}
-      >
-        Search Near My Location
-      </button>
-      
-      </div>
-      <div style={{ fontWeight: "bold" }}>To Futher Narrow Your Search:</div>
-      <input
-        type="text"
-        placeholder="Search games"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        style={{
-          padding: "10px",
-          width: "100%",
-          borderRadius: "5px",
-          border: "1px solid #ddd",
-        }}
-      />
-      <div style={{ fontWeight: "bold" }}>Filter by:</div>
-      <div style={{ display: "flex", marginBottom: "20px" }}>
-        {filterKeys.map((key) => (
+        <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
           <button
-            key={key}
-            onClick={() => setFilterKey(key)}
+            onClick={requestLocation}
+            className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          >
+            Use My Location
+          </button>
+
+          <input
+            type="text"
+            placeholder="Enter a Location (City, State)"
+            value={manualLocation}
+            onChange={(e) => setManualLocation(e.target.value)}
             style={{
               padding: "10px",
-              margin: "0 5px",
-              backgroundColor: filterKey === key ? "green" : "gray",
-              color: "white",
+              border: "1px solid #ddd",
               borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
+              width: "100%",
             }}
+          />
+          <button
+            onClick={() => geocodeLocation(manualLocation)}
+            className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
           >
-            {key}
+            Search
           </button>
-        ))}
+        </div>
+      </div>
+
+      {/* Dropdown or buttons for selecting sorting criteria */}
+      <div style={{ marginBottom: "16px" }}>
+        <label htmlFor="sort" style={{ marginRight: "8px" }}>
+          Sort By:
+        </label>
+        <select
+          id="sort"
+          value={sortKey}
+          onChange={(e) => setSortKey(e.target.value)}
+        >
+          <option value="date">Date</option>
+          <option value="price">Price</option>
+          <option value="players">Players</option>
+        </select>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -123,8 +163,10 @@ const Search = () => {
             id={index}
             name={game.name}
             price={game.price}
-            duration={game.duration}
+            location={game.location}
             startDate={game.startDate}
+            playerCount={game.playerCount}
+            max_players={game.max_players}
           />
         ))}
       </div>
