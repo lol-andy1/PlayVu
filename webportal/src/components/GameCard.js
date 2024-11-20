@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const GameCard = ({ id, name, price, duration, date, field }) => {
+const GameCard = ({ id, name, price, duration, date}) => {
   const navigate = useNavigate();
 
   return (

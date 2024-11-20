@@ -67,7 +67,7 @@ const GameDetails = () => {
             <Typography variant="h5" component="div" className="mb-4 text-center">
               {game.name || 'Game Title'}
             </Typography>
-            <Field team_1={game.team_1} team_2={game.team_2}/>
+            <Field team1={game.team_1} team2={game.team_2}/>
             <Typography variant="body1" className="mb-2">
               <span className="font-semibold">Location:</span> {game.location || 'N/A'}
             </Typography>
