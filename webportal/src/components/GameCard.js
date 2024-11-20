@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const GameCard = ({ id, name, price, duration, startDate, endDate }) => {
+const GameCard = ({ id, name, price, location, startDate, playerCount, max_players, endDate}) => {
   const navigate = useNavigate();
   const [liveGame, setLiveGame] = useState(false)
 
@@ -24,7 +24,8 @@ const GameCard = ({ id, name, price, duration, startDate, endDate }) => {
       style={{
         backgroundColor: "#f3f3f3",
         margin: "0px",
-        padding: "16px",
+        paddingBottom: "16px",
+        paddingRight: "16px",
         borderRadius: "8px",
         cursor: "pointer",
       }}
@@ -38,11 +39,20 @@ const GameCard = ({ id, name, price, duration, startDate, endDate }) => {
             <div className="rounded-full w-full bg-red-400"></div>
           </div>
         </div>
-
+        <p
+          style={{
+            fontSize: "16px",
+            color: "#888",
+            textAlign: "right",
+            marginRight: "8px",
+          }}
+        >
+          {playerCount} / {max_players}
+        </p>
         <h3 style={{ fontSize: "18px", fontWeight: "bold"}}>
           {name}
         </h3>
-        <p style={{ fontSize: "16px", marginBottom: "4px" }}>{duration}</p>
+        <p style={{ fontSize: "16px", marginBottom: "4px" }}>{location}</p>
         <p style={{ fontSize: "16px", marginBottom: "4px" }}>
           {new Intl.DateTimeFormat([], {
             timeZone: 'UTC',
