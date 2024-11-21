@@ -51,19 +51,19 @@ const Search = () => {
         const res = await axios.get(
           `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance * 1.609}`
         );
-        setGames(
-          res.data.map((game) => ({
-            duration: game.duration,
+        const sortedGames = res.data
+          .map((game) => ({
             id: game.game_id,
             location: game.location,
             name: game.name,
-            startDate: new Date(game.timezone),
+            startDate: new Date(game.start_date),
             price: game.price,
             sub_field_id: game.field,
             playerCount: game.playerCount,
             max_players: game.max_players,
           }))
-        );
+          .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        setGames(sortedGames);
       } catch (err) {
         console.error(err);
       }
@@ -164,8 +164,11 @@ const Search = () => {
             id={game.id}
             name={game.name}
             price={game.price}
-            duration={game.duration}
-            date={game.date}
+            location={game.location}
+            startDate={game.startDate}
+            playerCount={game.playerCount}
+            max_players={game.max_players}
+            field={game.field}
           />
         ))}
       </div>
