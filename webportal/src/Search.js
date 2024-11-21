@@ -63,8 +63,7 @@ const Search = () => {
             playerCount: game.playerCount,
             max_players: game.max_players,
           }))
-          .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-        setGames(sortedGames);
+        );
       } catch (err) {
         console.error(err);
       }
@@ -165,10 +164,8 @@ const Search = () => {
             id={game.id}
             name={game.name}
             price={game.price}
-            location={game.location}
-            startDate={game.startDate}
-            playerCount={game.playerCount}
-            max_players={game.max_players}
+            duration={game.duration}
+            date={game.date}
           />
         ))}
       </div>
