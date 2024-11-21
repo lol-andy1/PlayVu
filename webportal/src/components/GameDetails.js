@@ -25,7 +25,7 @@ const GameDetails = () => {
     useEffect(() => {
         // here put the axios request for game by id
         const getGameDetails = async () => {
-            try{
+          try{
                 const res = await axios.get(`/api/get-game-data?gameId=${slug}`);
                 const data = res.data;
                 console.log(data);
@@ -41,13 +41,86 @@ const GameDetails = () => {
                     team_2: data.team_2,
                     sideline: data.sideline
                   });
-            }
-            catch (err) {
+          }
+          catch (err) {
                 console.log(err)
-            }
+          }
         }
         getGameDetails();
-    }, []);
+    }, [game]);
+
+    const joinTeam = async (team) => {
+      if(game.player_count >= game.max_players && team > 0) {
+        alert('Game is full. Try joining sideline.') // Realistically this code should never happen
+      }
+      else {
+        try {
+          const res = await axios.post(`/api/join-game`, {
+            gameId: slug,
+            team: team
+          })
+          if (res.status === 200) {
+            alert(`Successfully joined ${team === 1 ? 'Team 1' : team === 2 ? 'Team 2' : 'the Sideline'}!`);
+            try {
+              const response = axios.get(`/api/get-game-data?gameId=${slug}`);
+              const data = response.data;
+              setGame({
+                name: data.name,
+                location: data.location,
+                player_count: data.playerCount,
+                max_players: data.max_players,
+                price: data.price,
+                field: data.sub_field_name,
+                date: data.timezone,
+                team_1: data.team_1,
+                team_2: data.team_2,
+                sideline: data.sideline
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+        catch (err) {
+          console.log(err);
+          alert('Error joining. Please try again.')
+        }
+      }
+    }
+
+    const leaveGame = async () => {
+      try {
+        const res = await axios.post(`api/leave-game`, {
+          gameId: slug
+        })
+        if (res.status === 200) {
+          alert(`Successfully left game!`);
+          try {
+            const response = axios.get(`/api/get-game-data?gameId=${slug}`);
+            const data = response.data;
+            setGame({
+              name: data.name,
+              location: data.location,
+              player_count: data.playerCount,
+              max_players: data.max_players,
+              price: data.price,
+              field: data.sub_field_name,
+              date: data.timezone,
+              team_1: data.team_1,
+              team_2: data.team_2,
+              sideline: data.sideline
+            });
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+        alert('Failure to leave game. Please try again.')
+      }
+    }
+
+    // game.player_count = game.max_players;
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
@@ -92,10 +165,48 @@ const GameDetails = () => {
             <Typography variant="body1" className="mb-2">
               <span className="font-semibold">Sideline:</span> {game.sideline.length > 0 ? game.sideline.join(', ') : 'Sideline is currently empty'}
             </Typography>
+            <div className="flex justify-around mt-4">
+              {game.player_count < game.max_players ? (
+                <>
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: '#d32f2f', color: '#ffffff' }}
+                    onClick={() => joinTeam(1)}
+                  >
+                    Join Team 1
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: '#1976d2', color: '#ffffff' }}
+                    onClick={() => joinTeam(2)}
+                  >
+                    Join Team 2
+                  </Button>
+                </>
+              ) : (
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: '#14532d', color: '#ffffff' }}
+                    onClick={() => joinTeam(0)}
+                  >
+                    Join Sideline
+                  </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
+        <div className="w-full max-w-md mt-4 px-4">
+          <Button
+            variant="contained"
+            style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
+            onClick={leaveGame}
+            className="w-full"
+          >
+            Leave Game
+          </Button>
+        </div>
       </div>
     );
-    };
+};
 
 export default GameDetails; 

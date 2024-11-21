@@ -8,7 +8,6 @@ const Field = ({team1, team2}) => {
     //     "Frank Harris", "Grace Clark"]
     team1.slice(0,15);
     team2.slice(0,15);
-    console.log(team1, team2);
 
     const isTeam2 = (left) => parseFloat(left) < 50;
 
