@@ -26,7 +26,6 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
         margin: "0px",
         paddingBottom: "16px",
         paddingRight: "16px",
-        borderRadius: "8px",
         cursor: "pointer",
       }}
     >
@@ -39,16 +38,7 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
             <div className="rounded-full w-full bg-red-400"></div>
           </div>
         </div>
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#888",
-            textAlign: "right",
-            marginRight: "8px",
-          }}
-        >
-          {playerCount} / {max_players}
-        </p>
+      
         <h3 style={{ fontSize: "18px", fontWeight: "bold"}}>
           {name}
         </h3>
@@ -56,16 +46,17 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
         <p style={{ fontSize: "16px", marginBottom: "4px" }}>
           {new Date(startDate).toLocaleString()}
         </p>
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#888",
-            textAlign: "right",
-            marginRight: "8px",
-          }}
-        >
-          Price: {price ? `$${price}` : "Free"}
-        </p>
+        <div className="flex justify-between px-2 text-gray-500">
+          {playerCount !== null &&
+            <p>
+              {playerCount} / {max_players}
+            </p>
+          }
+          <p>
+            Price: {price ? `$${price}` : "Free"}
+          </p>
+        </div>
+
       </div>
     </button>
   );

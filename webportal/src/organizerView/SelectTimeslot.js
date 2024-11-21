@@ -211,12 +211,12 @@ const SelectTimeslot = () => {
         </div>
       </div>
 
-      <div className="h-[50vh] overflow-scroll border-y-2 border-gray-500 py-1">
+      <div className="h-[50vh] overflow-scroll border-y-2 border-gray-500 pt-2">
         {timeslots ?
           (timeslots.length > 0 ?
             (timeslots.map((slot, index) => (
-              <div className="flex px-6" key={index}>
-                <h1 className="-translate-y-2 w-20">{slot.time.toLocaleString([], { hour: '2-digit', minute: '2-digit'})}</h1>
+              <div className="flex space-x-2 px-6" key={index}>
+                <h1 className="text-lg -translate-y-3 w-20">{index % 2 === 0 ? slot.time.toLocaleString([], { hour: '2-digit', minute: '2-digit'}): ""}</h1>
                 <button 
                   className={`flex-1 h-10 border-t border-x border-black ${slot.status === 1 ? "bg-gray-100" : (slot.status === 0 ? "bg-gray-400" : "bg-green-300")}`}
                   onClick={() => handleSelect(index)}

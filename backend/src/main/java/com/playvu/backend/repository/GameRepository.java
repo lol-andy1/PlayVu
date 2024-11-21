@@ -34,11 +34,14 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
                         "WHERE gp.participant_id = :participantId", nativeQuery = true)
         List<Map<String, Object>> findByGameParticipant(@Param("participantId") Integer participantId);
 
-        @Query(value = "SELECT g.game_id AS \"gameId\", g.max_players AS \"maxPlayers\", g.name, g.price, g.start_date AT TIME ZONE 'UTC' AS \"startDate\", g.end_date AT TIME ZONE 'UTC' AS \"endDate\" "
-                        +
-                        "FROM game g " +
-                        "WHERE g.organizer_id = :organizerId", nativeQuery = true)
-        List<Map<String, Object>> findByOrganizerId(@Param("organizerId") Integer organizerId);
+                @Query(value = "SELECT g.game_id AS \"gameId\", g.max_players AS \"maxPlayers\", g.name, g.price, sf.name AS \"subfield\", f.name AS \"field\", " + 
+                                "g.start_date AT TIME ZONE 'UTC' AS \"startDate\", g.end_date AT TIME ZONE 'UTC' AS \"endDate\", " +
+                                "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\" " +
+                                "FROM game g " +
+                                "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
+                                "JOIN field f ON sf.master_field_id = f.field_id " +
+                                "WHERE g.organizer_id = :organizerId", nativeQuery = true)
+                List<Map<String, Object>> findByOrganizerId(@Param("organizerId") Integer organizerId);
 
         @Query(value = "SELECT g.game_id, g.max_players, g.name, g.start_date AT TIME ZONE 'UTC' AS start_date, g.end_date AT TIME ZONE 'UTC' AS end_date, g.price, mf.address AS \"location\", "
                         +

@@ -29,7 +29,7 @@ export const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, isLoading } = useAuth0();
   const { role } = useRole();
   {
-    console.log(role);
+    //console.log(role);
   }
 
   if (isLoading) {

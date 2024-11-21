@@ -49,7 +49,7 @@ public class APIController {
 
     @PostMapping(value = "/edit-field")
     public void editField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        fieldService.editField(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+        fieldService.editField(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity(), fieldBody.getPrice());
     }
 
     @PostMapping(value = "/delete-field")
