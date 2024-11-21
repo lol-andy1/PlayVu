@@ -18,6 +18,7 @@ const Organize = () => {
     navigate("/organize/games")
     setGameData({})
     setSubfield({})
+    setCurrStep(-1)
   }
 
   const changeStep = (stepNum) =>{
