@@ -5,7 +5,7 @@ import axios from "axios";
 const Search = () => {
   const [games, setGames] = useState([]);
   const [location, setLocation] = useState(null);
-  const [distance, setDistance] = useState("");
+  const [distance, setDistance] = useState(10);
   const [sortKey, setSortKey] = useState("id");
   const [manualLocation, setManualLocation] = useState("");
 
@@ -91,47 +91,38 @@ const Search = () => {
   };
 
   return (
-    <div style={{ padding: "20px", backgroundColor: "#ffffff", minHeight: "100vh" }}>
+    <div className="p-4 bg-white min-h-screen">
       <div>
-        <p style={{ marginBottom: "8px" }}>Select Distance:</p>
-        <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-          {[10, 25, 50, 100].map((presetDistance) => (
-            <button
-              key={presetDistance}
-              onClick={() => setDistance(presetDistance)}
-              style={{
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ddd",
-                backgroundColor: distance === presetDistance ? "gray" : "white",
-                color: distance === presetDistance ? "white" : "black",
-                cursor: "pointer",
-              }}
-            >
-              {presetDistance} miles
-            </button>
-          ))}
+        <p className="text-center mt-2">
+          Selected Distance: <strong>{distance} miles</strong>
+        </p>
+        <div className="mb-4">
+          <input
+            type="range"
+            min="10"
+            max="100"
+            step="5"
+            value={distance}
+            onChange={(e) => setDistance(e.target.value)}
+            className="w-full"
+          />
         </div>
-
-        <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+        <div className="flex justify-center mb-4">
           <button
             onClick={requestLocation}
             className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
           >
-            Use My Location
+            Search By My Location
           </button>
-
+        </div>
+        <p className="text-center mt-2">OR</p>
+        <div className="flex gap-4 mb-4">
           <input
             type="text"
             placeholder="Enter a Location (City, State)"
             value={manualLocation}
             onChange={(e) => setManualLocation(e.target.value)}
-            style={{
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "5px",
-              width: "100%",
-            }}
+            className="p-2 text-lg border border-gray-300 rounded w-full"
           />
           <button
             onClick={() => geocodeLocation(manualLocation)}
@@ -143,14 +134,15 @@ const Search = () => {
       </div>
 
       {/* Dropdown or buttons for selecting sorting criteria */}
-      <div style={{ marginBottom: "16px" }}>
-        <label htmlFor="sort" style={{ marginRight: "8px" }}>
+      <div className="mb-4">
+        <label htmlFor="sort" className="mr-2">
           Sort By:
         </label>
         <select
           id="sort"
           value={sortKey}
           onChange={(e) => setSortKey(e.target.value)}
+          className="p-2 border border-gray-300 rounded"
         >
           <option value="date">Date</option>
           <option value="price">Price</option>
@@ -158,19 +150,27 @@ const Search = () => {
         </select>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        {filteredGames.map((game, index) => (
-          <GameCard
-            id={game.id}
-            name={game.name}
-            price={game.price}
-            location={game.location}
-            startDate={game.startDate}
-            playerCount={game.playerCount}
-            max_players={game.max_players}
-            field={game.field}
-          />
-        ))}
+      {/* Conditional Rendering for No Results */}
+      <div className="flex flex-col items-center">
+        {filteredGames.length === 0 ? (
+          <p className="text-lg text-gray-600 mt-6">
+            No results found. Try adjusting distance or searching in a different location.
+          </p>
+        ) : (
+          filteredGames.map((game) => (
+            <GameCard
+              key={game.id}
+              id={game.id}
+              name={game.name}
+              price={game.price}
+              location={game.location}
+              startDate={game.startDate}
+              playerCount={game.playerCount}
+              max_players={game.max_players}
+              field={game.field}
+            />
+          ))
+        )}
       </div>
     </div>
   );
