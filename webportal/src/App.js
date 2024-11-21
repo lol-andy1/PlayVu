@@ -8,6 +8,7 @@ import Games from "./Games";
 import Profile from "./Profile";
 import Search from "./Search";
 import Navbar from "./components/navbar";
+import GameDetails from "./components/GameDetails"
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import Organize from "./organizerView/Organize";
@@ -157,6 +158,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["player", "admin"]}>
               <Search />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/game-details/:slug"
+          element={
+            <ProtectedRoute allowedRoles={["player", "admin"]}>
+              <GameDetails/>
             </ProtectedRoute>
           }
         />

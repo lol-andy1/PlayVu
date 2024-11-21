@@ -37,12 +37,12 @@ public class FieldScheduleService {
 
     public void addFieldSchedule(HttpServletRequest request, Integer subFieldId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
 
-        // Users user = userService.getUserFromJwt();
+        Users user = userService.getUserFromJwt();
 
-        // Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
-        // if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
-        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control subfield: " + subFieldId);
-        // }
+        Integer masterFieldId = subFieldRepository.findBySubFieldId(subFieldId).getMasterFieldId();
+        if(fieldRepository.findById(masterFieldId).get().getOwnerId() != user.getUserId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control subfield: " + subFieldId);
+        }
 
         FieldSchedule newSchedule = new FieldSchedule(); 
         

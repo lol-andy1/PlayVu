@@ -1,0 +1,47 @@
+[33m37063189[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32min-game-view[m[33m)[m HEAD@{0}: commit (merge): Merge branch 'game-details' of https://github.com/lol-andy1/PlayVu into in-game-view
+[33mbf98ed12[m[33m ([m[1;31morigin/webportal[m[33m, [m[1;31morigin/in-game-view[m[33m)[m HEAD@{1}: checkout: moving from conner-search-react to in-game-view
+[33mee1b6fb2[m[33m ([m[1;31morigin/conner-search-react[m[33m, [m[1;32mconner-search-react[m[33m)[m HEAD@{2}: commit: fixed merge conflicts with current web portal and added the ability to search in a city that is not at your location
+[33m7ae3c2ea[m HEAD@{3}: checkout: moving from backend to conner-search-react
+[33m453c9556[m[33m ([m[1;32mbackend[m[33m)[m HEAD@{4}: checkout: moving from conner-search-react to backend
+[33m7ae3c2ea[m HEAD@{5}: reset: moving to HEAD
+[33m7ae3c2ea[m HEAD@{6}: commit (merge): Merge branch 'webportal' of https://github.com/lol-andy1/PlayVu into conner-search-react
+[33m5e949303[m HEAD@{7}: reset: moving to 5e949303
+[33mc344e29a[m HEAD@{8}: reset: moving to HEAD
+[33mc344e29a[m HEAD@{9}: checkout: moving from conner-search-react to conner-search-react
+[33mc344e29a[m HEAD@{10}: checkout: moving from conner-search-react to conner-search-react
+[33mc344e29a[m HEAD@{11}: reset: moving to HEAD
+[33mc344e29a[m HEAD@{12}: reset: moving to HEAD
+[33mc344e29a[m HEAD@{13}: reset: moving to HEAD
+[33mc344e29a[m HEAD@{14}: reset: moving to HEAD
+[33mc344e29a[m HEAD@{15}: commit (merge): Merge branch 'webportal' of https://github.com/lol-andy1/PlayVu into conner-search-react
+[33m5e949303[m HEAD@{16}: commit: changed distance so that there is no need to add enter a number, selections buttons are instead used
+[33md9c9600f[m HEAD@{17}: commit: made a small change so that the games are sorted by date by default rather than by id
+[33m18646abb[m HEAD@{18}: commit: Improved sorting features to be able to sort nearby games by date, price, and duration without needing to type anything in
+[33m24aa49d6[m HEAD@{19}: commit: Integrated Location Search and slightly modified the API
+[33m25644956[m HEAD@{20}: reset: moving to HEAD
+[33m25644956[m HEAD@{21}: commit: converted search page over to react and implemented geolocation functionality
+[33m453c9556[m[33m ([m[1;32mbackend[m[33m)[m HEAD@{22}: pull origin backend: Fast-forward
+[33m411d122d[m HEAD@{23}: checkout: moving from conner-home-search-page to conner-search-react
+[33mc21da4ae[m[33m ([m[1;31morigin/conner-home-search-page[m[33m, [m[1;32mconner-home-search-page[m[33m)[m HEAD@{24}: reset: moving to HEAD
+[33mc21da4ae[m[33m ([m[1;31morigin/conner-home-search-page[m[33m, [m[1;32mconner-home-search-page[m[33m)[m HEAD@{25}: checkout: moving from conner-home-search-page to conner-home-search-page
+[33mc21da4ae[m[33m ([m[1;31morigin/conner-home-search-page[m[33m, [m[1;32mconner-home-search-page[m[33m)[m HEAD@{26}: commit: fixed a missed line
+[33m936eb0a4[m HEAD@{27}: commit: location search integration but still lacking geolocation
+[33mcbf23297[m HEAD@{28}: checkout: moving from dev to conner-home-search-page
+[33mb444bb61[m[33m ([m[1;32mdev[m[33m)[m HEAD@{29}: checkout: moving from conner-home-search-page to dev
+[33mcbf23297[m HEAD@{30}: commit: changed date format to be simpler
+[33mb092238a[m HEAD@{31}: pull origin dev: Merge made by the 'ort' strategy.
+[33m9c1694b6[m HEAD@{32}: reset: moving to HEAD
+[33m9c1694b6[m HEAD@{33}: checkout: moving from dev to conner-home-search-page
+[33mb444bb61[m[33m ([m[1;32mdev[m[33m)[m HEAD@{34}: checkout: moving from conner-home-search-page to dev
+[33m9c1694b6[m HEAD@{35}: reset: moving to HEAD
+[33m9c1694b6[m HEAD@{36}: commit: added search functionality and filtering for different criteria
+[33m27e23045[m[33m ([m[1;31morigin/frontend-experiment-mvp[m[33m)[m HEAD@{37}: pull origin frontend-experiment-mvp: Fast-forward
+[33m4f1f70b7[m HEAD@{38}: reset: moving to HEAD^
+[33m27e23045[m[33m ([m[1;31morigin/frontend-experiment-mvp[m[33m)[m HEAD@{39}: pull origin frontend-experiment-mvp: Fast-forward
+[33mc91e55b6[m[33m ([m[1;32mfrontend-experiment-mvp[m[33m)[m HEAD@{40}: checkout: moving from frontend-styling-home to conner-home-search-page
+[33md7b32f95[m[33m ([m[1;31morigin/frontend-styling-home[m[33m, [m[1;32mfrontend-styling-home[m[33m)[m HEAD@{41}: commit: made other pages follow color theme
+[33md3f40415[m HEAD@{42}: commit: made color changes to fit styling closer in line with wireframes
+[33mc91e55b6[m[33m ([m[1;32mfrontend-experiment-mvp[m[33m)[m HEAD@{43}: checkout: moving from frontend-experiment-mvp to frontend-styling-home
+[33mc91e55b6[m[33m ([m[1;32mfrontend-experiment-mvp[m[33m)[m HEAD@{44}: checkout: moving from frontend-experiment-mvp to frontend-experiment-mvp
+[33mc91e55b6[m[33m ([m[1;32mfrontend-experiment-mvp[m[33m)[m HEAD@{45}: checkout: moving from main to frontend-experiment-mvp
+[33m7257c9f8[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{46}: clone: from https://github.com/lol-andy1/PlayVu
