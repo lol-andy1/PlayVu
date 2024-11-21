@@ -72,7 +72,7 @@ const OrganizeConfirm = () => {
 
         <div className="flex">
           <h1 className="font-semibold w-1/3">Entry Fee:</h1>
-          <p className="w-full">${gameData.price}</p>
+          <p className="w-full">${gameData.price ? gameData.price : 0}</p>
         </div>
 
         <div className="flex border-t-2">

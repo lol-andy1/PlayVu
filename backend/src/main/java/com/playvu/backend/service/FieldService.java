@@ -104,7 +104,7 @@ public class FieldService {
         
     }
 
-    public void editField(HttpServletRequest request, Integer field_id, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+    public void editField(HttpServletRequest request, Integer field_id, String name, String description, String address, String zip_code, String city, Float price) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -130,7 +130,13 @@ public class FieldService {
         if(city != null){
             field.setCity(city);
         }
-        
+        if(price == null){
+          field.setPrice(0.f);
+        }
+        else{
+          field.setPrice(price);
+        }
+      
         // TODO: Decide if we need to change coordinates if address switches
         // String full_address = address + ", " + zip_code + ", " + city;
         // Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);

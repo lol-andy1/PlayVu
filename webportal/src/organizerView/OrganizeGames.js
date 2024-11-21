@@ -97,6 +97,9 @@ const Organize = () => {
                 price={game.price}
                 startDate={game.startDate}
                 endDate={game.endDate}
+                playerCount={game.playerCount}
+                max_players={game.maxPlayers}
+                location={game.field + ", " + game.subfield}
               />
 
               <div className="absolute right-1 p-2" onClick={() => handleDelete(game)}>

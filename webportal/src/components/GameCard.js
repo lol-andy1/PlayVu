@@ -30,17 +30,17 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
             <div className="rounded-full w-full bg-red-400"></div>
           </div>
         </div>
-
-        <p className="text-sm text-gray-500 text-right mr-2">
-          {playerCount} / {max_players}
-        </p>
-
+      
         <h3 className="text-lg font-bold">{name}</h3>
         <p className="text-sm mb-1">{location}</p>
         <p className="text-sm mb-1">{new Date(startDate).toLocaleString()}</p>
-        <p className="text-sm text-gray-500 text-right mr-2">
-          Price: {price ? `$${price}` : "Free"}
-        </p>
+        <div className="flex justify-between px-2 text-gray-500">
+          {playerCount !== null &&
+            <p>{playerCount} / {max_players}</p>
+          }
+          <p>Price: {price ? `$${price}` : "Free"}</p>
+        </div>
+
       </div>
     </button>
   );
