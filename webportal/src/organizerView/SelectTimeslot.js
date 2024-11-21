@@ -2,9 +2,6 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { GameContext } from "./Organize"
 import { useNavigate } from 'react-router-dom';
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -12,18 +9,13 @@ import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault(dayjs.tz.guess());
-
 const SelectTimeslot = () => {
   const { subfield, setGameData, setCurrStep } = useContext( GameContext )
   const navigate = useNavigate()
 
   const [gameStart, setGameStart] = useState('')
   const [gameEnd, setGameEnd] = useState('')
-  const [selectedDay, setSelectedDay] = useState(new Date().toISOString())
-
+  const [selectedDay, setSelectedDay] = useState(new Date())
   const [timeslots, setTimeslots] = useState()
   const [duration, setDuration] = useState(60)
 
@@ -31,16 +23,18 @@ const SelectTimeslot = () => {
     setDuration(value)
   } 
 
-  const goPrevDay = () => {
-    const localDate = new Date()
-    const offset = localDate.getTimezoneOffset()
-    localDate.setMinutes(localDate.getMinutes() - offset)
+  const getDayOnly = (date) => {
+    const d = new Date(date)
+    d.setHours(0, 0, 0, 0)
+    return d
+  }
 
+  const goPrevDay = () => {
     const currDay = new Date(selectedDay)
 
-    if (currDay.getDate() > localDate.getDate()){
+    if (getDayOnly(currDay) > getDayOnly(new Date())){
       currDay.setDate(currDay.getDate() - 1)
-      setSelectedDay(currDay.toISOString())
+      setSelectedDay(currDay)
       setGameStart("")
     }
   }
@@ -48,7 +42,7 @@ const SelectTimeslot = () => {
   const goNextDay = () => {
     const currDay = new Date(selectedDay)
     currDay.setDate(currDay.getDate() + 1)
-    setSelectedDay(currDay.toISOString())
+    setSelectedDay(currDay)
     setGameStart("")
   }
 
@@ -71,11 +65,18 @@ const SelectTimeslot = () => {
         const res = await axios.get(`api/get-subfield-schedules?subFieldId=${subfield.subFieldId}`)
 
         if (res.data){
+          res.data = res.data.map((schedule) => ({
+            ...schedule,
+            startDate: new Date(schedule.startDate),
+            endDate: new Date(schedule.endDate)
+          }))
 
-          const daySchedules = res.data.filter(schedule => 
-            (selectedDay.slice(0, 10) >= schedule.startDate.slice(0, 10)) &&
-            (selectedDay.slice(0, 10) <= schedule.endDate.slice(0, 10))
-          )
+          const day = getDayOnly(selectedDay)
+
+          const daySchedules = res.data.filter(schedule => (
+            day >= getDayOnly(schedule.startDate) &&
+            day <= getDayOnly(schedule.endDate)
+          ))
 
           if (daySchedules.length > 0){
             const earliest = daySchedules.reduce((early, curr) => {
@@ -86,18 +87,15 @@ const SelectTimeslot = () => {
             })
       
             // Handle start/end dates before/after the selected day
-            let curr = (earliest.startDate.slice(0, 10) < selectedDay.slice(0, 10)) ?
-              new Date(selectedDay.slice(0, 10) + "T00:00:00Z") :
+            const earliestDay = getDayOnly(earliest.startDate)
+            let curr = (earliestDay < day) ?
+              new Date(day) :
               new Date(earliest.startDate)
             
-            const end = (latest.endDate.slice(0, 10) > selectedDay.slice(0, 10)) ?  
-              new Date(selectedDay.slice(0, 10) + "T23:59:00Z") :
+            const latestDay = getDayOnly(latest.endDate)
+            const end = (latestDay > day) ?  
+              new Date(day.getFullYear(), day.getMonth(), day.getDate(), 23, 59, 0) :
               new Date(latest.endDate)
-
-            const availableTimes = daySchedules.map(schedule => ({
-              start: new Date(schedule.startDate),
-              end: new Date(schedule.endDate)
-            })) 
 
             const gameTimes = subfield.data ? 
               subfield.data.map(game => ({
@@ -111,8 +109,8 @@ const SelectTimeslot = () => {
             while (curr < end){
               let status = 0
         
-              for (const times of availableTimes){
-                if (curr >= times.start && curr < times.end){
+              for (const schedule of daySchedules){
+                if (curr >= schedule.startDate && curr < schedule.endDate){
                   status = 1
                   break
                 }
@@ -124,7 +122,7 @@ const SelectTimeslot = () => {
                 }
               }
         
-              if (dayjs(curr).toDate() < localTime){
+              if (curr < localTime){
                 status = 0
               }
         
@@ -189,7 +187,7 @@ const SelectTimeslot = () => {
             </IconButton>
           </div>
 
-          <h1 className="my-4 text-xl text-center">{selectedDay.slice(0, 10)}</h1>
+          <h1 className="my-4 text-xl text-center">{selectedDay.toLocaleDateString()}</h1>
 
           <div>
             <IconButton onClick={goNextDay}>

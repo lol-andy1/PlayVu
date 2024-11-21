@@ -28,7 +28,6 @@ const OrganizeConfirm = () => {
       setLoading(true)
       await axios.post("/api/add-game", gameData)
       setSuccess(true)
-      setCurrStep(-1)
     } catch (err) {
       console.log(err)
     }
@@ -37,6 +36,7 @@ const OrganizeConfirm = () => {
   const exitOrganize = () => {
     if (success){
       navigate("/organize/games")
+      setCurrStep(-1)
     }
   }
 
