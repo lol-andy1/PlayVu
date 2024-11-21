@@ -36,7 +36,7 @@ const GameDetails = () => {
                     max_players: data.max_players,
                     price: data.price,
                     field: data.sub_field_name,
-                    date: data.timezone,
+                    date: data.start_date,
                     team_1: data.team_1,
                     team_2: data.team_2,
                     sideline: data.sideline

@@ -53,9 +53,10 @@ const Search = () => {
         );
         const sortedGames = res.data
           .map((game) => ({
+            id: game.game_id,
             location: game.location,
             name: game.name,
-            startDate: new Date(game.timezone),
+            startDate: new Date(game.start_date),
             price: game.price,
             sub_field_id: game.field,
             playerCount: game.playerCount,

@@ -52,16 +52,9 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
         <h3 style={{ fontSize: "18px", fontWeight: "bold"}}>
           {name}
         </h3>
-        <p style={{ fontSize: "16px", marginBottom: "4px" }}>{id}</p>
         <p style={{ fontSize: "16px", marginBottom: "4px" }}>{location}</p>
         <p style={{ fontSize: "16px", marginBottom: "4px" }}>
-          {new Intl.DateTimeFormat([], {
-            timeZone: 'UTC',
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-          }).format(startDate)}
+          {new Date(startDate).toLocaleString()}
         </p>
         <p
           style={{
