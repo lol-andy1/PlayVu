@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Card, CardContent, Typography, Button } from '@mui/material';
 import Field from "./Field";
+import { QRCode } from 'react-qrcode-logo';
+import logo from  "../assets/logo.jpg"
 
 const GameDetails = () => {
     const [reload, setReload] = useState(0); // This is used to know when to reload the page cause i cba to figure out how to do it in a different way
@@ -37,7 +39,7 @@ const GameDetails = () => {
               max_players: data.max_players,
               price: data.price,
               field: data.sub_field_name,
-              date: data.timezone,
+              date: data.start_date,
               team_1: data.team_1,
               team_2: data.team_2,
               sideline: data.sideline
@@ -175,6 +177,14 @@ const GameDetails = () => {
             Leave Game
           </Button>
         </div>
+        <p style={{ fontSize: "16px", margin: "8px" }}>Share This Game:</p>
+        <QRCode 
+          value= {window.location.href}
+          size={200}
+          logoImage={logo}
+          logoWidth={67}
+          logoHeight={67}
+        />
       </div>
     );
 };
