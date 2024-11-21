@@ -44,7 +44,7 @@ public class APIController {
 
     @PostMapping(value = "/add-field")
     public Integer addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getPrice(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
     @PostMapping(value = "/edit-field")
@@ -142,6 +142,11 @@ public class APIController {
         gameService.switchTeam(gameBody.getGameId());
     }
 
+    @PostMapping(value = "/leave-game")
+    public void leaveGame(@RequestBody Game gameBody) {
+        gameService.leaveGame(gameBody.getGameId());
+    }
+
     @GetMapping(value = "/get-user")
     public Map<String, Object> getUser(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
         return userService.getUser(request);
@@ -153,8 +158,18 @@ public class APIController {
     }
 
     @PostMapping(value = "/edit-user")
-    public void editUser(HttpServletRequest request, @RequestBody Users userBody) throws URISyntaxException, IOException, InterruptedException {
-        userService.editUser(request, userBody.getFirstName(), userBody.getLastName(), userBody.getUsername(), userBody.getBio(), userBody.getProfilePicture());
+    public void editUser(@RequestBody Users userBody){
+        userService.editUser(userBody.getFirstName(), userBody.getLastName(), userBody.getUsername(), userBody.getBio(), userBody.getProfilePicture());
+    }
+
+    @PostMapping(value = "/admin-edit-user")
+    public void adminEditUser(@RequestBody Users userBody){
+        userService.adminEditUser(userBody.getUserId(), userBody.getRole());
+    }
+
+    @PostMapping(value = "/admin-delete-user")
+    public void adminDeleteUser(@RequestBody Users userBody){
+        userService.adminDeleteUser(userBody.getUserId());
     }
     
 

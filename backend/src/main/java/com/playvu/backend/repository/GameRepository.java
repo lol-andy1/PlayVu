@@ -90,7 +90,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
         @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END " +
                         "FROM game g " +
-                        "WHERE g.sub_field_id IN (:subFieldId) AND g.start_date > CURRENT_TIMESTAMP AT TIME ZONE 'UTC'", nativeQuery = true)
-        boolean isPendingGames(@Param("subFieldId") List<Integer> subFieldIds);
+                        "WHERE g.sub_field_id IN (:subFieldIds) AND g.start_date > CURRENT_TIMESTAMP AT TIME ZONE 'UTC'", nativeQuery = true)
+        boolean isPendingGames(@Param("subFieldIds") List<Integer> subFieldIds);
 
 }

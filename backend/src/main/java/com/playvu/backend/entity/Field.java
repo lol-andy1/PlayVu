@@ -44,6 +44,9 @@ public class Field {
     public Float longitude;
 
     @Column()
+    public Float price;
+
+    @Column()
     public Boolean available;
 
     public Integer getFieldId() {
@@ -132,6 +135,15 @@ public class Field {
 
     public void setAvailable(Boolean available) {
         this.available = available;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }  
+    
     
 }
