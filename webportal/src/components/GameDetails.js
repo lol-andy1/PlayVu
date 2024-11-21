@@ -5,6 +5,7 @@ import { Card, CardContent, Typography, Button } from '@mui/material';
 import Field from "./Field";
 
 const GameDetails = () => {
+    const [reload, setReload] = useState(0); // This is used to know when to reload the page cause i cba to figure out how to do it in a different way
     const [game, setGame] = useState({
         name: '',
         location: '',
@@ -16,7 +17,7 @@ const GameDetails = () => {
         team_1: [],
         team_2: [],
         sideline: []
-      });
+      }); // game data
     const navigate = useNavigate();
 
     // Get slug from route parameters
@@ -26,29 +27,30 @@ const GameDetails = () => {
         // here put the axios request for game by id
         const getGameDetails = async () => {
           try{
-                const res = await axios.get(`/api/get-game-data?gameId=${slug}`);
-                const data = res.data;
-                console.log(data);
-                setGame({
-                    name: data.name,
-                    location: data.location,
-                    player_count: data.playerCount,
-                    max_players: data.max_players,
-                    price: data.price,
-                    field: data.sub_field_name,
-                    date: data.timezone,
-                    team_1: data.team_1,
-                    team_2: data.team_2,
-                    sideline: data.sideline
-                  });
+            const res = await axios.get(`/api/get-game-data?gameId=${slug}`); // get data
+            const data = res.data;
+            console.log(data);
+            setGame({ 
+              name: data.name,
+              location: data.location,
+              player_count: data.playerCount,
+              max_players: data.max_players,
+              price: data.price,
+              field: data.sub_field_name,
+              date: data.timezone,
+              team_1: data.team_1,
+              team_2: data.team_2,
+              sideline: data.sideline
+            }); // set data
           }
           catch (err) {
-                console.log(err)
+            console.log(err)
           }
         }
-        getGameDetails();
-    }, [game]);
+        getGameDetails(); // actually do the thing we want it to do
+    }, [reload]); // reload if reload is changed
 
+    // function takes team parameter, makes an API request, and if successful reloads the page
     const joinTeam = async (team) => {
       if(game.player_count >= game.max_players && team > 0) {
         alert('Game is full. Try joining sideline.') // Realistically this code should never happen
@@ -61,24 +63,7 @@ const GameDetails = () => {
           })
           if (res.status === 200) {
             alert(`Successfully joined ${team === 1 ? 'Team 1' : team === 2 ? 'Team 2' : 'the Sideline'}!`);
-            try {
-              const response = axios.get(`/api/get-game-data?gameId=${slug}`);
-              const data = response.data;
-              setGame({
-                name: data.name,
-                location: data.location,
-                player_count: data.playerCount,
-                max_players: data.max_players,
-                price: data.price,
-                field: data.sub_field_name,
-                date: data.timezone,
-                team_1: data.team_1,
-                team_2: data.team_2,
-                sideline: data.sideline
-              });
-            } catch (error) {
-              console.log(error);
-            }
+            setReload(!reload);
           }
         }
         catch (err) {
@@ -95,24 +80,7 @@ const GameDetails = () => {
         })
         if (res.status === 200) {
           alert(`Successfully left game!`);
-          try {
-            const response = axios.get(`/api/get-game-data?gameId=${slug}`);
-            const data = response.data;
-            setGame({
-              name: data.name,
-              location: data.location,
-              player_count: data.playerCount,
-              max_players: data.max_players,
-              price: data.price,
-              field: data.sub_field_name,
-              date: data.timezone,
-              team_1: data.team_1,
-              team_2: data.team_2,
-              sideline: data.sideline
-            });
-          } catch (error) {
-            console.log(error);
-          }
+          setReload(!reload);
         }
       } catch (err) {
         console.log(err);
@@ -121,6 +89,8 @@ const GameDetails = () => {
     }
 
     // game.player_count = game.max_players;
+    // game.team_1 = [  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Moore", "Eve White",
+    //     "Frank Harris", "Grace Clark"]
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
