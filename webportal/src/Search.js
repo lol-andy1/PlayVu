@@ -51,12 +51,15 @@ const Search = () => {
         const res = await axios.get(
           `/api/get-games?latitude=${location.latitude}&longitude=${location.longitude}&distance=${distance * 1.609}`
         );
-        const sortedGames = res.data
-          .map((game) => ({
+        setGames(
+          res.data.map((game) => ({
+            duration: game.duration,
+            id: game.game_id,
             location: game.location,
             name: game.name,
             startDate: new Date(game.timezone),
             price: game.price,
+            sub_field_id: game.field,
             playerCount: game.playerCount,
             max_players: game.max_players,
           }))
@@ -159,8 +162,7 @@ const Search = () => {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {filteredGames.map((game, index) => (
           <GameCard
-            key={index}
-            id={index}
+            id={game.id}
             name={game.name}
             price={game.price}
             location={game.location}
