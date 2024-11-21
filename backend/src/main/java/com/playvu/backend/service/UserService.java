@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.playvu.backend.entity.Users;
+import com.playvu.backend.repository.GameParticipantRepository;
 import com.playvu.backend.repository.UsersRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UserService {
     @Autowired 
     private UsersRepository usersRepository;
+
+    @Autowired 
+    private GameParticipantRepository gameParticipantRepository;
+    
 
     public Users getUserFromJwt() {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -86,9 +91,12 @@ public class UserService {
         if(!user.getRole().equals("admin")){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
         }
-
         Users deleteUser = usersRepository.findById(userId).get();
-        
+        if(deleteUser.getEmail().equals("Deleted User")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User already deleted");
+        }
+
+        gameParticipantRepository.deleteFutureUserGames(userId);
         deleteUser.setUsername("Deleted User");
         deleteUser.setEmail("Deleted User");
         usersRepository.save(deleteUser);
