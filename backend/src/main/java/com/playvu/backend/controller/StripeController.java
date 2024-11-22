@@ -1,41 +1,25 @@
 package com.playvu.backend.controller;
 
 import com.playvu.backend.dto.StripeRequestDTO;
-import com.playvu.backend.entity.*;
 // import org.springframework.web.multipart.MultipartFile;
 
-import com.playvu.backend.service.*;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.exception.StripeException;
-import com.stripe.model.Customer;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerSearchResult;
 import com.stripe.model.PaymentIntent;
-import com.stripe.model.Product;
-import com.stripe.model.checkout.Session;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.CustomerSearchParams;
 import com.stripe.param.PaymentIntentCreateParams;
-import com.stripe.param.checkout.SessionCreateParams;
-import com.stripe.param.checkout.SessionCreateParams.LineItem.PriceData;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
