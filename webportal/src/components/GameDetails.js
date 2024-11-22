@@ -64,7 +64,6 @@ const GameDetails = () => {
           team: 0 // Start on the sideline
         });
         if (res.status === 200) {
-          alert("Successfully joined the game!");
           setIsJoined(true); // Set joined status to true
           setReload(!reload);
         }
@@ -86,7 +85,6 @@ const GameDetails = () => {
             team: team
           })
           if (res.status === 200) {
-            alert(`Successfully joined ${team === 1 ? 'Team 1' : team === 2 ? 'Team 2' : 'the Sideline'}!`);
             setReload(!reload);
           }
         }
@@ -103,7 +101,6 @@ const GameDetails = () => {
           gameId: slug
         });
         if (res.status === 200) {
-          alert("Successfully left the game!");
           setIsJoined(false); // Reset joined status
           setReload(!reload);
         }
@@ -112,7 +109,14 @@ const GameDetails = () => {
         alert("Failure to leave the game. Please try again.");
       }
     };
-
+    const handleLeaveGame = () => {
+      const userConfirmed = window.confirm(
+        "Are you sure you want to leave the game? If you wish to rejoin the action later we suggest that you join the sideline instead"
+      );
+      if (userConfirmed) {
+        leaveGame(); // Call the function to leave the game
+      }
+    };
     // game.player_count = game.max_players;
     // game.team_1 = [  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Moore", "Eve White",
     //     "Frank Harris", "Grace Clark"]
@@ -177,6 +181,13 @@ const GameDetails = () => {
                 >
                   Join Team 2
                 </Button>
+                <Button
+                  variant="contained"
+                  style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
+                  onClick={() => joinTeam(0)}
+                >
+                  Join Sideline
+                </Button>
               </div>
             </>
             ) : (
@@ -198,7 +209,7 @@ const GameDetails = () => {
           <Button
             variant="contained"
             style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
-            onClick={leaveGame}
+            onClick={handleLeaveGame}
             className="w-full"
           >
             Leave Game
