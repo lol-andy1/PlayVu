@@ -60,7 +60,7 @@ const Profile = () => {
     setLoading(true)
     const res = await axios.get("/api/get-user")
     setUserInfo(res.data)
-
+    
     setNewUsername(res.data.username)
     setNewBio(res.data.bio)
     setNewPic(res.data.profilePicture)
