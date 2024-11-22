@@ -21,13 +21,13 @@ const GameDetails = () => {
         sideline: []
       }); // game data
     const navigate = useNavigate();
-
+    const [isJoined, setIsJoined] = useState(false);
     // Get slug from route parameters
     const {slug} = useParams();
-
     useEffect(() => {
         // here put the axios request for game by id
         const getGameDetails = async () => {
+          const userRes = await axios.get("/api/get-user")
           try{
             const res = await axios.get(`/api/get-game-data?gameId=${slug}`); // get data
             const data = res.data;
@@ -44,6 +44,11 @@ const GameDetails = () => {
               team_2: data.team_2,
               sideline: data.sideline
             }); // set data
+            const isUserJoined =
+              data.team_1.includes(userRes.data.username) ||
+              data.team_2.includes(userRes.data.username) ||
+              data.sideline.includes(userRes.data.username);
+            setIsJoined(isUserJoined);
           }
           catch (err) {
             console.log(err)
@@ -51,6 +56,22 @@ const GameDetails = () => {
         }
         getGameDetails(); // actually do the thing we want it to do
     }, [reload]); // reload if reload is changed
+
+    const joinGame = async () => {
+      try {
+        const res = await axios.post(`/api/join-game`, {
+          gameId: slug,
+          team: 0 // Start on the sideline
+        });
+        if (res.status === 200) {
+          setIsJoined(true); // Set joined status to true
+          setReload(!reload);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error joining the game. Please try again.");
+      }
+    };
 
     // function takes team parameter, makes an API request, and if successful reloads the page
     const joinTeam = async (team) => {
@@ -64,7 +85,6 @@ const GameDetails = () => {
             team: team
           })
           if (res.status === 200) {
-            alert(`Successfully joined ${team === 1 ? 'Team 1' : team === 2 ? 'Team 2' : 'the Sideline'}!`);
             setReload(!reload);
           }
         }
@@ -77,19 +97,26 @@ const GameDetails = () => {
 
     const leaveGame = async () => {
       try {
-        const res = await axios.post(`api/leave-game`, {
+        const res = await axios.post(`/api/leave-game`, {
           gameId: slug
-        })
+        });
         if (res.status === 200) {
-          alert(`Successfully left game!`);
+          setIsJoined(false); // Reset joined status
           setReload(!reload);
         }
       } catch (err) {
-        console.log(err);
-        alert('Failure to leave game. Please try again.')
+        console.error(err);
+        alert("Failure to leave the game. Please try again.");
       }
-    }
-
+    };
+    const handleLeaveGame = () => {
+      const userConfirmed = window.confirm(
+        "Are you sure you want to leave the game? If you wish to rejoin the action later we suggest that you join the sideline instead"
+      );
+      if (userConfirmed) {
+        leaveGame(); // Call the function to leave the game
+      }
+    };
     // game.player_count = game.max_players;
     // game.team_1 = [  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Moore", "Eve White",
     //     "Frank Harris", "Grace Clark"]
@@ -137,46 +164,58 @@ const GameDetails = () => {
             <Typography variant="body1" className="mb-2">
               <span className="font-semibold">Sideline:</span> {game.sideline.length > 0 ? game.sideline.join(', ') : 'Sideline is currently empty'}
             </Typography>
-            <div className="flex justify-around mt-4">
-              {game.player_count < game.max_players ? (
-                <>
-                  <Button
-                    variant="contained"
-                    style={{ backgroundColor: '#d32f2f', color: '#ffffff' }}
-                    onClick={() => joinTeam(1)}
-                  >
-                    Join Team 1
-                  </Button>
-                  <Button
-                    variant="contained"
-                    style={{ backgroundColor: '#1976d2', color: '#ffffff' }}
-                    onClick={() => joinTeam(2)}
-                  >
-                    Join Team 2
-                  </Button>
-                </>
-              ) : (
-                  <Button
-                    variant="contained"
-                    style={{ backgroundColor: '#14532d', color: '#ffffff' }}
-                    onClick={() => joinTeam(0)}
-                  >
-                    Join Sideline
-                  </Button>
-              )}
+            {isJoined ? (
+            <>
+              <div className="flex justify-around mt-4">
+                <Button
+                  variant="contained"
+                  style={{ backgroundColor: '#d32f2f', color: '#ffffff' }}
+                  onClick={() => joinTeam(1)}
+                >
+                  Join Team 1
+                </Button>
+                <Button
+                  variant="contained"
+                  style={{ backgroundColor: '#1976d2', color: '#ffffff' }}
+                  onClick={() => joinTeam(2)}
+                >
+                  Join Team 2
+                </Button>
+                <Button
+                  variant="contained"
+                  style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
+                  onClick={() => joinTeam(0)}
+                >
+                  Join Sideline
+                </Button>
+              </div>
+            </>
+            ) : (
+            <div className="w-full max-w-md mt-4 px-4">
+              <Button
+                variant="contained"
+                style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
+                onClick={joinGame}
+                className="w-full"
+              >
+                Join Game
+              </Button>
             </div>
+            )}
           </CardContent>
         </Card>
+        {isJoined && (
         <div className="w-full max-w-md mt-4 px-4">
           <Button
             variant="contained"
             style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
-            onClick={leaveGame}
+            onClick={handleLeaveGame}
             className="w-full"
           >
             Leave Game
           </Button>
         </div>
+        )}
         <p style={{ fontSize: "16px", margin: "8px" }}>Share This Game:</p>
         <QRCode 
           value= {window.location.href}

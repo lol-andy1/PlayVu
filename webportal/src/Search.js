@@ -57,6 +57,7 @@ const Search = () => {
             location: game.location,
             name: game.name,
             startDate: new Date(game.start_date),
+            endDate: new Date(game.end_date),
             price: game.price,
             sub_field_id: game.field,
             playerCount: game.playerCount,
@@ -165,6 +166,7 @@ const Search = () => {
               price={game.price}
               location={game.location}
               startDate={game.startDate}
+              endDate={game.endDate}
               playerCount={game.playerCount}
               max_players={game.max_players}
               field={game.field}
