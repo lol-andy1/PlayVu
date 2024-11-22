@@ -76,8 +76,8 @@
         <dependency>
             <groupId>com.stripe</groupId>
             <artifactId>stripe-java</artifactId>
-            <version>4.2.0</version>
-        </dependency>
+            <version>28.0.1</version>
+          </dependency>
     </dependencies>
 
     <build>
