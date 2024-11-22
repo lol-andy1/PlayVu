@@ -1,25 +1,17 @@
 import { useState } from "react";
 import UserManagement from "./components/UserManagement";
 
-const GamesManagement = () => <div>Games Management Content</div>;
-const FieldsManagement = () => <div>Fields Management Content</div>;
-// const UserManagement = () => <div>User Management Content</div>;
-
 const Admin = () => {
-  const navItems = [{ name: "Games" }, { name: "Fields" }, { name: "Users" }];
+  const navItems = [{ name: "Users" }];
 
   const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
 
   const renderContent = () => {
     switch (selectedNavItem) {
-      case "Games":
-        return <GamesManagement />;
-      case "Fields":
-        return <FieldsManagement />;
       case "Users":
         return <UserManagement />;
       default:
-        return <GamesManagement />;
+        return <UserManagement />;
     }
   };
 

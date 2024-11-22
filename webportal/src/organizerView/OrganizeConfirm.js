@@ -9,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 
 const OrganizeConfirm = () => {
-  const { gameData, subfield } = useContext( GameContext )
+  const { gameData, subfield, setCurrStep  } = useContext( GameContext )
   const navigate = useNavigate()
 
   const [duration, setDuration] = useState(0)
@@ -36,6 +36,7 @@ const OrganizeConfirm = () => {
   const exitOrganize = () => {
     if (success){
       navigate("/organize/games")
+      setCurrStep(-1)
     }
   }
 
@@ -56,7 +57,7 @@ const OrganizeConfirm = () => {
 
         <div className="flex">
           <h1 className="font-semibold w-1/3">Time:</h1>
-          <p className="w-full">{new Date(gameData.startDate).toUTCString()}</p>
+          <p className="w-full">{new Date(gameData.startDate).toLocaleString()}</p>
         </div>
 
         <div className="flex">
@@ -70,8 +71,13 @@ const OrganizeConfirm = () => {
         </div>
 
         <div className="flex">
-          <h1 className="font-semibold w-1/3">Price:</h1>
-          <p className="w-full">${gameData.price}</p>
+          <h1 className="font-semibold w-1/3">Entry Fee:</h1>
+          <p className="w-full">${gameData.price ? gameData.price : 0}</p>
+        </div>
+
+        <div className="flex border-t-2">
+          <h1 className="font-semibold w-1/3">Rental Cost:</h1>
+          <p className="w-full">${duration * gameData.organizerCost}</p>
         </div>
       </div>
       

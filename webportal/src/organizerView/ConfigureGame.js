@@ -13,7 +13,7 @@ const ConfigureGame = () => {
 
   const [gameName, setGameName] = useState("")
   const [maxPlayers, setMaxPlayers] = useState(22)
-  const [price, setPrice] = useState(0)
+  const [price, setPrice] = useState("")
 
   const marks = [
     {value: 7, label: "7"},

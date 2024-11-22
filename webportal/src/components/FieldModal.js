@@ -80,6 +80,27 @@ const FieldModal = ({
                   className="block w-full p-2 border border-gray-200 rounded-lg"
                 />
               </li>
+              <li>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Price
+                </label>
+                <input
+                  type="number"
+                  value={selectedField?.price || ""}
+                  onChange={(e) => handleFieldChange("price", e.target.value)}
+                  className="block w-full p-2 border border-gray-200 rounded-lg"
+                />
+              </li>
+              <li>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  value={selectedField?.description || ""}
+                  onChange={(e) => handleFieldChange("description", e.target.value)}
+                  className="block w-full p-2 border border-gray-200 rounded-lg"
+                />
+              </li>
             </ul>
           </div>
 

@@ -65,5 +65,13 @@ public class FieldSchedule {
         throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 
+    @Override
+    public String toString() {
+        return "FieldSchedule [fieldScheduleId=" + fieldScheduleId + ", subFieldId=" + subFieldId + ", startDate="
+                + startDate + ", endDate=" + endDate + "]";
+    }
+
+    
+
     
 }

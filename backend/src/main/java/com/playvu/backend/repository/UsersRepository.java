@@ -22,7 +22,8 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
                    "username AS \"username\", " +
                    "email AS \"email\", " +
                    "bio AS \"bio\", " +
-                   "profile_picture AS \"profilePicture\" " +
+                   "profile_picture AS \"profilePicture\", " +
+                   "role "+
                    "FROM users WHERE email = :email", 
            nativeQuery = true)
     Map<String, Object> userDataByEmail(@Param("email") String email);
@@ -34,8 +35,8 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
                    "email AS \"email\", " +
                    "bio AS \"bio\", " +
                    "profile_picture AS \"profilePicture\", " +
-                   "role "+
-                   "FROM users", 
+                   "role " +
+                   "FROM users ORDER BY user_id ASC", 
            nativeQuery = true)
     List< Map<String, Object> > getUsers();
 }

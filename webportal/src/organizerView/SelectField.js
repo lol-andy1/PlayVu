@@ -27,7 +27,8 @@ const SelectField = () => {
       ...prevData,
       venue: field.fieldName,
       location: field.address + " " + field.city + " " + field.zipCode,
-      subFieldId: subfield.subFieldId
+      subFieldId: subfield.subFieldId,
+      organizerCost: field.price
   }))
     setSubfield(subfield)
     navigate('/organize/select-time');
