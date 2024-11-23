@@ -3,13 +3,11 @@ import {useState, useEffect} from "react";
 import {useStripe, useElements, PaymentElement, Elements  } from "@stripe/react-stripe-js";
 import StripeCheckout from "./StripeCheckout";
 import {loadStripe} from "@stripe/stripe-js";
-  
-// const publishableKey = "pk_test_51QMaBkK6acT5v5wcVhkePxrwXrGRuwJT6HHT4hbsOEg1RuF8rlxHjZCLjkHuzcGnJDcKrWNay2vIKDGjkrLnpFH100SPJwopdj";
 
 // This component serves as the checkout form 
 const StripePayment = (props) => { // Add prop for success/failure of transaction
     const setAllowConfirmation = props.setAllowConfirmation;
-    const amount = props.amount; // NOTE THIS IS IN CENTS NOT DOLLARS!!!
+    // const amount = props.amount; // NOTE THIS IS IN CENTS NOT DOLLARS!!!
     // const allowConfirmation = props.allowConfirmation;
     //const success = props.success; // THIS IS bool, and updates if success
     // EMAIL and NAME are also props
@@ -29,17 +27,21 @@ const StripePayment = (props) => { // Add prop for success/failure of transactio
             headers: {
                 "Content-Type": "application/json", // Specify JSON format
             },
-            body: JSON.stringify({price: amount, email: props.email, name: props.name}),
+            body: JSON.stringify({price: props.amount, email: props.email, name: props.name}),
             });
+
+            // console.log("JSON param", props.amount);
 
             const clientSecret = await response.text();
             setClientSecret(clientSecret);
         };
 
-        fetchClientSecret();
-    }, [amount, props.email, props.name, baseURL]);
-
-    console.log("Client Secret",clientSecret);
+        if (props.amount)
+        {
+            fetchClientSecret();
+        }
+        // fetchClientSecret();
+    }, [props.amount, props.email, props.name, baseURL]);
 
     return (
         <div>

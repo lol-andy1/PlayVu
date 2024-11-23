@@ -42,6 +42,10 @@ const OrganizeConfirm = () => {
     }
   }
 
+  // console.log(duration * gameData.organizerCost * 100);
+
+  const fieldCost = Math.round(duration * gameData.organizerCost * 100);
+
   return (
     <>
       <div className="overflow-y-auto text-xl space-y-4 mt-4">
@@ -83,7 +87,7 @@ const OrganizeConfirm = () => {
         </div>
       </div>
 
-      <StripePayment setAllowConfirmation={setAllowConfirmation} amount={duration * gameData.organizerCost * 100} email={gameData.email} name={gameData.name} /> 
+      <StripePayment setAllowConfirmation={setAllowConfirmation} amount={fieldCost} email={gameData.email} name={gameData.name} /> {/* FIX THIS NAME AND EMAIL FROM AUTH0 */}
       
       <div className="flex absolute right-0 p-4 space-x-2">
         <Button  onClick={handleSubmit} variant="contained" color="success" disabled={!allowConfirmation} disableElevation>
