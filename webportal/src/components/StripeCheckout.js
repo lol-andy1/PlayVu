@@ -24,7 +24,15 @@ const StripeCheckout = (props) => {
         redirect: 'if_required'
       });
 
-    setAllowConfirmation(true);
+    if (error) {
+        if (error.type === "card_error" || error.type === "validation_error") {
+            console.error(error.message);
+            } else {
+            console.error("An unexpected error occured.");
+            }
+    } else {
+        setAllowConfirmation(true);
+    }
 }  
     return (
         <div className="flex flex-col gap-4 p-10">
