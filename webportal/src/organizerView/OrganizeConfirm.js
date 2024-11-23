@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
+import StripePayment from "../components/StripePayment";
 
 const OrganizeConfirm = () => {
   const { gameData, subfield, setCurrStep  } = useContext( GameContext )
@@ -15,6 +16,7 @@ const OrganizeConfirm = () => {
   const [duration, setDuration] = useState(0)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [allowConfirmation, setAllowConfirmation] = useState(false)
 
   useEffect(() => {
     const s = new Date(gameData.startDate)
@@ -40,9 +42,11 @@ const OrganizeConfirm = () => {
     }
   }
 
+  const fieldCost = Math.round(duration * gameData.organizerCost * 100);
+
   return (
     <>
-      <div className="text-xl space-y-4 mt-4">
+      <div className="overflow-y-auto text-xl space-y-4 mt-4">
         <h1 className="text-center text-3xl font-semibold">{gameData.name}</h1>
 
         <div className="flex">
@@ -80,9 +84,11 @@ const OrganizeConfirm = () => {
           <p className="w-full">${duration * gameData.organizerCost}</p>
         </div>
       </div>
+
+      <StripePayment setAllowConfirmation={setAllowConfirmation} amount={fieldCost} email={gameData.email} name={gameData.name} /> {/* FIX THIS NAME AND EMAIL FROM AUTH0 */}
       
-      <div className="flex absolute bottom-0 right-0 p-4 space-x-2">
-        <Button  onClick={handleSubmit} variant="contained" color="success" disableElevation>
+      <div className="flex absolute right-0 p-4 space-x-2">
+        <Button  onClick={handleSubmit} variant="contained" color="success" disabled={!allowConfirmation} disableElevation>
           Confirm
         </Button>
       </div>

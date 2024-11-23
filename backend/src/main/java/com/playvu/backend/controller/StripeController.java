@@ -33,6 +33,9 @@ public class StripeController {
     String STRIPE_API_KEY =
         "sk_test_51QMaBkK6acT5v5wc7eHjby7Lj23CamBlmPz6OgyklTKNHNDTpZNaSTTdsscWQctIBjWGVrD4BE7IphnAqIDEuZO300GYav2LKK"; // TODO: Provide as env variable, this value starts with sk_ (secret key)
 
+    String STRIPE_PUBLISHABLE_KEY =
+        "pk_test_51QMaBkK6acT5v5wcVhkePxrwXrGRuwJT6HHT4hbsOEg1RuF8rlxHjZCLjkHuzcGnJDcKrWNay2vIKDGjkrLnpFH100SPJwopdj";
+
     // TODO: Get environment variable
 
     // String Client_BASE_URL = "http://localhost:3000"; // TODO: This may cause issues, convert to environment variable, and link to production build
@@ -97,5 +100,11 @@ public class StripeController {
         PaymentIntent intent = PaymentIntent.create(params);
 
         return intent.getClientSecret();
+    }
+
+    @GetMapping("/get-stripe-publishable-key")
+    // This key is needed to get the checkout box to work, but is not secret, so can be hardcoded too
+    public String getStripePublishableKey() {
+        return STRIPE_PUBLISHABLE_KEY;
     }
 }
