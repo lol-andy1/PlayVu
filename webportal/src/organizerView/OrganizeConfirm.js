@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import { GameContext } from "./Organize"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
@@ -12,6 +13,7 @@ import StripePayment from "../components/StripePayment";
 const OrganizeConfirm = () => {
   const { gameData, subfield, setCurrStep  } = useContext( GameContext )
   const navigate = useNavigate()
+  const {user} = useAuth0()
 
   const [duration, setDuration] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -41,8 +43,6 @@ const OrganizeConfirm = () => {
       setCurrStep(-1)
     }
   }
-
-  const fieldCost = Math.round(duration * gameData.organizerCost * 100);
 
   return (
     <>
@@ -85,7 +85,12 @@ const OrganizeConfirm = () => {
         </div>
       </div>
 
-      <StripePayment setAllowConfirmation={setAllowConfirmation} amount={fieldCost} email={gameData.email} name={gameData.name} /> {/* FIX THIS NAME AND EMAIL FROM AUTH0 */}
+      <StripePayment 
+        setAllowConfirmation={setAllowConfirmation} 
+        amount={Math.round(duration * gameData.organizerCost * 100)} 
+        email={user.email} 
+        name={user.name} 
+      />
       
       <div className="flex absolute right-0 p-4 space-x-2">
         <Button  onClick={handleSubmit} variant="contained" color="success" disabled={!allowConfirmation} disableElevation>

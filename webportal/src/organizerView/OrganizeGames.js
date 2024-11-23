@@ -92,7 +92,7 @@ const Organize = () => {
           {upcomingGames.slice(0, 4).map((game, index) => (
             <div key={index} className="flex relative justify-center">
               <GameCard
-                id={game.id}
+                id={game.gameId}
                 name={game.name}
                 price={game.price}
                 startDate={game.startDate}
