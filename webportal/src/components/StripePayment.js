@@ -5,20 +5,12 @@ import StripeCheckout from "./StripeCheckout";
 import {loadStripe} from "@stripe/stripe-js";
 
 // This component serves as the checkout form 
-const StripePayment = (props) => { // Add prop for success/failure of transaction
+const StripePayment = (props) => {
     const setAllowConfirmation = props.setAllowConfirmation;
-    // const amount = props.amount; // NOTE THIS IS IN CENTS NOT DOLLARS!!!
-    // const allowConfirmation = props.allowConfirmation;
-    //const success = props.success; // THIS IS bool, and updates if success
-    // EMAIL and NAME are also props
-
     const baseURL = process.env.REACT_APP_BACKEND_URL;
     
     const [stripePromise] = useState(() => loadStripe("pk_test_51QMaBkK6acT5v5wcVhkePxrwXrGRuwJT6HHT4hbsOEg1RuF8rlxHjZCLjkHuzcGnJDcKrWNay2vIKDGjkrLnpFH100SPJwopdj"));
-
-
     const [clientSecret, setClientSecret] = useState(null);
-    // console.log(JSON.stringify({price: amount, email: props.email, name: props.name}));
     
     useEffect(() => {
         const fetchClientSecret = async () => {
@@ -40,7 +32,7 @@ const StripePayment = (props) => { // Add prop for success/failure of transactio
         {
             fetchClientSecret();
         }
-        // fetchClientSecret();
+
     }, [props.amount, props.email, props.name, baseURL]);
 
     return (

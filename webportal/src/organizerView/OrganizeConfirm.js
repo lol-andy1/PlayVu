@@ -42,8 +42,6 @@ const OrganizeConfirm = () => {
     }
   }
 
-  // console.log(duration * gameData.organizerCost * 100);
-
   const fieldCost = Math.round(duration * gameData.organizerCost * 100);
 
   return (
