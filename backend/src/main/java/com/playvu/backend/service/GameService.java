@@ -62,21 +62,26 @@ public class GameService {
     public Object getGameData(Integer game_id) {
         List<Object[]> game_participants = gameParticipantRepository.gameParticipantsByGameId(game_id);
 
-        List<Object> team1 = new ArrayList<>();
-        List<Object> team2 = new ArrayList<>();
-        List<Object> sideline = new ArrayList<>();
+        List<Map<String, Object>> team1 = new ArrayList<>();
+        List<Map<String, Object>> team2 = new ArrayList<>();
+        List<Map<String, Object>> sideline = new ArrayList<>();
 
         for (Object[] participant : game_participants) {
 
             Integer team = (Integer) participant[0];
             String username = (String) participant[1];
+            Integer userId = (Integer) participant[2];
+
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("username", username);
+            entry.put("userId", userId);
 
             if (team == 0) {
-                sideline.add(username);
+                sideline.add(entry);
             } else if (team == 1) {
-                team1.add(username);
+                team1.add(entry);
             } else {
-                team2.add(username);
+                team2.add(entry);
             }
         }
 

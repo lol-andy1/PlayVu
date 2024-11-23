@@ -15,7 +15,7 @@ import com.playvu.backend.entity.GameParticipant;
 
 @Repository
 public interface GameParticipantRepository extends JpaRepository<GameParticipant, Integer> {
-    @Query(value = "SELECT gp.team , u.username " +
+    @Query(value = "SELECT gp.team , u.username, u.user_id " +
                "FROM game_participant gp " +
                "JOIN users u ON gp.participant_id = u.user_id " +
                "WHERE gp.game_id = :gameId", 

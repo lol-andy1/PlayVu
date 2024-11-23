@@ -1,7 +1,7 @@
 import field from './../assets/field.jpg'
 import { Box } from '@mui/material'
 
-const Field = ({team1, team2}) => {
+const Field = ({team1, team2, managePlayer}) => {
     // team1 = [  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Moore", "Eve White",
     //     "Frank Harris", "Grace Clark"]
     // team2 = ["Edward", "Felicia", "Gerard", "Howard", "Eve White",
@@ -57,7 +57,7 @@ const Field = ({team1, team2}) => {
         {/* Render team1 players */}
         {team1.map((player, index) => (
           <div
-            key={player}
+            key={index}
             className={`absolute rounded-full flex items-center justify-center ${
               isTeam2(team1_positions[index].left) ? 'bg-red-500' : 'bg-blue-500'
             } w-10 h-10`} // Constant circle size 10px
@@ -66,17 +66,16 @@ const Field = ({team1, team2}) => {
               left: team1_positions[index].left,
               transform: 'translate(-50%, -50%)', // Center the circle relative to the position
             }}
-          >
-            {/* Player's name inside the circle */}
-            <span className="text-white text-[10px] text-center">
-              {player}
+          > 
+            <span className="text-white text-[10px] text-center" onClick={() => managePlayer(player)}>
+              {player.username}
             </span>
           </div>
         ))}
         {/* Render team2 players */}
         {team2.map((player, index) => (
           <div
-            key={player}
+            key={index}
             className={`absolute rounded-full flex items-center justify-center ${
               isTeam2(team2_positions[index].left) ? 'bg-red-500' : 'bg-blue-500'
             } w-10 h-10`} // Constant circle size 10px
@@ -88,7 +87,7 @@ const Field = ({team1, team2}) => {
           >
             {/* Player's name inside the circle */}
             <span className="text-white text-[10px] text-center">
-              {player}
+              {player.username}
             </span>
           </div>
         ))}
