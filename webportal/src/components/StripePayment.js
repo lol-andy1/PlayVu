@@ -8,7 +8,9 @@ import {loadStripe} from "@stripe/stripe-js";
 
 // This component serves as the checkout form 
 const StripePayment = (props) => { // Add prop for success/failure of transaction
+    const setAllowConfirmation = props.setAllowConfirmation;
     const amount = props.amount; // NOTE THIS IS IN CENTS NOT DOLLARS!!!
+    // const allowConfirmation = props.allowConfirmation;
     //const success = props.success; // THIS IS bool, and updates if success
     // EMAIL and NAME are also props
 
@@ -41,9 +43,8 @@ const StripePayment = (props) => { // Add prop for success/failure of transactio
 
     return (
         <div>
-            <h1>Stripe Payment!!!</h1>
             {stripePromise && clientSecret && (<Elements stripe={stripePromise} options={{clientSecret}}>
-            <StripeCheckout />
+            <StripeCheckout setAllowConfirmation={setAllowConfirmation} />
 </Elements>)}
         </div>
     )   
