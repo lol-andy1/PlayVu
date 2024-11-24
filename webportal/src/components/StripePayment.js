@@ -14,7 +14,7 @@ const StripePayment = (props) => {
     
     useEffect(() => {
         const fetchClientSecret = async () => {
-            const response = await fetch(baseURL+"/api/checkout", {
+            const response = await fetch(baseURL+"api/checkout", {
                 method: "POST",
             headers: {
                 "Content-Type": "application/json", // Specify JSON format
