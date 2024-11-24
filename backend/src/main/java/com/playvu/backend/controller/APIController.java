@@ -139,7 +139,7 @@ public class APIController {
 
     @PostMapping(value = "/join-game")
     public void joinGame(HttpServletRequest request, @RequestBody GameParticipant gameParticipantBody) {
-        gameService.joinGame(gameParticipantBody.getGameId(), gameParticipantBody.getTeam());
+        gameService.joinGame(gameParticipantBody.getGameId(), gameParticipantBody.getTeam(), gameParticipantBody.getParticipantId());
     }
 
     @PostMapping(value = "/switch-team")

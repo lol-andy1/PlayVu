@@ -90,7 +90,7 @@ const GameDetails = () => {
   };
 
   // function takes team parameter, makes an API request, and if successful reloads the page
-  const joinTeam = async (team) => {
+  const joinTeam = async (team, userId) => {
     if(game.player_count >= game.max_players && team > 0) {
       alert('Game is full. Try joining sideline.') // Realistically this code should never happen
     }
@@ -98,7 +98,8 @@ const GameDetails = () => {
       try {
         const res = await axios.post(`/api/join-game`, {
           gameId: slug,
-          team: team
+          team: team,
+          participantId: userId
         })
         if (res.status === 200) {
           setReload(!reload);
@@ -250,18 +251,21 @@ const GameDetails = () => {
           <h1 className=" text-2xl border-b-2">Manage</h1>
           <h1 className=" text-xl">{selectedPlayer && selectedPlayer.username}</h1>
           <Button
+            onClick={() => joinTeam(1, selectedPlayer.userId)}
             variant="contained"
             style={{ backgroundColor: '#d32f2f', color: '#ffffff', borderRadius: 0 }}
           >
             Move to Team 1
           </Button>
           <Button
+            onClick={() => joinTeam(2, selectedPlayer.userId)}
             variant="contained"
             style={{ backgroundColor: '#1976d2', color: '#ffffff', borderRadius: 0 }}
           >
             Move to Team 2
           </Button>
           <Button
+            onClick={() => joinTeam(0, selectedPlayer.userId)}
             variant="contained"
             style={{ backgroundColor: '#16a34a', color: '#ffffff', borderRadius: 0 }}
           >
@@ -274,6 +278,7 @@ const GameDetails = () => {
             Substitute
           </Button>
           <Button
+            //onClick={handleLeaveGame}
             variant="contained"
             style={{ backgroundColor: '#d32f2f', color: '#ffffff', borderRadius: 0}}
           >

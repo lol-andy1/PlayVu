@@ -156,8 +156,8 @@ public class GameService {
 
     }
 
-    public void joinGame(Integer gameId, Integer team) {
-        gameRepository.findById(gameId).get(); // check if game is present
+    public void joinGame(Integer gameId, Integer team, Integer participantId) {
+        Game game = gameRepository.findById(gameId).get(); // check if game is present
         if (team != 0 && team != 1 && team != 2) {
             return;
         }
@@ -167,16 +167,21 @@ public class GameService {
         }
 
         Users user = userService.getUserFromJwt();
+        Integer userId = user.getUserId();
         
-        if (gameParticipantRepository.findByGameIdAndParticipantId(gameId, user.getUserId()) != null) {
-            GameParticipant gameParticipant = gameParticipantRepository.findByGameIdAndParticipantId(gameId, user.getUserId());
+        if (participantId != null && userId == game.getOrganizerId()){
+            userId = participantId;
+        }
+        
+        if (gameParticipantRepository.findByGameIdAndParticipantId(gameId, userId) != null) {
+            GameParticipant gameParticipant = gameParticipantRepository.findByGameIdAndParticipantId(gameId, userId);
             gameParticipant.setTeam(team);
 
             gameParticipantRepository.save(gameParticipant);
         } else {
             GameParticipant gameParticipant = new GameParticipant();
             gameParticipant.setGameId(gameId);
-            gameParticipant.setParticipantId(user.getUserId());
+            gameParticipant.setParticipantId(userId);
             gameParticipant.setTeam(team);
 
             gameParticipantRepository.save(gameParticipant);
