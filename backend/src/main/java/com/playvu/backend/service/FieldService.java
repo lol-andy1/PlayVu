@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 // import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -78,7 +79,7 @@ public class FieldService {
         return coordinates;
     }
 
-    public Integer addField(HttpServletRequest request, String name, String description, Float price, String address, String zipCode, String city) throws URISyntaxException, IOException, InterruptedException{
+    public Integer addField(HttpServletRequest request, String name, String description, Float price, String picture, String address, String zipCode, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -94,6 +95,7 @@ public class FieldService {
         newField.setZipCode(zipCode);
         newField.setCity(city);
         newField.setPrice(price);
+        newField.setPicture(picture);
         newField.setAvailable(true);
         
         newField.setLatitude(new_field_coordinates.get("latitude"));
@@ -104,7 +106,7 @@ public class FieldService {
         
     }
 
-    public void editField(HttpServletRequest request, Integer field_id, String name, String description, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+    public void editField(HttpServletRequest request, Integer field_id, String name, String description, String picture, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -121,6 +123,9 @@ public class FieldService {
         if(description != null){
             field.setDescription(description);
         }
+        if(picture != null){
+          field.setPicture(picture);
+        }
         if(address != null){
             field.setAddress(address);
         }
@@ -131,11 +136,12 @@ public class FieldService {
             field.setCity(city);
         }
         
-        // TODO: Decide if we need to change coordinates if address switches
-        // String full_address = address + ", " + zip_code + ", " + city;
-        // Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
-        // field.setLatitude(new_field_coordinates.get("latitude"));
-        // field.setLongitude(new_field_coordinates.get("longitude"));
+        if(address != null && zip_code != null && city != null){
+          String full_address = address + ", " + zip_code + ", " + city;
+            Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
+          field.setLatitude(new_field_coordinates.get("latitude"));
+          field.setLongitude(new_field_coordinates.get("longitude"));
+        }
         
         fieldRepository.save(field);
     }
