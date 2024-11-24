@@ -20,6 +20,7 @@ import com.playvu.backend.repository.GameParticipantRepository;
 import com.playvu.backend.repository.GameRepository;
 // import com.playvu.backend.repository.SubFieldRepository;
 import com.playvu.backend.repository.SubFieldRepository;
+import com.playvu.backend.repository.UsersRepository;
 
 @Service
 public class GameService {
@@ -37,6 +38,9 @@ public class GameService {
 
     @Autowired 
     private FieldScheduleRepository fieldScheduleRepository;
+
+    @Autowired
+    private UsersRepository usersRepository;
 
     @Autowired
     private UserService userService;
@@ -207,6 +211,21 @@ public class GameService {
         gameParticipantRepository.delete(gameParticipant);
         
     }
+
+    public void removePlayer(Integer gameId, Integer participantId){
+        Game game = gameRepository.findById(gameId).get(); // check if game is present 
+
+        Users user = userService.getUserFromJwt();
+        Users participant = usersRepository.findById(participantId).get();
+
+        if(game.getOrganizerId() != user.getUserId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control game: " + gameId);
+        }
+
+        GameParticipant gameParticipant = gameParticipantRepository.findByGameIdAndParticipantId(gameId, participant.getUserId());
+        gameParticipantRepository.delete(gameParticipant);
+    }
+
 
 
 }
