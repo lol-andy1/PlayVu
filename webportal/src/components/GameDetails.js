@@ -5,6 +5,8 @@ import { Card, CardContent, Typography, Button, Dialog } from '@mui/material';
 import Field from "./Field";
 import { QRCode } from 'react-qrcode-logo';
 import logo from  "../assets/logo.jpg"
+import StripePayment from "./StripePayment";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const GameDetails = () => {
   const [reload, setReload] = useState(0); 
@@ -25,8 +27,11 @@ const GameDetails = () => {
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [openManager, setOpenManager] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(false);
+  const [allowConfirmation, setAllowConfirmation] = useState(false)
 
   const {slug} = useParams();
+  const {user} = useAuth0();
+  console.log(user);
   useEffect(() => {
     const getGameDetails = async () => {
       try{
@@ -280,6 +285,13 @@ const GameDetails = () => {
             Remove from game
           </Button>
         </div>
+      </Dialog>
+      <Dialog open = {!allowConfirmation}>
+        <StripePayment     
+          setAllowConfirmation={setAllowConfirmation} 
+          amount={1000} 
+          email={user.email} 
+          name={user.name} />
       </Dialog>
     </div>
   );
