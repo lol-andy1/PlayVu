@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Card, CardContent, Typography, Button, Dialog } from '@mui/material';
+import { Card, CardContent, Typography, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import Field from "./Field";
 import { QRCode } from 'react-qrcode-logo';
 import logo from  "../assets/logo.jpg"
@@ -15,7 +15,8 @@ const GameDetails = () => {
     max_players: null,
     price: null,
     field: '',
-    date: '',
+    start_date: '',
+    end_date: '',
     team_1: [],
     team_2: [],
     sideline: []
@@ -25,6 +26,7 @@ const GameDetails = () => {
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [openManager, setOpenManager] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(false);
+  const [openQRModal, setOpenQRModal] = useState(false);
 
   const {slug} = useParams();
   useEffect(() => {
@@ -41,7 +43,8 @@ const GameDetails = () => {
           max_players: data.max_players,
           price: data.price,
           field: data.sub_field_name,
-          date: data.start_date,
+          start_date: data.start_date,
+          end_date: data.end_date,
           team_1: data.team_1,
           team_2: data.team_2,
           sideline: data.sideline
@@ -136,6 +139,9 @@ const GameDetails = () => {
     // game.team_1 = [  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Moore", "Eve White",
     //     "Frank Harris", "Grace Clark"]
 
+  const currentTime = Date.now();
+  const gameEndTime = new Date(game.end_date).getTime();
+  const canJoinGame = currentTime < gameEndTime;
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
       {/* Button placed above the card */}
@@ -169,7 +175,7 @@ const GameDetails = () => {
             <span className="font-semibold">Field:</span> {game.field || 'N/A'}
           </Typography>
           <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Date:</span> {new Date(game.date).toLocaleString() || 'N/A'}
+            <span className="font-semibold">Date:</span> {new Date(game.start_date).toLocaleString() || 'N/A'}
           </Typography>
           <Typography variant="body1" className="mb-2">
             <span className="font-semibold">Team 1:</span> {game.team_1.length > 0 ? game.team_1.join(', ') : 'No players'}
@@ -180,7 +186,19 @@ const GameDetails = () => {
           <Typography variant="body1" className="mb-2">
             <span className="font-semibold">Sideline:</span> {game.sideline.length > 0 ? game.sideline.map(player => player.username).join(', ') : 'Sideline is currently empty'}
           </Typography>
-          {isJoined ? (
+          {!isJoined && canJoinGame && (
+            <div className="w-full max-w-md mt-4 px-4">
+              <Button
+                variant="contained"
+                style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
+                onClick={joinGame}
+                className="w-full"
+              >
+                Join Game
+              </Button>
+            </div>
+          )}
+          {isJoined && (
           <>
             <div className="flex justify-around mt-4">
               <Button
@@ -206,22 +224,8 @@ const GameDetails = () => {
               </Button>
             </div>
           </>
-          ) : (
-          <div className="w-full max-w-md mt-4 px-4">
-            <Button
-              variant="contained"
-              style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
-              onClick={joinGame}
-              className="w-full"
-            >
-              Join Game
-            </Button>
-          </div>
           )}
-        </CardContent>
-      </Card>
-
-      {isJoined && (
+          {isJoined && (
       <div className="w-full max-w-md mt-4 px-4">
         <Button
           variant="contained"
@@ -234,14 +238,36 @@ const GameDetails = () => {
       </div>
       )}
 
-      <p style={{ fontSize: "16px", margin: "8px" }}>Share This Game:</p>
-      <QRCode 
-        value= {window.location.href}
-        size={200}
-        logoImage={logo}
-        logoWidth={67}
-        logoHeight={67}
-      />
+      <div className="w-full max-w-md mt-4 px-4">
+        <Button
+          variant="contained"
+          style={{ backgroundColor: '#3b82f6', color: '#ffffff' }}
+          onClick={() => setOpenQRModal(true)}
+          className="w-full"
+        >
+          Share This Game
+        </Button>
+      </div>
+
+      <Dialog open={openQRModal} onClose={() => setOpenQRModal(false)}>
+        <DialogContent>
+          <Typography variant="h6" className="text-center mb-4">Scan to Share This Game</Typography>
+          <QRCode 
+            value={window.location.href}
+            size={200}
+            logoImage={logo}
+            logoWidth={67}
+            logoHeight={67}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenQRModal(false)} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+        </CardContent>
+      </Card>
 
       <Dialog
         open={openManager} onClose={closeManager} 
