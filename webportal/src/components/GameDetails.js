@@ -28,6 +28,7 @@ const GameDetails = () => {
   const [openManager, setOpenManager] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(false);
   const [allowConfirmation, setAllowConfirmation] = useState(false)
+  const [joinClicked, setJoinClicked] = useState(false)
 
   const {slug} = useParams();
   const {user} = useAuth0();
@@ -141,6 +142,14 @@ const GameDetails = () => {
     // game.team_1 = [  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Moore", "Eve White",
     //     "Frank Harris", "Grace Clark"]
 
+    useEffect(() => {
+      if (allowConfirmation) {
+        joinGame();
+        // setJoinClicked(false);
+        // setAllowConfirmation(false);
+      }
+    }, [allowConfirmation]);
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
       {/* Button placed above the card */}
@@ -216,7 +225,9 @@ const GameDetails = () => {
             <Button
               variant="contained"
               style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
-              onClick={joinGame}
+              onClick={() => {
+                setAllowConfirmation(false);
+                setJoinClicked(true);}}
               className="w-full"
             >
               Join Game
@@ -286,10 +297,10 @@ const GameDetails = () => {
           </Button>
         </div>
       </Dialog>
-      <Dialog open = {!allowConfirmation}>
+      <Dialog open = {!allowConfirmation && joinClicked}>
         <StripePayment     
           setAllowConfirmation={setAllowConfirmation} 
-          amount={1000} 
+          amount={game.price * 100} 
           email={user.email} 
           name={user.name} />
       </Dialog>

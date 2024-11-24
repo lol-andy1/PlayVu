@@ -3,6 +3,7 @@ import {useState, useEffect} from "react";
 import {useStripe, useElements, PaymentElement, Elements  } from "@stripe/react-stripe-js";
 import StripeCheckout from "./StripeCheckout";
 import {loadStripe} from "@stripe/stripe-js";
+import { useAuth0 } from "@auth0/auth0-react";
 
 // This component serves as the checkout form 
 const StripePayment = (props) => {
@@ -14,7 +15,7 @@ const StripePayment = (props) => {
     
     useEffect(() => {
         const fetchClientSecret = async () => {
-            const response = await fetch(baseURL+"api/checkout", {
+            const response = await fetch(baseURL+"/api/checkout", {
                 method: "POST",
             headers: {
                 "Content-Type": "application/json", // Specify JSON format
