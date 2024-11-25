@@ -61,6 +61,7 @@ const Search = () => {
             price: game.price,
             playerCount: game.playerCount,
             max_players: game.max_players,
+            picture: game.picture
           }))
           .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
         setGames(sortedGames);
@@ -176,6 +177,7 @@ const Search = () => {
                   endDate={game.endDate}
                   playerCount={game.playerCount}
                   max_players={game.max_players}
+                  picture={game.picture}
                 />
               ))
             )}
