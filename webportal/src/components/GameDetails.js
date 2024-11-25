@@ -356,7 +356,7 @@ const GameDetails = () => {
               <Button
                 variant="contained"
                 style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
-                onClick={joinGame}
+                onClick={handleJoin}
                 className="w-full"
               >
                 Join Game
@@ -537,21 +537,20 @@ const GameDetails = () => {
         </div>
       </Dialog>
 
-      {joinClicked && !allowConfirmation && (
-        <Dialog open={true}>
-          <StripePayment
-            setAllowConfirmation={(status) => {
-              setAllowConfirmation(status);
-              if (status) {
-                setJoinClicked(false);
-              }
-            }}
-            amount={game.price * 100}
-            email={user.email}
-            name={user.name}
-          />
-        </Dialog>
-      )}
+      <Dialog open={joinClicked && !allowConfirmation} onClose={() => setJoinClicked(false)}>
+        <StripePayment
+          setAllowConfirmation={(status) => {
+            setAllowConfirmation(status);
+            if (status) {
+              setJoinClicked(false);
+            }
+          }}
+          amount={game.price * 100}
+          email={user.email}
+          name={user.name}
+        />
+      </Dialog>
+      
     </div>
   );
 };
