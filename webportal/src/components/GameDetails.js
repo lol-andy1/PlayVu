@@ -26,13 +26,15 @@ const GameDetails = () => {
     sideline: []
   }); 
   const [isJoined, setIsJoined] = useState(false);
-  const [isOrganizer, setIsOrganizer] = useState(false);
-  const [openManager, setOpenManager] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState(false);
-  const [currTime, setCurrTime] = useState(Date.now());
   const [allowConfirmation, setAllowConfirmation] = useState(false)
   const [joinClicked, setJoinClicked] = useState(false)
   const [timeElapsed, setTimeElapsed] = useState('');
+
+  const [isOrganizer, setIsOrganizer] = useState(false);
+  const [openManager, setOpenManager] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState({});
+  const [currTime, setCurrTime] = useState(Date.now());
+  const [substitute, setSubstitute] = useState(false);
 
   const {slug} = useParams();
   const {user} = useAuth0();
@@ -108,6 +110,11 @@ const GameDetails = () => {
       setSelectedPlayer(player)
       setOpenManager(true)
     }
+  }
+
+  const closeManager = () => {
+    setOpenManager(false)
+    setSubstitute(false)
   }
 
   const removePlayer = async (userId) => {
@@ -245,18 +252,20 @@ const GameDetails = () => {
               ? `Game started. Time passed: ${timeElapsed}` 
               : 'Game has not started yet.'}
           </Typography>
+
           <Field team1={game.team_1} team2={game.team_2} managePlayer={managePlayer}/>
-                {/* Sideline Players Row */}
+
           <Box className="w-full bg-gray-200 py-4 flex justify-center gap-4 flex-wrap">
             {game.sideline.map((player, index) => (
               <div
-                key={player}
+                key={index}
                 className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center"
               >
-                <span className="text-black text-[10px] text-center truncate" onClick={() => managePlayer(player)}>{player.username}</span>
+                <span className="text-black text-[10px] text-center truncate" onClick={() => managePlayer({...player, team: 0})}>{player.username}</span>
               </div>
             ))}
           </Box>
+
           <Typography variant="body1" className="mb-2">
             <span className="font-semibold">Location:</span> {game.location || 'N/A'}
           </Typography>
@@ -344,56 +353,60 @@ const GameDetails = () => {
         logoHeight={67}
       />
 
-      <Dialog
-        open={openManager} onClose={() => setOpenManager(false)} 
-      > 
-        <div className="p-4 flex flex-col w-52">
+      <Dialog open={openManager && !substitute} onClose={closeManager}> 
+        <div className="p-4 flex flex-col w-72">
           <h1 className="text-xl pb-2 border-b-2">Manage {selectedPlayer && selectedPlayer.username}</h1>
 
-          <h1>
-            {"Play time: " + 
-              (Math.round(
+          <div>
+            <span>Play time: </span>
+            <span>
+              {(Math.round(
+                selectedPlayer.playTime ? 
                 (selectedPlayer.playTime + 
                   (selectedPlayer.team !== 0 ? 
                     (currTime - Date.parse(selectedPlayer.playStart)) / 1000 
                     : 0
                   )
-                ) 
-              )) + 
-            " sec"}
-          </h1>
-
-          <h1 className="mt-2">Move Player</h1>
-
-          <div className="flex flex-col mb-4 border border-black rounded-lg bg-gray-100">
-            <Button
-              onClick={() => joinTeam(1, selectedPlayer.userId)}
-              style={{ color: '#1976d2' }}
-            >
-              Team 1
-            </Button>
-
-            <Button
-              onClick={() => joinTeam(2, selectedPlayer.userId)}
-              style={{ color: '#16a34a', borderTop: "1px solid black", borderRadius: 0 }}
-            >
-              Team 2
-            </Button>
-
-            <Button
-              onClick={() => joinTeam(0, selectedPlayer.userId)}
-              style={{ color: 'grey', borderTop: "1px solid black", borderBottom: "1px solid black", borderRadius: 0  }}
-            >
-              Sideline
-            </Button>
-
-            <Button
-              style={{ color: 'grey', }}
-            >
-              Substitute
-            </Button>
+                ) / 60 
+                : 0
+              ))  + " min"}
+            </span>
           </div>
+          
+          <div>
+            <h1 className="mt-2">Move Player</h1>
 
+            <div className="flex flex-col mb-4 border border-black rounded-lg bg-gray-100">
+              <Button
+                onClick={() => joinTeam(1, selectedPlayer.userId)}
+                style={{ color: '#1976d2' }}
+              >
+                Team 1
+              </Button>
+
+              <Button
+                onClick={() => joinTeam(2, selectedPlayer.userId)}
+                style={{ color: '#16a34a', borderTop: "1px solid black", borderRadius: 0 }}
+              >
+                Team 2
+              </Button>
+
+              <Button
+                color="warning"
+                onClick={() => joinTeam(0, selectedPlayer.userId)}
+                style={{ borderTop: "1px solid black", borderBottom: "1px solid black", borderRadius: 0  }}
+              >
+                Sideline
+              </Button>
+
+              <Button
+                onClick={setSubstitute}
+                disabled={selectedPlayer.team !== 0}
+              >
+                Substitute
+              </Button>
+            </div>
+          </div>
           <Button
             onClick={() => removePlayer(selectedPlayer.userId)}
             variant="outlined"
@@ -404,23 +417,51 @@ const GameDetails = () => {
           </Button>
         </div>
       </Dialog>
+      
+      <Dialog open={substitute} onClose={() => setSubstitute(false)}>
+        <div className="py-2 flex flex-col w-72">
+          <h1 className="px-4">Replace</h1>
+          <div className="flex flex-col">
+            {game.team_1.concat(game.team_2)
+              .sort((a, b) => (
+                (b.playTime + (currTime - Date.parse(b.playStart)) / 1000) - 
+                (a.playTime + (currTime - Date.parse(a.playStart)) / 1000)
+              ))
+              .map((player, index) => (
+                <div className={`px-4 py-2 text-xl border-t flex justify-between ${index % 2 === 0 ? "bg-gray-200" : ""}`}>
+                  <span>{player.username}</span>
+                  <span>
+                    {(Math.round(
+                      (player.playTime + 
+                        (player.team !== 0 ? 
+                          (currTime - Date.parse(player.playStart)) / 1000 
+                          : 0
+                        )
+                      ) / 60 
+                    )) + 
+                    " min"}
+                  </span>
+                </div>
+              ))}
+          </div>
+        </div>
+      </Dialog>
+
       {joinClicked && !allowConfirmation && (
-  <Dialog open={true}>
-    <StripePayment
-      setAllowConfirmation={(status) => {
-        setAllowConfirmation(status);
-        if (status) {
-          setJoinClicked(false);
-        }
-      }}
-      amount={gamePrice}
-      email={user.email}
-      name={user.name}
-    />
-  </Dialog>
-)}
-
-
+        <Dialog open={true}>
+          <StripePayment
+            setAllowConfirmation={(status) => {
+              setAllowConfirmation(status);
+              if (status) {
+                setJoinClicked(false);
+              }
+            }}
+            amount={gamePrice}
+            email={user.email}
+            name={user.name}
+          />
+        </Dialog>
+      )}
     </div>
   );
 };

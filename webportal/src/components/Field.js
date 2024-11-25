@@ -67,7 +67,7 @@ const Field = ({team1, team2, managePlayer}) => {
               transform: 'translate(-50%, -50%)', // Center the circle relative to the position
             }}
           > 
-            <span className="text-white text-[10px] text-center" onClick={() => managePlayer(player)}>
+            <span className="text-white text-[10px] text-center" onClick={() => managePlayer({...player, team: 1})}>
               {player.username}
             </span>
           </div>
@@ -85,7 +85,7 @@ const Field = ({team1, team2, managePlayer}) => {
               transform: 'translate(-50%, -50%)', // Center the circle relative to the position
             }}
           >
-            <span className="text-white text-[10px] text-center" onClick={() => managePlayer(player)}>
+            <span className="text-white text-[10px] text-center" onClick={() => managePlayer({...player, team: 2})}>
               {player.username}
             </span>
           </div>
