@@ -9,6 +9,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import StripePayment from "../components/StripePayment";
+import Dialog from '@mui/material/Dialog';
 
 const OrganizeConfirm = () => {
   const { gameData, subfield, setCurrStep  } = useContext( GameContext )
@@ -18,7 +19,7 @@ const OrganizeConfirm = () => {
   const [duration, setDuration] = useState(0)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [allowConfirmation, setAllowConfirmation] = useState(false)
+  const [payment, setPayment] = useState(false)
 
   useEffect(() => {
     const s = new Date(gameData.startDate)
@@ -29,12 +30,17 @@ const OrganizeConfirm = () => {
 
   const handleSubmit = async () => {
     try{
+      setPayment(false)
       setLoading(true)
       await axios.post("/api/add-game", gameData)
       setSuccess(true)
     } catch (err) {
       console.log(err)
     }
+  }
+
+  const closePayment = () => {
+    setPayment(false)
   }
 
   const exitOrganize = () => {
@@ -85,18 +91,22 @@ const OrganizeConfirm = () => {
         </div>
       </div>
 
-      <StripePayment 
-        setAllowConfirmation={setAllowConfirmation} 
-        amount={Math.round(duration * gameData.organizerCost * 100)} 
-        email={user.email} 
-        name={user.name} 
-      />
-      
-      <div className="flex absolute right-0 p-4 space-x-2">
-        <Button  onClick={handleSubmit} variant="contained" color="success" disabled={!allowConfirmation} disableElevation>
-          Confirm
-        </Button>
+      <div className="flex absolute right-0 bottom-0 p-4 space-x-2">
+        <div onClick={setPayment}>
+          <Button variant="contained" color="success" disableElevation>
+            Confirm
+          </Button>
+        </div>
       </div>
+
+      <Dialog open={payment.valueOf()} onClose={closePayment}>
+        <StripePayment 
+          setAllowConfirmation={handleSubmit} 
+          amount={Math.round(duration * gameData.organizerCost * 100)} 
+          email={user.email} 
+          name={user.name} 
+        />
+      </Dialog>
 
       <Backdrop open={loading} onClick={exitOrganize} sx={{zIndex: 10}}>
         {success ?

@@ -1,5 +1,7 @@
 package com.playvu.backend.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +26,12 @@ public class GameParticipant {
 
     @Column()
     private Integer team;
+
+    @Column()
+    private Integer playTime;
+
+    @Column()
+    private LocalDateTime playStart;
 
     public Integer getGameParticipantId() {
         return gameParticipantId;
@@ -57,7 +65,23 @@ public class GameParticipant {
         this.team = team;
     }  
 
-    
-    
-    
+    public Integer getPlayTime() {
+        return playTime;
+    }
+
+    public void setPlayTime(Integer playTime) {
+        this.playTime = playTime;
+    }  
+
+    public void addToPlayTime(Integer playTime) {
+        this.playTime += playTime;
+    } 
+
+    public LocalDateTime getPlayStart() {
+        return playStart;
+    }
+
+    public void setPlayStart(LocalDateTime playStart) {
+        this.playStart = playStart;
+    }  
 }

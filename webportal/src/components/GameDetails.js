@@ -25,6 +25,7 @@ const GameDetails = () => {
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [openManager, setOpenManager] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(false);
+  const [currTime, setCurrTime] = useState(Date.now());
 
   const {slug} = useParams();
   useEffect(() => {
@@ -44,7 +45,8 @@ const GameDetails = () => {
           date: data.start_date,
           team_1: data.team_1,
           team_2: data.team_2,
-          sideline: data.sideline
+          sideline: data.sideline,
+          startDate: new Date(data.start_date)
         });
 
         const isUserJoined =
@@ -63,15 +65,26 @@ const GameDetails = () => {
 
   const managePlayer = (player) => {
     if (isOrganizer){
+      setCurrTime(Date.now())
       setSelectedPlayer(player)
       setOpenManager(true)
     }
   }
 
-  const closeManager = () => {
-    setOpenManager(false)
+  const removePlayer = async (userId) => {
+    if (isOrganizer){
+      try {
+        await axios.post('/api/remove-player', {
+          gameId: slug,
+          participantId: userId
+        });
+        setReload(!reload);
+        setOpenManager(false);  
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
-
 
   const joinGame = async () => {
     try {
@@ -99,10 +112,12 @@ const GameDetails = () => {
         const res = await axios.post(`/api/join-game`, {
           gameId: slug,
           team: team,
-          participantId: userId
+          participantId: userId,
+          playStart: new Date().toISOString()
         })
         if (res.status === 200) {
           setReload(!reload);
+          setOpenManager(false);
         }
       } catch (err) {
         console.log(err);
@@ -125,6 +140,7 @@ const GameDetails = () => {
       alert("Failure to leave the game. Please try again.");
     }
   };
+
   const handleLeaveGame = () => {
     const userConfirmed = window.confirm(
       "Are you sure you want to leave the game? If you wish to rejoin the action later we suggest that you join the sideline instead"
@@ -133,9 +149,6 @@ const GameDetails = () => {
       leaveGame(); // Call the function to leave the game
     }
   };
-    // game.player_count = game.max_players;
-    // game.team_1 = [  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Moore", "Eve White",
-    //     "Frank Harris", "Grace Clark"]
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
@@ -245,44 +258,62 @@ const GameDetails = () => {
       />
 
       <Dialog
-        open={openManager} onClose={closeManager} 
+        open={openManager} onClose={() => setOpenManager(false)} 
       > 
-        <div className="p-4 flex flex-col">
-          <h1 className=" text-2xl border-b-2">Manage</h1>
-          <h1 className=" text-xl">{selectedPlayer && selectedPlayer.username}</h1>
+        <div className="p-4 flex flex-col w-52">
+          <h1 className="text-xl pb-2 border-b-2">Manage {selectedPlayer && selectedPlayer.username}</h1>
+
+          <h1>
+            {"Play time: " + 
+              (Math.round(
+                (selectedPlayer.playTime + 
+                  (selectedPlayer.team !== 0 ? 
+                    (currTime - Date.parse(selectedPlayer.playStart)) / 1000 
+                    : 0
+                  )
+                ) 
+              )) + 
+            " sec"}
+          </h1>
+
+          <h1 className="mt-2">Move Player</h1>
+
+          <div className="flex flex-col mb-4 border border-black rounded-lg bg-gray-100">
+            <Button
+              onClick={() => joinTeam(1, selectedPlayer.userId)}
+              style={{ color: '#1976d2' }}
+            >
+              Team 1
+            </Button>
+
+            <Button
+              onClick={() => joinTeam(2, selectedPlayer.userId)}
+              style={{ color: '#16a34a', borderTop: "1px solid black", borderRadius: 0 }}
+            >
+              Team 2
+            </Button>
+
+            <Button
+              onClick={() => joinTeam(0, selectedPlayer.userId)}
+              style={{ color: 'grey', borderTop: "1px solid black", borderBottom: "1px solid black", borderRadius: 0  }}
+            >
+              Sideline
+            </Button>
+
+            <Button
+              style={{ color: 'grey', }}
+            >
+              Substitute
+            </Button>
+          </div>
+
           <Button
-            onClick={() => joinTeam(1, selectedPlayer.userId)}
-            variant="contained"
-            style={{ backgroundColor: '#d32f2f', color: '#ffffff', borderRadius: 0 }}
+            onClick={() => removePlayer(selectedPlayer.userId)}
+            variant="outlined"
+            color="error"
+            style={{ borderColor: "black", backgroundColor: '#f3f4f6'}}
           >
-            Move to Team 1
-          </Button>
-          <Button
-            onClick={() => joinTeam(2, selectedPlayer.userId)}
-            variant="contained"
-            style={{ backgroundColor: '#1976d2', color: '#ffffff', borderRadius: 0 }}
-          >
-            Move to Team 2
-          </Button>
-          <Button
-            onClick={() => joinTeam(0, selectedPlayer.userId)}
-            variant="contained"
-            style={{ backgroundColor: '#16a34a', color: '#ffffff', borderRadius: 0 }}
-          >
-            Move to Sideline
-          </Button>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: '#16a34a', color: '#ffffff', borderRadius: 0 }}
-          >
-            Substitute
-          </Button>
-          <Button
-            //onClick={handleLeaveGame}
-            variant="contained"
-            style={{ backgroundColor: '#d32f2f', color: '#ffffff', borderRadius: 0}}
-          >
-            Remove from game
+            Remove
           </Button>
         </div>
       </Dialog>
