@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Card, CardContent, Typography, Button, Dialog } from '@mui/material';
+import { Card, CardContent, Typography, Button, Dialog, Box } from '@mui/material';
 import Field from "./Field";
 import { QRCode } from 'react-qrcode-logo';
 import logo from  "../assets/logo.jpg"
+import StripePayment from "./StripePayment";
+import { useAuth0 } from "@auth0/auth0-react";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import IconButton from '@mui/material/IconButton'
 
 const GameDetails = () => {
+  const navigate = useNavigate();
   const [reload, setReload] = useState(0); 
   const [game, setGame] = useState({
     name: '',
@@ -20,13 +25,16 @@ const GameDetails = () => {
     team_2: [],
     sideline: []
   }); 
-  const navigate = useNavigate();
   const [isJoined, setIsJoined] = useState(false);
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [openManager, setOpenManager] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(false);
+  const [allowConfirmation, setAllowConfirmation] = useState(false)
+  const [joinClicked, setJoinClicked] = useState(false)
+  const [timeElapsed, setTimeElapsed] = useState('');
 
   const {slug} = useParams();
+  const {user} = useAuth0();
   useEffect(() => {
     const getGameDetails = async () => {
       try{
@@ -60,6 +68,37 @@ const GameDetails = () => {
     }
     getGameDetails();
   }, [reload, slug]);
+
+  useEffect(() => {
+    if (allowConfirmation) {
+      joinGame();
+      // setJoinClicked(false);
+      // setAllowConfirmation(false);
+    }
+  }, [allowConfirmation]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (game.date) {
+        const startTime = new Date(game.date).getTime();
+        const currentTime = Date.now();
+        if (currentTime > startTime) {
+          const elapsedTime = currentTime - startTime;
+
+          const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+          const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+  
+          setTimeElapsed(`${hours}h ${minutes}m ${seconds}s`);
+        }
+        else {
+          setTimeElapsed('');
+        }
+      }
+    }, 1000)
+
+    return () => clearInterval(interval);
+  }, [game])
 
   const managePlayer = (player) => {
     if (isOrganizer){
@@ -124,6 +163,7 @@ const GameDetails = () => {
       alert("Failure to leave the game. Please try again.");
     }
   };
+
   const handleLeaveGame = () => {
     const userConfirmed = window.confirm(
       "Are you sure you want to leave the game? If you wish to rejoin the action later we suggest that you join the sideline instead"
@@ -135,6 +175,31 @@ const GameDetails = () => {
     // game.player_count = game.max_players;
     // game.team_1 = [  "Alice Johnson", "Bob Smith", "Charlie Davis", "Diana Moore", "Eve White",
     //     "Frank Harris", "Grace Clark"]
+
+  const refreshPage = () => {
+    setReload(!reload);
+  }
+
+  const handleJoin = () => {
+    setJoinClicked(true);
+    if(game.price === 0) {
+      setAllowConfirmation(true);
+    }
+    else {
+      setAllowConfirmation(false);
+    }
+  }
+
+  // if(game.price === 0 && !allowConfirmation) {
+  //   setAllowConfirmation(true);
+  // }
+
+    const gamePrice = game.price * 100;
+
+    const handleJoinGame = () => {
+      setAllowConfirmation(false);
+      setJoinClicked(true);
+    };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
@@ -154,8 +219,31 @@ const GameDetails = () => {
         <CardContent>
           <Typography variant="h5" component="div" className="mb-4 text-center">
             {game.name || 'Game Title'}
+            <IconButton 
+              onClick={refreshPage} 
+              style={{ marginLeft: '8px', color: '#14532d' }} 
+              aria-label="refresh"
+            >
+              <RefreshIcon />
+            </IconButton>
+          </Typography>
+          <Typography variant="body2" className="text-center text-gray-600">
+            {timeElapsed 
+              ? `Game started. Time passed: ${timeElapsed}` 
+              : 'Game has not started yet.'}
           </Typography>
           <Field team1={game.team_1} team2={game.team_2} managePlayer={managePlayer}/>
+                {/* Sideline Players Row */}
+          <Box className="w-full bg-gray-200 py-4 flex justify-center gap-4 flex-wrap">
+            {game.sideline.map((player, index) => (
+              <div
+                key={player}
+                className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center"
+              >
+                <span className="text-black text-[10px] text-center truncate" onClick={() => managePlayer(player)}>{player.username}</span>
+              </div>
+            ))}
+          </Box>
           <Typography variant="body1" className="mb-2">
             <span className="font-semibold">Location:</span> {game.location || 'N/A'}
           </Typography>
@@ -211,7 +299,11 @@ const GameDetails = () => {
             <Button
               variant="contained"
               style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
-              onClick={joinGame}
+<<<<<<< Updated upstream
+              onClick={handleJoin}
+=======
+              onClick={handleJoinGame}
+>>>>>>> Stashed changes
               className="w-full"
             >
               Join Game
@@ -281,6 +373,23 @@ const GameDetails = () => {
           </Button>
         </div>
       </Dialog>
+      {joinClicked && !allowConfirmation && (
+  <Dialog open={true}>
+    <StripePayment
+      setAllowConfirmation={(status) => {
+        setAllowConfirmation(status);
+        if (status) {
+          setJoinClicked(false); // Close dialog
+        }
+      }}
+      amount={gamePrice}
+      email={user.email}
+      name={user.name}
+    />
+  </Dialog>
+)}
+
+
     </div>
   );
 };
