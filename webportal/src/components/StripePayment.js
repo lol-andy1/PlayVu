@@ -3,6 +3,7 @@ import {useState, useEffect} from "react";
 import {useStripe, useElements, PaymentElement, Elements  } from "@stripe/react-stripe-js";
 import StripeCheckout from "./StripeCheckout";
 import {loadStripe} from "@stripe/stripe-js";
+import { useAuth0 } from "@auth0/auth0-react";
 
 // This component serves as the checkout form 
 const StripePayment = (props) => {
