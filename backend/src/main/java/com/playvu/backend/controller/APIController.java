@@ -152,6 +152,11 @@ public class APIController {
         gameService.removePlayer(gameParticipantBody.getGameId(), gameParticipantBody.getParticipantId());
     }
 
+    @PostMapping(value = "/switch-players")
+    public void switchPlayers(@RequestBody Map<String, Integer> switchPlayersBody) {
+        gameService.switchPlayers(switchPlayersBody.get("gameId"), switchPlayersBody.get("participantId1"), switchPlayersBody.get("participantId2"), switchPlayersBody.get("team"));
+    }
+
     @GetMapping(value = "/get-user")
     public Map<String, Object> getUser(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
         return userService.getUser(request);
