@@ -194,6 +194,13 @@ const GameDetails = () => {
   //   setAllowConfirmation(true);
   // }
 
+    const gamePrice = game.price * 100;
+
+    const handleJoinGame = () => {
+      setAllowConfirmation(false);
+      setJoinClicked(true);
+    };
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
       {/* Button placed above the card */}
@@ -292,7 +299,11 @@ const GameDetails = () => {
             <Button
               variant="contained"
               style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
+<<<<<<< Updated upstream
               onClick={handleJoin}
+=======
+              onClick={handleJoinGame}
+>>>>>>> Stashed changes
               className="w-full"
             >
               Join Game
@@ -362,13 +373,23 @@ const GameDetails = () => {
           </Button>
         </div>
       </Dialog>
-      <Dialog open = {!allowConfirmation && joinClicked}>
-        <StripePayment     
-          setAllowConfirmation={setAllowConfirmation} 
-          amount={game.price * 100} 
-          email={user.email} 
-          name={user.name} />
-      </Dialog>
+      {joinClicked && !allowConfirmation && (
+  <Dialog open={true}>
+    <StripePayment
+      setAllowConfirmation={(status) => {
+        setAllowConfirmation(status);
+        if (status) {
+          setJoinClicked(false); // Close dialog
+        }
+      }}
+      amount={gamePrice}
+      email={user.email}
+      name={user.name}
+    />
+  </Dialog>
+)}
+
+
     </div>
   );
 };
