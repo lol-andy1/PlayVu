@@ -24,7 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.stripe.model.Account;
 import com.stripe.param.AccountListParams;
+import com.stripe.param.AccountCreateParams;
 import com.stripe.model.AccountCollection;
+import com.stripe.net.RequestOptions;
+import com.stripe.model.Balance;
 
 import java.util.List;
 import java.util.Map;
@@ -134,7 +137,30 @@ public class StripeController {
 
         // No account so create acct
 
+        AccountCreateParams createParams =  AccountCreateParams.builder()
+            .setCountry("US")
+            .setBusinessProfile(AccountCreateParams.BusinessProfile.builder()
+                .setName(name)
+                .build())
+            .build();
 
-        return ""; // No account found                    
+        Account account = Account.create(createParams);
+
+        return account.getId();
+
+
+        // return ""; // No account found                    
+    }
+
+    @PostMapping("/get-balance-of-account")
+    public Long getBalanceOfAccount(HttpServletRequest request, String accountNumber) throws StripeException {
+
+        Stripe.apiKey = STRIPE_API_KEY;
+
+        RequestOptions options = RequestOptions.builder()
+            .setStripeAccount(accountNumber)
+            .build();
+
+        return Balance.retrieve(options).getPending().get(0).getAmount()+Balance.retrieve(options).getAvailable().get(0).getAmount();
     }
 }
