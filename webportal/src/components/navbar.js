@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link, useLocation } from "react-router-dom";
 import { useRole } from "../RoleContext";
+import logo from  "../assets/logo-nobg.png"
+import playvu from  "../assets/playvu-nobg.png"
 
 const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
@@ -16,11 +18,10 @@ const Navbar = () => {
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
           to="/"
-          className="flex items-center space-x-3 rtl:space-x-reverse"
+          className="flex items-center space-x-3 rtl:space-x-reverse lg:justify-start hidden lg:flex"
         >
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            PlayVu Portal
-          </span>
+          <img src={logo} alt="Logo" className="h-16 w-auto"/>
+          <img src={playvu} alt="PlayVu" className="h-6 w-auto"/>    
         </Link>
         <div className="flex md:order-2 space-x-3 rtl:space-x-reverse">
           {isAuthenticated ? (

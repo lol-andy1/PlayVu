@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import samplefield from  "../assets/samplefield.jpg"
 
 const GameCard = ({ id, name, price, location, startDate, playerCount, max_players, endDate, field, picture }) => {
   const navigate = useNavigate();
@@ -76,6 +77,14 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
       </div>
 
       <div className="h-1 w-full bg-gradient-to-r from-green-400 to-blue-500 rounded-b-lg"></div>
+      
+      <div className="w-full">
+        <img
+          src={picture || samplefield}
+          alt="Field"
+          className="w-full h-40 object-cover rounded-b-lg"
+        />
+      </div>
     </div>
   );
 };
