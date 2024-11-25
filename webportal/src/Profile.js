@@ -143,6 +143,7 @@ const Profile = () => {
                 playerCount={game.playerCount}
                 max_players={game.maxPlayers}
                 location={game.field + ", " + game.subfield}
+                price={game.price}
               />
             ))
           }
