@@ -139,6 +139,7 @@ const Profile = () => {
                 id={game.gameId}
                 name={game.name}
                 startDate={game.startDate}
+                endDate={game.endDate}
                 playerCount={game.playerCount}
                 max_players={game.maxPlayers}
                 location={game.field + ", " + game.subfield}

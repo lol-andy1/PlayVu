@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const GameCard = ({ id, name, price, location, startDate, playerCount, max_players, endDate, field }) => {
+const GameCard = ({ id, name, price, location, startDate, playerCount, max_players, endDate, field, picture }) => {
   const navigate = useNavigate();
   const [isLive, setIsLive] = useState(false);
   const [duration, setDuration] = useState('');
@@ -31,7 +31,7 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
       className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md border border-gray-200 cursor-pointer transition-transform transform hover:scale-105 hover:shadow-xl mb-4"
     >
       <div className="p-4">
-
+        
         <div className="flex items-center justify-between">
 
           <h3 className="text-xl font-semibold text-gray-800 truncate">{name}</h3>

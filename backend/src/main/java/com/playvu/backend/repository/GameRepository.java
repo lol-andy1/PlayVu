@@ -14,13 +14,13 @@ import com.playvu.backend.entity.Game;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
 
-    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.price, g.start_date AT TIME ZONE 'UTC', g.end_date AT TIME ZONE 'UTC', f.picture, f.address AS \"location\", " +
+    @Query(value = "SELECT g.game_id, g.max_players, g.sub_field_id, g.organizer_id, g.name, g.price, g.start_date AT TIME ZONE 'UTC' AS start_date, g.end_date AT TIME ZONE 'UTC' as end_date, f.picture, f.address AS \"location\", " +
                     "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\" " +
                     "FROM game g " +
                     "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
                     "JOIN field f ON sf.master_field_id = f.field_id " +
                     "WHERE f.field_id IN (:fieldIds)" + 
-                    "AND g.start_date > CURRENT_TIMESTAMP AT TIME ZONE 'UTC'", 
+                    "AND g.end_date > CURRENT_TIMESTAMP AT TIME ZONE 'UTC'", 
             nativeQuery = true)
     List< Map<String, Object> > findByFieldIds(@Param("fieldIds") List<Integer> fieldIds);
 
