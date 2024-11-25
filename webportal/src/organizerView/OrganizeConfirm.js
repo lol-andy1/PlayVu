@@ -85,12 +85,12 @@ const OrganizeConfirm = () => {
         </div>
       </div>
 
-      <StripePayment 
+      {!allowConfirmation && <StripePayment 
         setAllowConfirmation={setAllowConfirmation} 
         amount={Math.round(duration * gameData.organizerCost * 100)} 
         email={user.email} 
         name={user.name} 
-      />
+      />}
       
       <div className="flex absolute right-0 p-4 space-x-2">
         <Button  onClick={handleSubmit} variant="contained" color="success" disabled={!allowConfirmation} disableElevation>
