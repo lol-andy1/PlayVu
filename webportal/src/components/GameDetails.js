@@ -214,12 +214,10 @@ const GameDetails = () => {
   //   setAllowConfirmation(true);
   // }
 
-    const gamePrice = game.price * 100;
-
-    // const handleJoinGame = () => {
-    //   setAllowConfirmation(false);
-    //   setJoinClicked(true);
-    // };
+  // const handleJoinGame = () => {
+  //   setAllowConfirmation(false);
+  //   setJoinClicked(true);
+  // };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
@@ -246,6 +244,11 @@ const GameDetails = () => {
             >
               <RefreshIcon />
             </IconButton>
+          </Typography>
+          <Typography variant="body2" className="text-center text-gray-600">
+            {timeElapsed 
+              ? `Game started. Time passed: ${timeElapsed}` 
+              : 'Game has not started yet.'}
           </Typography>
           <Typography variant="body2" className="text-center text-gray-600">
             {timeElapsed 
@@ -456,7 +459,7 @@ const GameDetails = () => {
                 setJoinClicked(false);
               }
             }}
-            amount={gamePrice}
+            amount={game.price * 100}
             email={user.email}
             name={user.name}
           />
