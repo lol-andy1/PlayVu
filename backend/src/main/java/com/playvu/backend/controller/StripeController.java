@@ -22,6 +22,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stripe.model.Account;
+import com.stripe.param.AccountListParams;
+import com.stripe.model.AccountCollection;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping(path = "api", produces = MediaType.APPLICATION_JSON_VALUE)
 // Allow all origins for simplicity, change for production.
@@ -106,5 +114,27 @@ public class StripeController {
     // This key is needed to get the checkout box to work, but is not secret, so can be hardcoded too
     public String getStripePublishableKey() {
         return STRIPE_PUBLISHABLE_KEY;
+    }
+
+    @PostMapping("/find-account-number")
+    public String findOrCreateAccountNumber(HttpServletRequest request, String name) throws StripeException {
+
+        Stripe.apiKey = STRIPE_API_KEY;
+
+        AccountListParams listParams = AccountListParams.builder().build();
+
+        AccountCollection accounts =  Account.list(listParams);
+
+        for (Account account : accounts.getData()) {
+            if (name.equals(account.getBusinessProfile().getName()))
+            {
+                return account.getId();
+            }
+        }
+
+        // No account so create acct
+
+
+        return ""; // No account found                    
     }
 }
