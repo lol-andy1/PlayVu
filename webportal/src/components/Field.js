@@ -86,7 +86,7 @@ const Field = ({team1, team2, managePlayer}) => {
             }}
           >
             {/* Player's name inside the circle */}
-            <span className="text-white text-[10px] text-center">
+            <span className="text-white text-[10px] text-center" onClick={() => managePlayer(player)}>
               {player.username}
             </span>
           </div>
