@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App";
 import { Auth0Provider } from "@auth0/auth0-react";
 import axios from "axios";
+import { ThemeProvider } from '@mui/material/styles';
+import theme from "./muiTheme";
 // import { Elements } from "@stripe/react-stripe-js";
 // import { loadStripe } from "@stripe/stripe-js";
 
@@ -44,7 +46,10 @@ root.render(
       cacheLocation="localstorage"
     >
       {/* <Elements stripe={stripePromise} options={stripe_options}> */}
-      <App />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+
       {/* </Elements> */}
     </Auth0Provider>
   </React.StrictMode>,

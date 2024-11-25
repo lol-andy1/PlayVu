@@ -130,18 +130,35 @@ const GameDetails = () => {
     setSubstitute(false)
   }
 
+  const handleSubstitute = async (player) => {
+    try {
+      const team = game.team_1.some((p) => p.userId === player.userId) ? 1 : 2
+
+      await axios.post('api/switch-players', {
+        gameId: slug,
+        participantId1: player.userId,
+        participantId2: selectedPlayer.userId,
+        team: team
+      })
+
+      setReload(!reload);
+      setOpenManager(false); 
+      setSubstitute(false);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const removePlayer = async (userId) => {
-    if (isOrganizer){
-      try {
-        await axios.post('/api/remove-player', {
-          gameId: slug,
-          participantId: userId
-        });
-        setReload(!reload);
-        setOpenManager(false);  
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      await axios.post('/api/remove-player', {
+        gameId: slug,
+        participantId: userId
+      });
+      setReload(!reload);
+      setOpenManager(false);  
+    } catch (err) {
+      console.error(err);
     }
   }
 
@@ -423,14 +440,17 @@ const GameDetails = () => {
             <div className="flex flex-col mb-4 border border-black rounded-lg bg-gray-100">
               <Button
                 onClick={() => joinTeam(1, selectedPlayer.userId)}
-                style={{ color: '#1976d2' }}
+                disabled={selectedPlayer.team === 1 || game.player_count === game.max_players}
+                color="primary"
               >
                 Team 1
               </Button>
 
               <Button
                 onClick={() => joinTeam(2, selectedPlayer.userId)}
-                style={{ color: '#16a34a', borderTop: "1px solid black", borderRadius: 0 }}
+                disabled={selectedPlayer.team === 2 || game.player_count === game.max_players}
+                color="secondary"
+                style={{borderTop: "1px solid black", borderRadius: 0 }}
               >
                 Team 2
               </Button>
@@ -438,6 +458,7 @@ const GameDetails = () => {
               <Button
                 color="warning"
                 onClick={() => joinTeam(0, selectedPlayer.userId)}
+                disabled={selectedPlayer.team === 0}
                 style={{ borderTop: "1px solid black", borderBottom: "1px solid black", borderRadius: 0  }}
               >
                 Sideline
@@ -462,17 +483,21 @@ const GameDetails = () => {
         </div>
       </Dialog>
       
-      <Dialog open={substitute} onClose={() => setSubstitute(false)}>
+      <Dialog open={Boolean(substitute)} onClose={() => setSubstitute(false)} >
         <div className="py-2 flex flex-col w-72">
           <h1 className="px-4">Replace</h1>
-          <div className="flex flex-col">
+          <div className="flex flex-col overflow-auto max-h-96">
             {game.team_1.concat(game.team_2)
               .sort((a, b) => (
                 (b.playTime + (currTime - Date.parse(b.playStart)) / 1000) - 
                 (a.playTime + (currTime - Date.parse(a.playStart)) / 1000)
               ))
               .map((player, index) => (
-                <div className={`px-4 py-2 text-xl border-t flex justify-between ${index % 2 === 0 ? "bg-gray-200" : ""}`}>
+                <div 
+                  onClick={() => handleSubstitute(player)}
+                  key={index} 
+                  className={`px-4 py-2 text-xl border-t flex justify-between ${index % 2 === 0 ? "bg-gray-200" : ""}`}
+                >
                   <span>{player.username}</span>
                   <span>
                     {(Math.round(
