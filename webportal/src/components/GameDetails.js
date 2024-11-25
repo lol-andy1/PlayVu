@@ -82,8 +82,8 @@ const GameDetails = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (game.date) {
-        const startTime = new Date(game.date).getTime();
+      if (game.start_date) {
+        const startTime = new Date(game.start_date).getTime();
         const currentTime = Date.now();
         if (currentTime > startTime) {
           const elapsedTime = currentTime - startTime;
@@ -263,16 +263,13 @@ const GameDetails = () => {
             <span className="font-semibold">Field:</span> {game.field || 'N/A'}
           </Typography>
           <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Date:</span> {new Date(game.start_date).toLocaleString() || 'N/A'}
-          </Typography>
-          <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Team 1:</span> {game.team_1.length > 0 ? game.team_1.join(', ') : 'No players'}
-          </Typography>
-          <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Team 2:</span> {game.team_2.length > 0 ? game.team_2.join(', ') : 'No players'}
-          </Typography>
-          <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Sideline:</span> {game.sideline.length > 0 ? game.sideline.map(player => player.username).join(', ') : 'Sideline is currently empty'}
+            <span className="font-semibold">Date:</span> {new Date(game.start_date).toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }) || 'N/A'}
           </Typography>
           {!isJoined && canJoinGame && (
             <div className="w-full max-w-md mt-4 px-4">
