@@ -59,7 +59,7 @@ const Field = ({team1, team2, managePlayer}) => {
           <div
             key={index}
             className={`absolute rounded-full flex items-center justify-center ${
-              isTeam2(team1_positions[index].left) ? 'bg-red-500' : 'bg-blue-500'
+              isTeam2(team1_positions[index].left) ? 'bg-[#1976d2]' : 'bg-[#d32f2f]'
             } w-10 h-10`} // Constant circle size 10px
             style={{
               top: team1_positions[index].top,
@@ -77,7 +77,7 @@ const Field = ({team1, team2, managePlayer}) => {
           <div
             key={index}
             className={`absolute rounded-full flex items-center justify-center ${
-              isTeam2(team2_positions[index].left) ? 'bg-red-500' : 'bg-blue-500'
+              isTeam2(team2_positions[index].left) ? 'bg-[#1976d2]' : 'bg-[#d32f2f]'
             } w-10 h-10`} // Constant circle size 10px
             style={{
               top: team2_positions[index].top,

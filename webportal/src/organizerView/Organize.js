@@ -73,7 +73,7 @@ const Organize = () => {
 
       {currStep >= 0 &&
         <div className="absolute left-0 bottom-0 m-4">
-          <Button onClick={handleCancel} disableElevation variant="contained">
+          <Button onClick={handleCancel} disableElevation variant="contained" color="primary">
             Cancel
           </Button>
         </div>

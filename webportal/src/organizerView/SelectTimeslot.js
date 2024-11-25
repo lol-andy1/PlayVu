@@ -203,9 +203,10 @@ const SelectTimeslot = () => {
             onChange={changeDuration}
             marks min={30} max={180} step={30} 
             valueLabelDisplay="auto" 
+            color="neutral"
             sx={{
-              color: 'rgb(134 239 172)', width: 240,
-              '.MuiSlider-mark': {height: 15, backgroundColor: 'rgb(134 239 172)'}
+              width: 240,
+              '.MuiSlider-mark': {height: 15, backgroundColor: '#16a34a'}
             }}
           />
         </div>
@@ -218,7 +219,7 @@ const SelectTimeslot = () => {
               <div className="flex space-x-2 px-6" key={index}>
                 <h1 className="text-lg -translate-y-3 w-20">{index % 2 === 0 ? slot.time.toLocaleString([], { hour: '2-digit', minute: '2-digit'}): ""}</h1>
                 <button 
-                  className={`flex-1 h-10 border-t border-x border-black ${slot.status === 1 ? "bg-gray-100" : (slot.status === 0 ? "bg-gray-400" : "bg-green-300")}`}
+                  className={`flex-1 h-10 border-t border-x border-black ${slot.status === 1 ? "bg-gray-100" : (slot.status === 0 ? "bg-gray-400" : "bg-[#16a34a]")}`}
                   onClick={() => handleSelect(index)}
                 >
                 </button>

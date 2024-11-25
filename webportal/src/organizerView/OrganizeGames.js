@@ -75,14 +75,14 @@ const Organize = () => {
     <div className="flex flex-col mt-4">
       <div className="flex justify-center">
         <Button 
-          onClick={createNewGame} variant="contained" color="success" disableElevation 
+          onClick={createNewGame} variant="contained" color="neutral" sx={{ color: 'white'}} disableElevation 
         >
           Create New Game
         </Button>
       </div>
 
       <div className="">
-        <h1 className="m-2 text-lg">Upcoming</h1>
+        <h1 className="my-2 mx-4 text-lg">Upcoming</h1>
 
         <div className="overflow-scroll">
           {upcomingGames.slice(0, 4).map((game, index) => (

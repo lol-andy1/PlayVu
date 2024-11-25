@@ -52,7 +52,7 @@ const OrganizeConfirm = () => {
 
   return (
     <>
-      <div className="overflow-y-auto text-xl space-y-4 mt-4">
+      <div className="overflow-y-auto text-xl space-y-4 m-4">
         <h1 className="text-center text-3xl font-semibold">{gameData.name}</h1>
 
         <div className="flex">

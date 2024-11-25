@@ -70,9 +70,10 @@ const ConfigureGame = () => {
           track={false}
           marks={marks}
           min={14} max={22} step={2}
+          color="neutral"
           sx={{
-            color: 'rgb(134 239 172)', width: 200,
-            '.MuiSlider-mark': {height: 15, backgroundColor: 'rgb(134 239 172)'}
+            width: 200,
+            '.MuiSlider-mark': {height: 15, backgroundColor: '#16a34a'}
           }}
         />
       </div>
