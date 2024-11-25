@@ -44,12 +44,12 @@ public class APIController {
 
     @PostMapping(value = "/add-field")
     public Integer addField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getPrice(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
+        return fieldService.addField(request, fieldBody.getName(), fieldBody.getDescription(), fieldBody.getPrice(), fieldBody.getPicture(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity());
     }
 
     @PostMapping(value = "/edit-field")
     public void editField(HttpServletRequest request, @RequestBody Field fieldBody) throws URISyntaxException, IOException, InterruptedException {
-        fieldService.editField(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity(), fieldBody.getPrice());
+        fieldService.editField(request, fieldBody.getFieldId(), fieldBody.getName(), fieldBody.getDescription(), fieldBody.getPicture(), fieldBody.getAddress(), fieldBody.getZipCode(), fieldBody.getCity(), fieldBody.getPrice());
     }
 
     @PostMapping(value = "/delete-field")
@@ -155,6 +155,11 @@ public class APIController {
     @PostMapping(value = "/remove-player")
     public void removePlayer(@RequestBody GameParticipant gameParticipantBody) {
         gameService.removePlayer(gameParticipantBody.getGameId(), gameParticipantBody.getParticipantId());
+    }
+
+    @PostMapping(value = "/switch-players")
+    public void switchPlayers(@RequestBody Map<String, Integer> switchPlayersBody) {
+        gameService.switchPlayers(switchPlayersBody.get("gameId"), switchPlayersBody.get("participantId1"), switchPlayersBody.get("participantId2"), switchPlayersBody.get("team"));
     }
 
     @GetMapping(value = "/get-user")

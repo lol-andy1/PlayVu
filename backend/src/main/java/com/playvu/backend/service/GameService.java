@@ -256,6 +256,27 @@ public class GameService {
         gameParticipantRepository.delete(gameParticipant);
     }
 
+    public void switchPlayers(Integer gameId, Integer participantId1, Integer participantId2, Integer team){
+        Game game = gameRepository.findById(gameId).get(); // check if game is present 
+
+        Users user = userService.getUserFromJwt();
+        Users participant1 = usersRepository.findById(participantId1).get();
+        Users participant2 = usersRepository.findById(participantId2).get();
+
+        if(game.getOrganizerId() != user.getUserId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control game: " + gameId);
+        }
+
+        GameParticipant gameParticipant1 = gameParticipantRepository.findByGameIdAndParticipantId(gameId, participant1.getUserId());
+        GameParticipant gameParticipant2 = gameParticipantRepository.findByGameIdAndParticipantId(gameId, participant2.getUserId());
+
+        gameParticipant1.setTeam(0);
+        gameParticipant2.setTeam(team);
+
+        gameParticipantRepository.save(gameParticipant1);
+        gameParticipantRepository.save(gameParticipant2);
+    }
+
 
 
 }
