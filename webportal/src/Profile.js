@@ -120,6 +120,15 @@ const Profile = () => {
             onChange={changeBio}
             readOnly={!editing}
           />
+
+          <div className="flex flex-col bg-gray-100 rounded-xl shadow-xl max-w-fit p-10">
+            <h1 className="text-2xl font-semibold">Balance</h1>
+            <p className="text-4xl font-extrabold" style={{color: "#5433FF"}}>$10.00</p>
+            <div className="flex flex-row items-center">
+              <p>Powered by</p>
+              <img src="https://www.vectorlogo.zone/logos/stripe/stripe-ar21.svg"></img>
+            </div>
+          </div>
         </div>
 
         <div className={`m-2 ${editing ? "" : "invisible"}`}>
