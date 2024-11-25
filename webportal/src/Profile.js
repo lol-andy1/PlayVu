@@ -135,6 +135,7 @@ const Profile = () => {
             <h1>No Recent Games</h1> :
             games.map(game => (
               <GameCard 
+                key={game.gameId}
                 id={game.gameId}
                 name={game.name}
                 startDate={game.startDate}

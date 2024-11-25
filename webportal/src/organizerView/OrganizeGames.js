@@ -98,7 +98,7 @@ const Organize = () => {
                 location={game.field + ", " + game.subfield}
               />
 
-              <div className="absolute right-1 p-2" onClick={() => handleDelete(game)}>
+              <div className="absolute right-1 top-1/4 p-2" onClick={() => handleDelete(game)}>
                 <DeleteIcon color="action"/>
               </div>
             </div>

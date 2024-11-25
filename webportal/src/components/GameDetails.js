@@ -251,11 +251,7 @@ const GameDetails = () => {
               <RefreshIcon />
             </IconButton>
           </Typography>
-          <Typography variant="body2" className="text-center text-gray-600">
-            {timeElapsed 
-              ? `Game started. Time passed: ${timeElapsed}` 
-              : 'Game has not started yet.'}
-          </Typography>
+          
           <Typography variant="body2" className="text-center text-gray-600">
             {timeElapsed 
               ? `Game started. Time passed: ${timeElapsed}` 
