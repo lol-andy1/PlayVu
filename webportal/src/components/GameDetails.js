@@ -196,10 +196,10 @@ const GameDetails = () => {
 
     const gamePrice = game.price * 100;
 
-    const handleJoinGame = () => {
-      setAllowConfirmation(false);
-      setJoinClicked(true);
-    };
+    // const handleJoinGame = () => {
+    //   setAllowConfirmation(false);
+    //   setJoinClicked(true);
+    // };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
@@ -299,7 +299,7 @@ const GameDetails = () => {
             <Button
               variant="contained"
               style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
-              onClick={handleJoinGame}
+              onClick={handleJoin}
               className="w-full"
             >
               Join Game
@@ -375,7 +375,7 @@ const GameDetails = () => {
       setAllowConfirmation={(status) => {
         setAllowConfirmation(status);
         if (status) {
-          setJoinClicked(false); // Close dialog
+          setJoinClicked(false);
         }
       }}
       amount={gamePrice}
