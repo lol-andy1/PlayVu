@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const GameCard = ({ id, name, price, location, startDate, playerCount, max_players, endDate, field }) => {
   const navigate = useNavigate();
   const [isLive, setIsLive] = useState(false);
-
+  const [duration, setDuration] = useState('');
   useEffect(() => {
     if (startDate && endDate) {
       const start = new Date(startDate);
@@ -13,6 +13,16 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
 
       setIsLive(now >= start && now < end);
     }
+    const startTime = new Date(startDate);
+    const endTime = new Date(endDate);
+    const diffInMs = endTime - startTime;
+
+    const hours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
+    const formattedDuration = minutes === 0 
+      ? `${hours} hours` 
+      : `${hours} hours and ${minutes} minutes`;
+    setDuration(formattedDuration);
   }, [startDate, endDate]);
 
   return (
@@ -48,7 +58,7 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
           hour: "2-digit",
           minute: "2-digit",
         })}</p>
-
+        <p className="text-sm text-gray-500 mt-1">Game Length: {duration}</p>
         {field && <p className="text-sm text-gray-500 mt-1">Field: {field}</p>}
 
         <div className="flex justify-between items-center mt-3">

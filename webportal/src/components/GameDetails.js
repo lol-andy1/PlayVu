@@ -31,7 +31,7 @@ const GameDetails = () => {
   const [joinClicked, setJoinClicked] = useState(false)
   const [timeElapsed, setTimeElapsed] = useState('');
   const [openQRModal, setOpenQRModal] = useState(false);
-
+  const [duration, setDuration] = useState('');
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [openManager, setOpenManager] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState({});
@@ -59,7 +59,6 @@ const GameDetails = () => {
           team_1: data.team_1,
           team_2: data.team_2,
           sideline: data.sideline,
-          startDate: new Date(data.start_date)
         });
 
         const isUserJoined =
@@ -69,6 +68,17 @@ const GameDetails = () => {
 
         setIsJoined(isUserJoined);
         setIsOrganizer(userRes.data.userId === res.data.organizer_id)
+
+        const startTime = new Date(data.start_date);
+        const endTime = new Date(data.end_date);
+        const diffInMs = endTime - startTime;
+
+        const hours = Math.floor(diffInMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
+        const formattedDuration = minutes === 0 
+          ? `${hours} hours` 
+          : `${hours} hours and ${minutes} minutes`;
+        setDuration(formattedDuration);
       } catch (err) {
         console.log(err)
       }
@@ -192,7 +202,7 @@ const GameDetails = () => {
 
   const handleLeaveGame = () => {
     const userConfirmed = window.confirm(
-      "Are you sure you want to leave the game? If you wish to rejoin the action later we suggest that you join the sideline instead"
+      "Are you sure you want to leave the game? You will not be able to get a refund."
     );
     if (userConfirmed) {
       leaveGame(); // Call the function to leave the game
@@ -270,28 +280,41 @@ const GameDetails = () => {
               </div>
             ))}
           </Box>
-
-          <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Location:</span> {game.location || 'N/A'}
-          </Typography>
-          <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Players:</span> {game.player_count}/{game.max_players}
-          </Typography>
-          <Typography variant="body1" className="mb-2">
-              <span className="font-semibold">Price:</span> {game.price !== null ? `$${game.price.toFixed(2)}` : 'Free'}
-          </Typography>
-          <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Field:</span> {game.field || 'N/A'}
-          </Typography>
-          <Typography variant="body1" className="mb-2">
-            <span className="font-semibold">Date:</span> {new Date(game.start_date).toLocaleString(undefined, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }) || 'N/A'}
-          </Typography>
+          <Box
+            className="p-4 bg-gray-50 rounded-lg shadow-md"
+            style={{ border: "1px solid #e5e7eb" }}
+          >
+            <Typography variant="body1" className="mb-2">
+              <span className="font-semibold text-gray-700">Location:</span>{" "}
+              {game.location || "N/A"}
+            </Typography>
+            <Typography variant="body1" className="mb-2">
+              <span className="font-semibold text-gray-700">Players:</span>{" "}
+              {game.player_count}/{game.max_players}
+            </Typography>
+            <Typography variant="body1" className="mb-2">
+              <span className="font-semibold text-gray-700">Price:</span>{" "}
+              {game.price !== null ? `$${game.price.toFixed(2)}` : "Free"}
+            </Typography>
+            <Typography variant="body1" className="mb-2">
+              <span className="font-semibold text-gray-700">Field:</span>{" "}
+              {game.field || "N/A"}
+            </Typography>
+            <Typography variant="body1" className="mb-2">
+              <span className="font-semibold text-gray-700">Date:</span>{" "}
+              {new Date(game.start_date).toLocaleString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              }) || "N/A"}
+            </Typography>
+            <Typography>
+              <span className="font-semibold text-gray-700">Game Length:</span>{" "}
+              {duration || "Calculating..."}
+            </Typography>
+          </Box>
           {!isJoined && canJoinGame && (
             <div className="w-full max-w-md mt-4 px-4">
               <Button
@@ -354,7 +377,6 @@ const GameDetails = () => {
           Share This Game
         </Button>
       </div>
-
       <Dialog open={openQRModal} onClose={() => setOpenQRModal(false)}>
         <DialogContent>
           <Typography variant="h6" className="text-center mb-4">Scan to Share This Game</Typography>
