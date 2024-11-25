@@ -1,5 +1,6 @@
 package com.playvu.backend.service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import com.playvu.backend.repository.GameParticipantRepository;
 import com.playvu.backend.repository.GameRepository;
 // import com.playvu.backend.repository.SubFieldRepository;
 import com.playvu.backend.repository.SubFieldRepository;
+import com.playvu.backend.repository.UsersRepository;
 
 @Service
 public class GameService {
@@ -37,6 +39,9 @@ public class GameService {
 
     @Autowired
     private FieldScheduleRepository fieldScheduleRepository;
+
+    @Autowired
+    private UsersRepository usersRepository;
 
     @Autowired
     private UserService userService;
@@ -69,11 +74,14 @@ public class GameService {
         for (Object[] participant : game_participants) {
 
             Integer team = (Integer) participant[0];
-            String username = (String) participant[1];
-            Integer userId = (Integer) participant[2];
+            Integer playTime = (Integer) participant[1];
+            String username = (String) participant[3];
+            Integer userId = (Integer) participant[4];
 
             Map<String, Object> entry = new HashMap<>();
             entry.put("username", username);
+            entry.put("playTime", playTime);
+            entry.put("playStart", participant[2]);
             entry.put("userId", userId);
 
             if (team == 0) {
@@ -156,8 +164,8 @@ public class GameService {
 
     }
 
-    public void joinGame(Integer gameId, Integer team) {
-        gameRepository.findById(gameId).get(); // check if game is present
+    public void joinGame(Integer gameId, Integer team, Integer participantId, LocalDateTime playStart) {
+        Game game = gameRepository.findById(gameId).get(); // check if game is present
         if (team != 0 && team != 1 && team != 2) {
             return;
         }
@@ -167,17 +175,37 @@ public class GameService {
         }
 
         Users user = userService.getUserFromJwt();
+        Integer userId = user.getUserId();
         
-        if (gameParticipantRepository.findByGameIdAndParticipantId(gameId, user.getUserId()) != null) {
-            GameParticipant gameParticipant = gameParticipantRepository.findByGameIdAndParticipantId(gameId, user.getUserId());
+        if (participantId != null && userId == game.getOrganizerId()){
+            userId = participantId;
+        }
+        
+        if (gameParticipantRepository.findByGameIdAndParticipantId(gameId, userId) != null) {
+            GameParticipant gameParticipant = gameParticipantRepository.findByGameIdAndParticipantId(gameId, userId);
+
+            if (gameParticipant.getTeam() != 0){
+                Duration duration = Duration.between(
+                    gameParticipant.getPlayStart() != null ? gameParticipant.getPlayStart() : playStart,
+                    playStart
+                );
+                gameParticipant.addToPlayTime((int)duration.getSeconds());
+            }
+            
             gameParticipant.setTeam(team);
+
+            if (team != 0){
+                gameParticipant.setPlayStart(playStart);
+            }
 
             gameParticipantRepository.save(gameParticipant);
         } else {
             GameParticipant gameParticipant = new GameParticipant();
             gameParticipant.setGameId(gameId);
-            gameParticipant.setParticipantId(user.getUserId());
+            gameParticipant.setParticipantId(userId);
             gameParticipant.setTeam(team);
+            gameParticipant.setPlayTime(0);
+            gameParticipant.setPlayStart(playStart);
 
             gameParticipantRepository.save(gameParticipant);
         }
@@ -213,5 +241,21 @@ public class GameService {
         gameParticipantRepository.delete(gameParticipant);
 
     }
+
+    public void removePlayer(Integer gameId, Integer participantId){
+        Game game = gameRepository.findById(gameId).get(); // check if game is present 
+
+        Users user = userService.getUserFromJwt();
+        Users participant = usersRepository.findById(participantId).get();
+
+        if(game.getOrganizerId() != user.getUserId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not control game: " + gameId);
+        }
+
+        GameParticipant gameParticipant = gameParticipantRepository.findByGameIdAndParticipantId(gameId, participant.getUserId());
+        gameParticipantRepository.delete(gameParticipant);
+    }
+
+
 
 }

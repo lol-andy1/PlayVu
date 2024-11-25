@@ -16,18 +16,18 @@ const ConfigureGame = () => {
   const [price, setPrice] = useState("")
 
   const marks = [
-    {value: 7, label: "7"},
-    {value: 8, label: "8"},
-    {value: 9, label: "9"},
-    {value: 10, label: "10"},
-    {value: 11, label: "11"},
+    {value: 14, label: "14"},
+    {value: 16, label: "16"},
+    {value: 18, label: "18"},
+    {value: 20, label: "20"},
+    {value: 22, label: "22"},
   ]
 
   const changeGameName = (event) => {
     setGameName(event.target.value)
   } 
   const changeTeamSize = (event) => {
-    setMaxPlayers(event.target.value * 2)
+    setMaxPlayers(event.target.value)
   }
   const changePrice = (event) => {
     setPrice(event.target.value)
@@ -62,14 +62,14 @@ const ConfigureGame = () => {
       </div>
 
       <div className="flex items-center">
-        <h1 className="w-1/3 text-lg">Team Size</h1>
+        <h1 className="w-1/3 text-lg">Max Players</h1>
         <Slider 
           defaultValue={11}
-          value={maxPlayers / 2}
+          value={maxPlayers}
           onChange={changeTeamSize}
           track={false}
           marks={marks}
-          min={7} max={11}  
+          min={14} max={22} step={2}
           sx={{
             color: 'rgb(134 239 172)', width: 200,
             '.MuiSlider-mark': {height: 15, backgroundColor: 'rgb(134 239 172)'}

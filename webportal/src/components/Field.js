@@ -54,7 +54,7 @@ const Field = ({team1, team2, managePlayer}) => {
           alt="field"
           className="w-full h-auto object-cover"
         />
-        {/* Render team1 players */}
+        
         {team1.map((player, index) => (
           <div
             key={index}
@@ -67,12 +67,12 @@ const Field = ({team1, team2, managePlayer}) => {
               transform: 'translate(-50%, -50%)', // Center the circle relative to the position
             }}
           > 
-            <span className="text-white text-[10px] text-center" onClick={() => managePlayer(player)}>
+            <span className="text-white text-[10px] text-center" onClick={() => managePlayer({...player, team: 1})}>
               {player.username}
             </span>
           </div>
         ))}
-        {/* Render team2 players */}
+
         {team2.map((player, index) => (
           <div
             key={index}
@@ -85,8 +85,7 @@ const Field = ({team1, team2, managePlayer}) => {
               transform: 'translate(-50%, -50%)', // Center the circle relative to the position
             }}
           >
-            {/* Player's name inside the circle */}
-            <span className="text-white text-[10px] text-center" onClick={() => managePlayer(player)}>
+            <span className="text-white text-[10px] text-center" onClick={() => managePlayer({...player, team: 2})}>
               {player.username}
             </span>
           </div>

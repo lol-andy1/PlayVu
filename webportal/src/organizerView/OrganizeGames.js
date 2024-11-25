@@ -27,10 +27,6 @@ const Organize = () => {
     try{
       const res = await axios.get("/api/get-organizer-games")
 
-      const localDate = new Date();
-      const offset = localDate.getTimezoneOffset();
-      localDate.setMinutes(localDate.getMinutes() - offset)
-
       if (res.data.length > 0){
         res.data = res.data.map((game) => ({
           ...game,
@@ -39,7 +35,7 @@ const Organize = () => {
         }))
 
         const upcoming = res.data.filter((game) => (
-          game.endDate > localDate
+          Date.parse(game.endDate) > Date.now()
         ))
         upcoming.sort((a, b) => a.startDate - b.startDate)
         

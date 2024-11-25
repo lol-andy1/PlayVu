@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import TouchableButton from "./components/TouchableButton";
+import Button from '@mui/material/Button';
 import placeholderImage from  "./assets/profile.png"
 import Dialog from '@mui/material/Dialog';
+import GameCard from "./components/GameCard";
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({});
+  const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editPic, setEditPic] = useState(false);
@@ -16,7 +18,6 @@ const Profile = () => {
 
   const inputStyle = `w-3/5 text-center rounded-sm ${editing ? "outline outline-1 outline-neutral-300 focus:outline-green-400" : "focus:outline-none"}`
   const picIds = ["98", "19", "56", "35", "58", "91", "77", "42", "89", "44", "72", "85", "81", "21", "87", "41"]
-  const recentGames = []
 
   const openPicModal = () => {
     setEditPic(true)
@@ -57,15 +58,22 @@ const Profile = () => {
   }
 
   const getUser = async () => {
-    setLoading(true)
-    const res = await axios.get("/api/get-user")
-    setUserInfo(res.data)
-    
-    setNewUsername(res.data.username)
-    setNewBio(res.data.bio)
-    setNewPic(res.data.profilePicture)
+    try{
+      setLoading(true)
+      const res = await axios.get("/api/get-user")
+      setUserInfo(res.data)
+      const games = await axios.get("/api/get-user-games")
+      setGames(games.data)
 
-    setLoading(false)
+      setNewUsername(res.data.username)
+      setNewBio(res.data.bio)
+      setNewPic(res.data.profilePicture)
+  
+      setLoading(false)
+    } catch (err){
+      console.log(err)
+    }
+
   }
 
   useEffect(() => {
@@ -79,13 +87,14 @@ const Profile = () => {
           <h1 className="text-3xl font-semibold">Profile</h1>
 
           <div className="absolute right-1 top-1/2 -translate-y-1/2">
-            <TouchableButton label={editing ? "Cancel" : "Edit"} onClick={handleEdit} disabled={loading}
-            />
+            <Button onClick={handleEdit} disabled={loading} variant="outlined">
+              {editing ? "Cancel" : "Edit"}
+            </Button>
           </div>
         </div>
 
         <div className="flex flex-col mt-2 text-center items-center justify-center space-y-4">
-          <button 
+          <div
             className={`rounded-full w-36 ${editing && !newPic ? "opacity-30 outline outline-neutral-300" : ""}`}
             onClick={openPicModal}
             disabled={!editing}
@@ -95,11 +104,11 @@ const Profile = () => {
               alt="Profile"
               className="rounded-full"
             />
-          </button> 
+          </div> 
 
           <input 
             className={`text-2xl font-semibold ${editing ? "text-gray-400" : "placeholder-black"} ${inputStyle}`}
-            value={newUsername.startsWith('@') ? newUsername : "@" + newUsername}
+            value={newUsername}
             onChange={changeUsername}
             readOnly={!editing}
           />
@@ -113,17 +122,27 @@ const Profile = () => {
           />
         </div>
 
-        <TouchableButton 
-          label="Save" 
-          style={`bg-green-400 mr-1 mt-2 ml-auto ${editing ? "" : "invisible"}`}
-          onClick={saveChanges}
-        />
+        <div className={`m-2 ${editing ? "" : "invisible"}`}>
+          <Button onClick={saveChanges} color="success" variant="outlined">
+            Save
+          </Button>
+        </div>
+
 
         <div className="border-t border-gray-300 text-center">
           <h1 className="py-2 text-2xl">Recent Games</h1>
-          {
-            recentGames.length === 0 ? 
-            <h1>No Recent Games</h1> : ""
+          {games.length === 0 ? 
+            <h1>No Recent Games</h1> :
+            games.map(game => (
+              <GameCard 
+                id={game.gameId}
+                name={game.name}
+                startDate={game.startDate}
+                playerCount={game.playerCount}
+                max_players={game.maxPlayers}
+                location={game.field + ", " + game.subfield}
+              />
+            ))
           }
         </div>
 

@@ -139,7 +139,7 @@ public class APIController {
 
     @PostMapping(value = "/join-game")
     public void joinGame(HttpServletRequest request, @RequestBody GameParticipant gameParticipantBody) {
-        gameService.joinGame(gameParticipantBody.getGameId(), gameParticipantBody.getTeam());
+        gameService.joinGame(gameParticipantBody.getGameId(), gameParticipantBody.getTeam(), gameParticipantBody.getParticipantId(), gameParticipantBody.getPlayStart());
     }
 
     @PostMapping(value = "/switch-team")
@@ -150,6 +150,11 @@ public class APIController {
     @PostMapping(value = "/leave-game")
     public void leaveGame(@RequestBody Game gameBody) {
         gameService.leaveGame(gameBody.getGameId());
+    }
+
+    @PostMapping(value = "/remove-player")
+    public void removePlayer(@RequestBody GameParticipant gameParticipantBody) {
+        gameService.removePlayer(gameParticipantBody.getGameId(), gameParticipantBody.getParticipantId());
     }
 
     @GetMapping(value = "/get-user")
