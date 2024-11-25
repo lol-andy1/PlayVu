@@ -299,11 +299,7 @@ const GameDetails = () => {
             <Button
               variant="contained"
               style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
-<<<<<<< Updated upstream
-              onClick={handleJoin}
-=======
               onClick={handleJoinGame}
->>>>>>> Stashed changes
               className="w-full"
             >
               Join Game
