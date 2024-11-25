@@ -9,6 +9,7 @@ import StripePayment from "./StripePayment";
 import { useAuth0 } from "@auth0/auth0-react";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import IconButton from '@mui/material/IconButton'
+import QrCodeIcon from '@mui/icons-material/QrCode';
 
 const GameDetails = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const GameDetails = () => {
   const [selectedPlayer, setSelectedPlayer] = useState({});
   const [currTime, setCurrTime] = useState(Date.now());
   const [substitute, setSubstitute] = useState(false);
+  const [userId, setUserId] = useState();
 
   const {slug} = useParams();
   const {user} = useAuth0();
@@ -68,6 +70,7 @@ const GameDetails = () => {
 
         setIsJoined(isUserJoined);
         setIsOrganizer(userRes.data.userId === res.data.organizer_id)
+        setUserId(userRes.data.userId)
 
         const startTime = new Date(data.start_date);
         const endTime = new Date(data.end_date);
@@ -253,7 +256,7 @@ const GameDetails = () => {
   const gameEndTime = new Date(game.end_date).getTime();
   const canJoinGame = currentTime < gameEndTime;
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-100 pt-6">
+    <div className="flex flex-col items-center min-h-[80vh] bg-gray-100 pt-6">
       {/* Button placed above the card */}
       <div className="w-full max-w-md mb-4 px-4">
         <Button
@@ -266,24 +269,40 @@ const GameDetails = () => {
         </Button>
       </div>
 
-      <Card className="w-full max-w-md mx-4 shadow-lg mb-4">
+      <Card className="w-full max-w-md mx-4 shadow-lg">
         <CardContent>
           <Typography variant="h5" component="div" className="mb-4 text-center">
-            {game.name || 'Game Title'}
-            <IconButton 
-              onClick={refreshPage} 
-              style={{ marginLeft: '8px', color: '#14532d' }} 
-              aria-label="refresh"
-            >
-              <RefreshIcon />
-            </IconButton>
+            <Box className="flex justify-between">
+              <IconButton
+                onClick={() => setOpenQRModal(true)}
+              >
+                <QrCodeIcon />
+              </IconButton>
+
+              {game.name || 'Game Title'}
+              
+              <IconButton 
+                onClick={refreshPage} 
+                style={{ marginLeft: '8px', color: '#14532d' }} 
+                aria-label="refresh"
+              >
+                <RefreshIcon />
+              </IconButton>
+            </Box>
           </Typography>
-          
-          <Typography variant="body2" className="text-center text-gray-600">
-            {timeElapsed 
-              ? `Game started. Time passed: ${timeElapsed}` 
-              : 'Game has not started yet.'}
-          </Typography>
+
+          <Box className="flex justify-between mx-2">
+            <Typography variant="body1" className="text-center text-gray-600">
+              {timeElapsed && canJoinGame 
+                ? `Game started: ${timeElapsed}` 
+                : 'Game has not started yet.'}
+            </Typography>
+
+            <Typography variant="body1" className="mb-2 text-gray-600">
+              <span>Players:</span>{" "}
+              {game.player_count}/{game.max_players}
+            </Typography>
+          </Box>
 
           <Field team1={game.team_1} team2={game.team_2} managePlayer={managePlayer}/>
 
@@ -305,18 +324,17 @@ const GameDetails = () => {
               <span className="font-semibold text-gray-700">Location:</span>{" "}
               {game.location || "N/A"}
             </Typography>
-            <Typography variant="body1" className="mb-2">
-              <span className="font-semibold text-gray-700">Players:</span>{" "}
-              {game.player_count}/{game.max_players}
-            </Typography>
-            <Typography variant="body1" className="mb-2">
-              <span className="font-semibold text-gray-700">Price:</span>{" "}
-              {game.price !== null ? `$${game.price.toFixed(2)}` : "Free"}
-            </Typography>
+
             <Typography variant="body1" className="mb-2">
               <span className="font-semibold text-gray-700">Field:</span>{" "}
               {game.field || "N/A"}
             </Typography>
+
+            <Typography variant="body1" className="mb-2">
+              <span className="font-semibold text-gray-700">Price:</span>{" "}
+              {game.price !== null ? `$${game.price.toFixed(2)}` : "Free"}
+            </Typography>
+
             <Typography variant="body1" className="mb-2">
               <span className="font-semibold text-gray-700">Date:</span>{" "}
               {new Date(game.start_date).toLocaleString(undefined, {
@@ -327,6 +345,7 @@ const GameDetails = () => {
                 minute: "2-digit",
               }) || "N/A"}
             </Typography>
+
             <Typography>
               <span className="font-semibold text-gray-700">Game Length:</span>{" "}
               {duration || "Calculating..."}
@@ -344,38 +363,49 @@ const GameDetails = () => {
               </Button>
             </div>
           )}
-          {isJoined && (
+          {isJoined && canJoinGame && (
           <>
             <div className="flex justify-around mt-4">
               <Button
                 variant="contained"
-                style={{ backgroundColor: '#d32f2f', color: '#ffffff' }}
+                color="primary"
+                sx={{ color: 'white' }}
+                style={{ borderRadius: '5px 0 0 5px' }}
                 onClick={() => joinTeam(1)}
+                disabled={game.team_1.some(p => (p.userId === userId))}
               >
                 Join Team 1
               </Button>
+
               <Button
                 variant="contained"
-                style={{ backgroundColor: '#1976d2', color: '#ffffff' }}
+                color="secondary"
+                sx={{ color: 'white' }}
+                style={{ borderRadius: 0 }}
                 onClick={() => joinTeam(2)}
+                disabled={game.team_2.some(p => (p.userId === userId))}
               >
                 Join Team 2
               </Button>
+
               <Button
                 variant="contained"
-                style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
+                color="neutral"
+                sx={{ color: 'white' }}
+                style={{ borderRadius: '0 5px 5px 0' }}
                 onClick={() => joinTeam(0)}
+                disabled={game.sideline.some(p => (p.userId === userId))}
               >
                 Join Sideline
               </Button>
             </div>
           </>
           )}
-          {isJoined && (
+          {isJoined && canJoinGame &&(
       <div className="w-full max-w-md mt-4 px-4">
         <Button
-          variant="contained"
-          style={{ backgroundColor: '#16a34a', color: '#ffffff' }}
+          variant="outlined"
+          color="error"
           onClick={handleLeaveGame}
           className="w-full"
         >
@@ -384,16 +414,6 @@ const GameDetails = () => {
       </div>
       )}
 
-      <div className="w-full max-w-md mt-4 px-4">
-        <Button
-          variant="contained"
-          style={{ backgroundColor: '#3b82f6', color: '#ffffff' }}
-          onClick={() => setOpenQRModal(true)}
-          className="w-full"
-        >
-          Share This Game
-        </Button>
-      </div>
       <Dialog open={openQRModal} onClose={() => setOpenQRModal(false)}>
         <DialogContent>
           <Typography variant="h6" className="text-center mb-4">Scan to Share This Game</Typography>
@@ -456,7 +476,7 @@ const GameDetails = () => {
               </Button>
 
               <Button
-                color="warning"
+                color="neutral"
                 onClick={() => joinTeam(0, selectedPlayer.userId)}
                 disabled={selectedPlayer.team === 0}
                 style={{ borderTop: "1px solid black", borderBottom: "1px solid black", borderRadius: 0  }}
@@ -467,6 +487,7 @@ const GameDetails = () => {
               <Button
                 onClick={setSubstitute}
                 disabled={selectedPlayer.team !== 0}
+                color="warning"
               >
                 Substitute
               </Button>
