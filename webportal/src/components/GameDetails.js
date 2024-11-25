@@ -256,8 +256,8 @@ const GameDetails = () => {
             value={window.location.href}
             size={200}
             logoImage={logo}
-            logoWidth={67}
-            logoHeight={67}
+            logoWidth={50}
+            logoHeight={50}
           />
         </DialogContent>
         <DialogActions>
