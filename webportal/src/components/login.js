@@ -28,17 +28,22 @@ export function LogoutButton() {
 export const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, isLoading } = useAuth0();
   const { role } = useRole();
-  {
-    //console.log(role);
-  }
 
-  if (isLoading) {
+  // Wait for Auth0 and role loading to complete
+  if (isLoading || role === undefined) {
     return <div>Loading...</div>;
   }
 
-  if (!isAuthenticated || !allowedRoles.includes(role)) {
+  // Redirect unauthenticated users
+  if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
+  // Redirect if the user's role is not allowed
+  if (allowedRoles && !allowedRoles.includes(role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Render children if authenticated and authorized
   return children;
 };

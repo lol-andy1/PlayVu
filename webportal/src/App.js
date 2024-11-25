@@ -164,9 +164,9 @@ function App() {
         <Route
           path="/game-details/:slug"
           element={
-            <ProtectedRoute allowedRoles={["player", "admin"]}>
+            //<ProtectedRoute allowedRoles={["player", "admin"]}>
               <GameDetails/>
-            </ProtectedRoute>
+            //</ProtectedRoute>
           }
         />
       </Routes>
