@@ -46,14 +46,10 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     @Query(value = "SELECT g.game_id, g.organizer_id, g.max_players, g.name, g.start_date AT TIME ZONE 'UTC' AS \"start_date\", g.end_date AT TIME ZONE 'UTC' AS \"end_date\", g.price, mf.picture, mf.address AS \"location\", " +
                "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\", " + 
                "sf.name AS sub_field_name, " +
-               "mf.name AS master_field_name, " +
-               "u.username AS \"organizerUsername\", " +
-               "fo.username AS \"fieldOwnerUsername\" " +
+               "mf.name AS master_field_name " +
                "FROM game g " +
                "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
                "JOIN field mf ON sf.master_field_id = mf.field_id " +
-               "JOIN users u ON g.organizer_id = u.user_id " +
-               "JOIN users fo ON mf.owner_id = fo.user_id " +
                "WHERE g.game_id = :game_id", 
        nativeQuery = true)
     Map<String, Object> findByGameId(@Param("game_id") Integer game_id);
