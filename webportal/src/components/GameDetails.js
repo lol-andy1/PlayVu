@@ -549,8 +549,8 @@ const GameDetails = () => {
             }
           }}
           amount={game.price * 100}
-          email={user.email}
-          name={user.name}
+          email={"test@example.com"}
+          name={"Test"}
           receiver={game.organizerUsername}
         />
       </Dialog>
