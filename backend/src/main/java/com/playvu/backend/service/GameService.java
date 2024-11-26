@@ -184,7 +184,7 @@ public class GameService {
         if (gameParticipantRepository.findByGameIdAndParticipantId(gameId, userId) != null) {
             GameParticipant gameParticipant = gameParticipantRepository.findByGameIdAndParticipantId(gameId, userId);
 
-            if (gameParticipant.getTeam() != 0){
+            if (gameParticipant.getTeam() != 0 && playStart.isAfter(game.getStartDate())){
                 Duration duration = Duration.between(
                     gameParticipant.getPlayStart() != null ? gameParticipant.getPlayStart() : playStart,
                     playStart

@@ -112,7 +112,7 @@ const Organize = () => {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={deleteGame} color="warning">Yes</Button>
+          <Button onClick={deleteGame} color="error">Yes</Button>
           <Button onClick={cancelDelete}>No</Button>
         </DialogActions>
       </Dialog>
