@@ -108,7 +108,7 @@ public class StripeController {
 
         String receiver = requestDTO.getreceiver();
 
-        System.out.println(receiver);
+        // System.out.println(receiver);
 
         String accountID = findOrCreateAccountNumber(receiver);
 
@@ -246,7 +246,7 @@ public class StripeController {
         String accountID = "";
         boolean accountFound = false;
 
-        System.out.println(name.getName());
+        // System.out.println(name.getName());
         
         for (Account account : accounts.getData()) {
             if (name.getName().equals(account.getBusinessProfile().getName()))
@@ -256,7 +256,7 @@ public class StripeController {
             }
         }
 
-        System.out.println(accountFound);
+        // System.out.println(accountFound);
 
         // No account so create acct
         if (!accountFound){
