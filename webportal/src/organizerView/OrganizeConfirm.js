@@ -52,7 +52,8 @@ const OrganizeConfirm = () => {
 
   return (
     <>
-      <div className="overflow-y-auto text-xl space-y-4 m-4">
+      <div className="p-4 bg-gray-50 min-h-[80vh]">
+      <div className="max-w-4xl mx-auto bg-white shadow-md text-md rounded-lg space-y-2 p-4">
         <h1 className="text-center text-3xl font-semibold">{gameData.name}</h1>
 
         <div className="flex">
@@ -90,8 +91,8 @@ const OrganizeConfirm = () => {
           <p className="w-full">${duration * gameData.organizerCost}</p>
         </div>
       </div>
-
-      <div className="flex absolute right-0 bottom-0 p-4 space-x-2">
+      </div>
+      <div className=" absolute right-0 bottom-24 p-4 ">
         <div onClick={setPayment}>
           <Button variant="contained" color="success" disableElevation>
             Confirm
