@@ -1,8 +1,9 @@
 import { useState } from "react";
 import UserManagement from "./components/UserManagement";
+import FormResponses from "./components/ownerRequests";
 
 const Admin = () => {
-  const navItems = [{ name: "Users" }];
+  const navItems = [{ name: "Users" }, { name: "Field Owners Applications" }];
 
   const [selectedNavItem, setSelectedNavItem] = useState(navItems[0].name);
 
@@ -10,6 +11,8 @@ const Admin = () => {
     switch (selectedNavItem) {
       case "Users":
         return <UserManagement />;
+      case "Field Owners Applications":
+        return <FormResponses />;
       default:
         return <UserManagement />;
     }

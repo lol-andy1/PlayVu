@@ -184,16 +184,18 @@ const UserManagement = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <h2 className="text-3xl font-semibold mb-8 text-gray-800 text-center">
-        User Management
-      </h2>
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <LazyLoadingTable
-          columns={columns}
-          data={data}
-          rowLoad={[10, 20, 50]}
-          className="w-full table-auto text-sm border-collapse"
-        />
+      <div className="max-w-full mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h2 className="text-3xl font-semibold mb-8 text-gray-800 text-center">
+          User Management
+        </h2>
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+          <LazyLoadingTable
+            columns={columns}
+            data={data}
+            rowLoad={[10, 20, 50]}
+            className="w-full table-auto text-sm border-collapse"
+          />
+        </div>
       </div>
     </div>
   );
