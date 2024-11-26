@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 // import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playvu.backend.entity.Field;
-import com.playvu.backend.entity.SubField;
 // import com.playvu.backend.entity.SubField;
 import com.playvu.backend.entity.Users;
 import com.playvu.backend.repository.FieldRepository;
@@ -106,7 +104,7 @@ public class FieldService {
         
     }
 
-    public void editField(HttpServletRequest request, Integer field_id, String name, String description, String picture, String address, String zip_code, String city, Float price) throws URISyntaxException, IOException, InterruptedException{
+    public void editField(HttpServletRequest request, Integer field_id, String name, String description, String picture, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -118,36 +116,24 @@ public class FieldService {
         }
 
         if(name != null){
-          field.setName(name);
+            field.setName(name);
         }
         if(description != null){
-          field.setDescription(description);
+            field.setDescription(description);
         }
         if(picture != null){
           field.setPicture(picture);
         }
         if(address != null){
-          field.setAddress(address);
+            field.setAddress(address);
         }
         if(zip_code != null){
-          field.setZipCode(zip_code);
+            field.setZipCode(zip_code);
         }
         if(city != null){
-          field.setCity(city);
+            field.setCity(city);
         }
-        if(price == null){
-          field.setPrice(0.f);
-        }
-        else{
-          field.setPrice(price);
-        }
-      
-        // TODO: Decide if we need to change coordinates if address switches
-        // String full_address = address + ", " + zip_code + ", " + city;
-        // Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
-        // field.setLatitude(new_field_coordinates.get("latitude"));
-        // field.setLongitude(new_field_coordinates.get("longitude"));
-        
+
         if(address != null && zip_code != null && city != null){
           String full_address = address + ", " + zip_code + ", " + city;
             Map<String, Float> new_field_coordinates = getCoordinatesByAddress(full_address);
@@ -158,32 +144,6 @@ public class FieldService {
         fieldRepository.save(field);
     }
 
-    public Object getSubfields(List<Map<String, Object>> originalFields){
-      List<Map<String, Object>> fields = new ArrayList<>();
-
-      for (Map<String, Object> originalField : originalFields) {
-
-        Map<String, Object> field = new HashMap<>(originalField);
-        Integer fieldId = (Integer) field.get("fieldId");
-
-        List<Map<String, Object>> subFields = new ArrayList<>();
-        List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
-
-        for (Map<String, Object> originalSubField : originalSubFields) {
-
-            Map<String, Object> subField = new HashMap<>(originalSubField);
-            Integer subFieldId = (Integer) subField.get("subFieldId");
-
-            subField.put("data", gameRepository.findAllBySubFieldId(subFieldId));
-            subFields.add(subField);
-        }
-
-        field.put("subFields", subFields);
-        fields.add(field);
-      }
-
-      return fields;
-    }
 
     public void deleteField(Integer fieldId){
         Users user = userService.getUserFromJwt();
@@ -210,17 +170,32 @@ public class FieldService {
       //     return;
       // }
   
-      //List<Map<String, Object>> fields = new ArrayList<>();
+      List<Map<String, Object>> fields = new ArrayList<>();
       
       List<Map<String, Object>> originalFields = fieldRepository.findByOwnerId(user.getUserId());
-      
-      return getSubfields(originalFields);
-    }
-    
-    public Object getFieldsByName(String name) throws URISyntaxException, IOException, InterruptedException {
-      List<Map<String, Object>> originalFields = fieldRepository.findFieldsByName(name);
+  
+      for (Map<String, Object> originalField : originalFields) {
 
-      return getSubfields(originalFields);
+          Map<String, Object> field = new HashMap<>(originalField);
+          Integer fieldId = (Integer) field.get("fieldId");
+  
+          List<Map<String, Object>> subFields = new ArrayList<>();
+          List<Map<String, Object>> originalSubFields = subFieldRepository.findByMasterFieldId(fieldId);
+  
+          for (Map<String, Object> originalSubField : originalSubFields) {
+
+              Map<String, Object> subField = new HashMap<>(originalSubField);
+              Integer subFieldId = (Integer) subField.get("subFieldId");
+  
+              subField.put("data", gameRepository.findAllBySubFieldId(subFieldId));
+              subFields.add(subField);
+          }
+  
+          field.put("subFields", subFields);
+          fields.add(field);
+      }
+  
+      return fields;
     }
 
     public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
