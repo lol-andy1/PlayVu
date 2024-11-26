@@ -88,7 +88,7 @@ try{
         const response = await fetch(baseURL+"/api/get-balance-of-account-from-username", {
           method: "POST",
       headers: {
-          "Content-Type": "application/json", // Specify JSON format
+          "Content-Type": "application/json",
       },
       body: JSON.stringify({name: res.data.username}),
       });

@@ -102,5 +102,18 @@ public class UserService {
         usersRepository.save(deleteUser);
     }
 
-    
+    public String findUsernameOfFieldOwner(Map<String, Object> fieldName){
+
+        List<Map<String,Object>> fieldsAndUsernames = usersRepository.fieldOwnersUsernames();
+
+        String nameOfField = fieldName.get("fieldName").toString().trim();
+
+        for(Map<String,Object> fieldAndUsername : fieldsAndUsernames){
+            if(fieldAndUsername.get("name").toString().trim().equals(nameOfField)){
+                return fieldAndUsername.get("username").toString();
+            }
+        }
+
+        return "";
+}
 }

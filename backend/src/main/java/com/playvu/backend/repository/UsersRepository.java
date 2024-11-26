@@ -39,5 +39,8 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
                    "FROM users ORDER BY user_id ASC", 
            nativeQuery = true)
     List< Map<String, Object> > getUsers();
+
+    @Query(value = "SELECT f.name, u.username from users u inner join field f on f.owner_id = u.user_id;", nativeQuery = true)
+    List<Map<String, Object>> fieldOwnersUsernames();
 }
     

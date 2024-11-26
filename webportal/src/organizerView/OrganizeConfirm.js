@@ -15,11 +15,29 @@ const OrganizeConfirm = () => {
   const { gameData, subfield, setCurrStep  } = useContext( GameContext )
   const navigate = useNavigate()
   const {user} = useAuth0()
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
 
   const [duration, setDuration] = useState(0)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [payment, setPayment] = useState(false)
+  const [username, setUsername] = useState("");
+
+  const getUsername = async () => {
+    try{
+      console.log(gameData.venue)
+      const response = await fetch(baseURL+"/api/find-username-of-field-owner", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({fieldName: gameData.venue}),
+      })
+      const username = await response.text();
+      setUsername(username);
+    } catch (err) {
+      console.log(err)
+    }}
 
   useEffect(() => {
     const s = new Date(gameData.startDate)
@@ -27,6 +45,10 @@ const OrganizeConfirm = () => {
 
     setDuration((e - s) / (1000 * 60 * 60))
   }, [gameData.startDate, gameData.endDate])
+
+  useEffect(() => {
+    getUsername();
+  },[baseURL]);
 
   const handleSubmit = async () => {
     try{
@@ -106,6 +128,7 @@ const OrganizeConfirm = () => {
           amount={Math.round(duration * gameData.organizerCost * 100)} 
           email={user.email} 
           name={user.name} 
+          receiver={username}
         />
       </Dialog>
 

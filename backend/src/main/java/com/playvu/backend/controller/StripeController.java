@@ -180,7 +180,8 @@ public class StripeController {
 
     @PostMapping("/find-or-create-account-number")
     public String findOrCreateAccountNumberAPI(@RequestBody UsernameAccountDTO name) throws StripeException {
-
+        lock.lock();
+        try{
         Stripe.apiKey = STRIPE_API_KEY;
 
         AccountListParams listParams = AccountListParams.builder().build();
@@ -206,14 +207,18 @@ public class StripeController {
         Account account = Account.create(createParams);
 
         return account.getId();
-
+    }
+    finally {
+        lock.unlock();
+    }
 
         // return ""; // No account found                    
     }
 
     @PostMapping("/get-balance-of-account")
     public Long getBalanceOfAccount(HttpServletRequest request, @RequestBody String accountNumber) throws StripeException {
-
+        lock.lock();
+        try{
         Stripe.apiKey = STRIPE_API_KEY;
 
         RequestOptions options = RequestOptions.builder()
@@ -221,6 +226,10 @@ public class StripeController {
             .build();
 
         return Balance.retrieve(options).getPending().get(0).getAmount()+Balance.retrieve(options).getAvailable().get(0).getAmount();
+    }
+    finally {
+        lock.unlock();
+    }
     }
 
     @PostMapping("/get-balance-of-account-from-username")

@@ -186,6 +186,10 @@ public class APIController {
     public void adminDeleteUser(@RequestBody Users userBody){
         userService.adminDeleteUser(userBody.getUserId());
     }
-    
+
+    @PostMapping(value = "/find-username-of-field-owner")
+    public String findUsernameOfFieldOwner(@RequestBody Map<String, Object> fieldName){
+        return userService.findUsernameOfFieldOwner(fieldName);
+    }  
 
 }
