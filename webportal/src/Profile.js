@@ -44,7 +44,7 @@ const Profile = () => {
 
   const handleEdit = () => {
     if (editing){
-      setNewUsername(userInfo.username)
+      // setNewUsername(userInfo.username)
       setNewBio(userInfo.bio)
       setNewPic(userInfo.profilePicture)
     }
