@@ -25,7 +25,7 @@ const OrganizeConfirm = () => {
 
   const getUsername = async () => {
     try{
-      console.log(gameData.venue)
+      // console.log(gameData.venue)
       const response = await fetch(baseURL+"/api/find-username-of-field-owner", {
         method: "POST",
         headers: {

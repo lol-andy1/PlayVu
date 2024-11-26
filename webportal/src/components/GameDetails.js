@@ -542,7 +542,7 @@ const GameDetails = () => {
       <Dialog open={joinClicked && !allowConfirmation} onClose={() => setJoinClicked(false)}>
         <StripePayment
           setAllowConfirmation={(status) => {
-            console.log(game.organizerUsername);
+            // console.log(game.organizerUsername);
             setAllowConfirmation(status);
             if (status) {
               setJoinClicked(false);

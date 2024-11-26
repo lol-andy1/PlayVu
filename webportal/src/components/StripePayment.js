@@ -46,7 +46,7 @@ const StripePayment = (props) => {
             // console.log("JSON param", props.amount);
 
             const clientSecret = await response.text();
-            console.log(clientSecret);
+            // console.log(clientSecret);
             setClientSecret(clientSecret);
         };
 
@@ -59,7 +59,7 @@ const StripePayment = (props) => {
 
     return (
         <div>
-            {console.log(stripePromise)}
+            {/* {console.log(stripePromise)} */}
             {(stripePromise && clientSecret) && (<Elements stripe={stripePromise} options={{clientSecret}}>
             <StripeCheckout setAllowConfirmation={setAllowConfirmation} />
 </Elements>)}
