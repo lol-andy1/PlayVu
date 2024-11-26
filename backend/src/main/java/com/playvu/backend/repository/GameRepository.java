@@ -24,7 +24,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
             nativeQuery = true)
     List< Map<String, Object> > findByFieldIds(@Param("fieldIds") List<Integer> fieldIds);
 
-        @Query(value = "SELECT g.game_id AS \"gameId\", g.max_players AS \"maxPlayers\", g.name, g.price, sf.name AS \"subfield\", f.name AS \"field\", " + 
+        @Query(value = "SELECT g.game_id AS \"gameId\", g.max_players AS \"maxPlayers\", g.name, g.price, sf.name AS \"subfield\", f.picture, f.name AS \"field\", " + 
                         "g.start_date AT TIME ZONE 'UTC' AS \"startDate\", g.end_date AT TIME ZONE 'UTC' AS \"endDate\", " +
                         "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\" " +
                         "FROM game g " +
@@ -34,7 +34,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
                         "WHERE gp.participant_id = :participantId", nativeQuery = true)
         List<Map<String, Object>> findByGameParticipant(@Param("participantId") Integer participantId);
 
-                @Query(value = "SELECT g.game_id AS \"gameId\", g.max_players AS \"maxPlayers\", g.name, g.price, sf.name AS \"subfield\", f.name AS \"field\", " + 
+                @Query(value = "SELECT g.game_id AS \"gameId\", g.max_players AS \"maxPlayers\", g.name, g.price, f.picture, sf.name AS \"subfield\", f.name AS \"field\", " + 
                                 "g.start_date AT TIME ZONE 'UTC' AS \"startDate\", g.end_date AT TIME ZONE 'UTC' AS \"endDate\", " +
                                 "(SELECT COUNT(gp.participant_id) FROM game_participant gp WHERE gp.game_id = g.game_id) AS \"playerCount\" " +
                                 "FROM game g " +

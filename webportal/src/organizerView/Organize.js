@@ -72,12 +72,14 @@ const Organize = () => {
       <Outlet/>
 
       {currStep >= 0 &&
-        <div className="absolute left-0 bottom-0 m-4">
+        <div className="absolute left-0 bottom-24 m-4">
           <Button onClick={handleCancel} disableElevation variant="contained" color="primary">
             Cancel
           </Button>
         </div>
       }
+      <hr className="border-t border-gray-300 w-full absolute bottom-24" />
+
     </GameContext.Provider>
   )
 }
