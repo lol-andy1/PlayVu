@@ -1,6 +1,7 @@
 package com.playvu.backend.controller;
 
 import com.playvu.backend.dto.StripeRequestDTO;
+import com.playvu.backend.dto.UsernameAccountDTO;
 // import org.springframework.web.multipart.MultipartFile;
 
 import com.stripe.Stripe;
@@ -120,7 +121,7 @@ public class StripeController {
     }
 
     @PostMapping("/find-account-number")
-    public String findOrCreateAccountNumber(HttpServletRequest request, String name) throws StripeException {
+    public String findOrCreateAccountNumber(HttpServletRequest request, @RequestBody String name) throws StripeException {
 
         Stripe.apiKey = STRIPE_API_KEY;
 
@@ -153,7 +154,7 @@ public class StripeController {
     }
 
     @PostMapping("/get-balance-of-account")
-    public Long getBalanceOfAccount(HttpServletRequest request, String accountNumber) throws StripeException {
+    public Long getBalanceOfAccount(HttpServletRequest request, @RequestBody String accountNumber) throws StripeException {
 
         Stripe.apiKey = STRIPE_API_KEY;
 
@@ -165,7 +166,42 @@ public class StripeController {
     }
 
     @PostMapping("/get-balance-of-account-from-username")
-    public Long getBalanceOfAccountFromUsername(HttpServletRequest request, String username) throws StripeException {
-        return getBalanceOfAccount(request, findOrCreateAccountNumber(request, username));
+    public Long getBalanceOfAccountFromUsername(HttpServletRequest request, @RequestBody UsernameAccountDTO name) throws StripeException {
+        Stripe.apiKey = STRIPE_API_KEY;
+
+        AccountListParams listParams = AccountListParams.builder().build();
+
+        AccountCollection accounts =  Account.list(listParams);
+
+        String accountID = "";
+        boolean accountFound = false;
+        
+        for (Account account : accounts.getData()) {
+            if (name.getName().equals(account.getBusinessProfile().getName()))
+            {
+                accountID = account.getId();
+                accountFound =  true;
+            }
+        }
+
+        // No account so create acct
+        if (!accountFound){
+            AccountCreateParams createParams =  AccountCreateParams.builder()
+            .setCountry("US")
+            .setBusinessProfile(AccountCreateParams.BusinessProfile.builder()
+                .setName(name.getName())
+                .build())
+            .build();
+
+            Account account = Account.create(createParams);
+
+            accountID = account.getId();
+        }
+
+        RequestOptions options = RequestOptions.builder()
+            .setStripeAccount(accountID)
+            .build();
+
+        return Balance.retrieve(options).getPending().get(0).getAmount()+Balance.retrieve(options).getAvailable().get(0).getAmount();
     }
 }
