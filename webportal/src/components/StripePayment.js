@@ -9,10 +9,29 @@ import { useAuth0 } from "@auth0/auth0-react";
 const StripePayment = (props) => {
     const setAllowConfirmation = props.setAllowConfirmation;
     const baseURL = process.env.REACT_APP_BACKEND_URL;
+ 
     
-    const [stripePromise] = useState(() => loadStripe('pk_test_51QMaBkK6acT5v5wcVhkePxrwXrGRuwJT6HHT4hbsOEg1RuF8rlxHjZCLjkHuzcGnJDcKrWNay2vIKDGjkrLnpFH100SPJwopdj',
-{stripeAccount: 'acct_1QPHjLGag9j1fcEY',}));
+    const [stripePromise, setStripePromise] = useState(null);
     const [clientSecret, setClientSecret] = useState(null);
+
+    useEffect(() => {
+        const fetchStripeAccount = async () => {
+            const response = await fetch(baseURL+"/api/find-or-create-account-number",
+                {method: "POST", 
+                headers: {
+                    "Content-Type": "application/json", // Specify JSON format
+                },
+                body: JSON.stringify({name: props.receiver}),
+                }
+            );
+    
+            const accountNumber =  await response.text();
+            const stripe = loadStripe('pk_test_51QMaBkK6acT5v5wcVhkePxrwXrGRuwJT6HHT4hbsOEg1RuF8rlxHjZCLjkHuzcGnJDcKrWNay2vIKDGjkrLnpFH100SPJwopdj',
+                {stripeAccount: accountNumber,});
+            setStripePromise(stripe);
+        }
+        fetchStripeAccount();
+    }, [props.receiver, baseURL]);
     
     useEffect(() => {
         const fetchClientSecret = async () => {
@@ -21,7 +40,7 @@ const StripePayment = (props) => {
             headers: {
                 "Content-Type": "application/json", // Specify JSON format
             },
-            body: JSON.stringify({price: props.amount, email: props.email, name: props.name, reciever: props.reciever}),
+            body: JSON.stringify({price: props.amount, email: props.email, name: props.name, receiver: props.receiver}),
             });
 
             // console.log("JSON param", props.amount);
@@ -36,7 +55,7 @@ const StripePayment = (props) => {
             fetchClientSecret();
         }
 
-    }, [props.amount, props.email, props.name, baseURL, props.reciever]);
+    }, [props.amount, props.email, props.name, baseURL, props.receiver]);
 
     return (
         <div>

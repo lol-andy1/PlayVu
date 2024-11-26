@@ -7,7 +7,7 @@ public class StripeRequestDTO {
     String email;
     String name;
     Long price;
-    String reciever;
+    String receiver;
 
     public String getEmail() {
         return email;
@@ -21,7 +21,7 @@ public class StripeRequestDTO {
         return price;
     }
 
-    public String getReciever() {
-        return reciever;
+    public String getreceiver() {
+        return receiver;
     }
 }

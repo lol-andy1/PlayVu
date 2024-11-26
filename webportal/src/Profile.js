@@ -19,7 +19,7 @@ const Profile = () => {
   const [newBio, setNewBio] = useState("")
   const [newUsername, setNewUsername] = useState("")
   const [newPic, setNewPic] = useState("")
-  const [balance, setBalance] = useState("10");
+  const [balance, setBalance] = useState("0");
 
   const inputStyle = `w-3/5 text-center rounded-sm ${editing ? "outline outline-1 outline-neutral-300 focus:outline-green-400" : "focus:outline-none"}`
   const picIds = ["98", "19", "56", "35", "58", "91", "77", "42", "89", "44", "72", "85", "81", "21", "87", "41"]

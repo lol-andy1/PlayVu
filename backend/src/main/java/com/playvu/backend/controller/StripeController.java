@@ -106,11 +106,11 @@ public class StripeController {
         {
         Stripe.apiKey = STRIPE_API_KEY;
 
-        String reciever = requestDTO.getReciever();
+        String receiver = requestDTO.getreceiver();
 
-        System.out.println(reciever);
+        System.out.println(receiver);
 
-        String accountID = findOrCreateAccountNumber(reciever);
+        String accountID = findOrCreateAccountNumber(receiver);
 
         Customer customer = findOrCreateCustomer(
             requestDTO.getEmail(),
@@ -167,6 +167,39 @@ public class StripeController {
             .setCountry("US")
             .setBusinessProfile(AccountCreateParams.BusinessProfile.builder()
                 .setName(name)
+                .build())
+            .build();
+
+        Account account = Account.create(createParams);
+
+        return account.getId();
+
+
+        // return ""; // No account found                    
+    }
+
+    @PostMapping("/find-or-create-account-number")
+    public String findOrCreateAccountNumberAPI(@RequestBody UsernameAccountDTO name) throws StripeException {
+
+        Stripe.apiKey = STRIPE_API_KEY;
+
+        AccountListParams listParams = AccountListParams.builder().build();
+
+        AccountCollection accounts =  Account.list(listParams);
+
+        for (Account account : accounts.getData()) {
+            if (name.getName().equals(account.getBusinessProfile().getName()))
+            {
+                return account.getId();
+            }
+        }
+
+        // No account so create acct
+
+        AccountCreateParams createParams =  AccountCreateParams.builder()
+            .setCountry("US")
+            .setBusinessProfile(AccountCreateParams.BusinessProfile.builder()
+                .setName(name.getName())
                 .build())
             .build();
 
