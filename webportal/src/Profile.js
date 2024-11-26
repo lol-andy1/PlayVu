@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import placeholderImage from  "./assets/profile.png"
 import Dialog from '@mui/material/Dialog';
 import GameCard from "./components/GameCard";
+import { useAuth0 } from "@auth0/auth0-react";
+import { set } from "express/lib/application";
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({});
@@ -11,10 +13,13 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editPic, setEditPic] = useState(false);
+  const {user} = useAuth0()
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
 
   const [newBio, setNewBio] = useState("")
   const [newUsername, setNewUsername] = useState("")
   const [newPic, setNewPic] = useState("")
+  const [balance, setBalance] = useState(0);
 
   const inputStyle = `w-3/5 text-center rounded-sm ${editing ? "outline outline-1 outline-neutral-300 focus:outline-green-400" : "focus:outline-none"}`
   const picIds = ["98", "19", "56", "35", "58", "91", "77", "42", "89", "44", "72", "85", "81", "21", "87", "41"]
@@ -29,9 +34,9 @@ const Profile = () => {
   const changeBio = (event) => {
     setNewBio(event.target.value)
   }
-  const changeUsername = (event) => {
-    setNewUsername(event.target.value)
-  }
+  // const changeUsername = (event) => {
+  //   setNewUsername(event.target.value)
+  // }
   const changePic = (picId) => {
     setNewPic(`https://avatar.iran.liara.run/public/${picId}`)
     closePicModal()
@@ -76,8 +81,25 @@ const Profile = () => {
 
   }
 
+  const getBalance = async () => {
+    try{
+      const response = await fetch(baseURL+"/api/get-balance-of-account-from-username", {
+        method: "POST",
+    headers: {
+        "Content-Type": "application/json", // Specify JSON format
+    },
+    body: JSON.stringify({username: user.name}),
+    });
+    const balance = await response.text();
+    setBalance(balance);
+    } catch (err){
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     getUser()
+    getBalance()
   }, [])
 
   return(
@@ -109,7 +131,7 @@ const Profile = () => {
           <input 
             className={`text-2xl font-semibold ${editing ? "text-gray-400" : "placeholder-black"} ${inputStyle}`}
             value={newUsername}
-            onChange={changeUsername}
+            // onChange={changeUsername}
             readOnly={!editing}
           />
 
@@ -123,7 +145,7 @@ const Profile = () => {
 
           <div className="flex flex-col bg-gray-100 rounded-xl shadow-xl max-w-fit p-10">
             <h1 className="text-2xl font-semibold">Balance</h1>
-            <p className="text-4xl font-extrabold" style={{color: "#5433FF"}}>$10.00</p>
+            <p className="text-4xl font-extrabold" style={{color: "#5433FF"}}>{balance}</p>
             <div className="flex flex-row items-center">
               <p>Powered by</p>
               <img src="https://www.vectorlogo.zone/logos/stripe/stripe-ar21.svg"></img>

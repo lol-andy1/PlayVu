@@ -163,4 +163,9 @@ public class StripeController {
 
         return Balance.retrieve(options).getPending().get(0).getAmount()+Balance.retrieve(options).getAvailable().get(0).getAmount();
     }
+
+    @PostMapping("/get-balance-of-account-from-username")
+    public Long getBalanceOfAccountFromUsername(HttpServletRequest request, String username) throws StripeException {
+        return getBalanceOfAccount(request, findOrCreateAccountNumber(request, username));
+    }
 }
