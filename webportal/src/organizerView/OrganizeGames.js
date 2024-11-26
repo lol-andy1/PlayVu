@@ -72,37 +72,40 @@ const Organize = () => {
 
 
   return (
-    <div className="flex flex-col mt-4">
-      <div className="flex justify-center">
-        <Button 
-          onClick={createNewGame} variant="contained" color="neutral" sx={{ color: 'white'}} disableElevation 
-        >
-          Create New Game
-        </Button>
-      </div>
+    <div className="p-4 bg-gray-50 min-h-[80vh]">
+      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-4">
+        <div className="flex justify-center">
+          <Button 
+            onClick={createNewGame} variant="contained" color="neutral" sx={{ color: 'white'}} disableElevation 
+          >
+            Create New Game
+          </Button>
+        </div>
 
-      <div className="">
-        <h1 className="my-2 mx-4 text-lg">Upcoming</h1>
+        <div className="">
+          <h1 className="my-2 mx-4 text-lg">Upcoming</h1>
 
-        <div className="overflow-scroll">
-          {upcomingGames.slice(0, 4).map((game, index) => (
-            <div key={index} className="flex relative justify-center">
-              <GameCard
-                id={game.gameId}
-                name={game.name}
-                price={game.price}
-                startDate={game.startDate}
-                endDate={game.endDate}
-                playerCount={game.playerCount}
-                max_players={game.maxPlayers}
-                location={game.field + ", " + game.subfield}
-              />
+          <div className="overflow-scroll">
+            {upcomingGames.slice(0, 4).map((game, index) => (
+              <div key={index} className="flex relative justify-center">
+                <GameCard
+                  id={game.gameId}
+                  name={game.name}
+                  price={game.price}
+                  startDate={game.startDate}
+                  endDate={game.endDate}
+                  playerCount={game.playerCount}
+                  max_players={game.maxPlayers}
+                  location={game.field + ", " + game.subfield}
+                  picture={game.picture}
+                />
 
-              <div className="absolute right-1 top-1/4 p-2" onClick={() => handleDelete(game)}>
-                <DeleteIcon color="action"/>
+                <div className="absolute right-1 top-1/4 p-2" onClick={() => handleDelete(game)}>
+                  <DeleteIcon color="action"/>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
