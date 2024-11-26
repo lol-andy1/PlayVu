@@ -30,6 +30,7 @@ const Fields = () => {
         zipCode: field.zipCode,
         city: field.city,
         price: field.price,
+        picture: field.picture,
         description: field.description || "No description provided",
         subfields: field.subFields.map((subField) => ({
           id: subField.subFieldId,
@@ -114,6 +115,7 @@ const Fields = () => {
         address: selectedField.streetAddress,
         zipCode: selectedField.zipCode,
         price: selectedField.price,
+        picture: selectedField.picture,
         description: selectedField.description,
         city: selectedField.city,
       });
@@ -139,6 +141,8 @@ const Fields = () => {
         address: field.streetAddress,
         zipCode: field.zipCode,
         city: field.city,
+        price: field.price,
+        picture: field.picture,
       });
       if (response.status === 200 || response.status === 201) {
         fetchFields();

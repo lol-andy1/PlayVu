@@ -1,4 +1,5 @@
 import { useState } from "react";
+import samplefield from "../assets/samplefield.jpg";
 
 const AddField = ({ onSendField, lastId }) => {
   const clearData = {
@@ -8,6 +9,7 @@ const AddField = ({ onSendField, lastId }) => {
     city: "",
     price: NaN,
     description: "",
+    picture: "",
   };
 
   const [toggleForm, setToggleForm] = useState(false);
@@ -37,6 +39,7 @@ const AddField = ({ onSendField, lastId }) => {
         city: formData.city,
         price: formData.price,
         description: formData.description,
+        picture: formData.picture,
       };
       onSendField(fieldInfo);
       setFormData(clearData);
@@ -49,11 +52,25 @@ const AddField = ({ onSendField, lastId }) => {
     <div>
       <button
         onClick={() => setToggleForm(!toggleForm)}
-        className={`bg-green-600 text-white px-4 py-2 w-full text-left ${
+        className={`bg-green-600 text-white px-4 py-2 w-full text-left flex items-center justify-between ${
           toggleForm ? "rounded-t-md" : "rounded-md"
         } focus:outline-none hover:bg-green-700 transition`}
       >
         <div className="font-semibold">Add Field</div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-4 h-4 ml-2 transition-transform duration-200 transform"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
       </button>
       {toggleForm && (
         <div className="border-2 border-green-600 rounded-b-md p-4 bg-gray-50">
@@ -171,6 +188,40 @@ const AddField = ({ onSendField, lastId }) => {
               className="w-full p-2 mt-1 border rounded focus:ring-green-500 focus:border-green-500"
             />
             {errors.price && (
+              <p className="text-red-500 text-xs mt-1">{errors.price}</p>
+            )}
+          </div>
+          {/* picture */}
+          <div className="mb-4">
+            <label
+              htmlFor="picture"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Picture
+            </label>
+            <input
+              onChange={(e) =>
+                setFormData({ ...formData, picture: e.target.value })
+              }
+              type="text"
+              name="picture"
+              id="picture"
+              value={formData.picture}
+              className="w-full p-2 mt-1 border rounded focus:ring-green-500 focus:border-green-500"
+            />
+            {formData.picture ? (
+              <img
+                src={formData.picture}
+                className="w-full h-60 object-cover rounded-b-lg mt-3"
+              />
+            ) : (
+              <img
+                src={samplefield}
+                className="w-full h-60 object-cover rounded-lg mt-3"
+              />
+            )}
+
+            {errors.picture && (
               <p className="text-red-500 text-xs mt-1">{errors.price}</p>
             )}
           </div>

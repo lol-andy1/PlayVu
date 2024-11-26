@@ -310,22 +310,40 @@ const AssignAvailabilities = () => {
             <form className="md:w-1/4 sm:w-1/2">
               <label
                 htmlFor="field_select"
-                className="block mb-2 w-full text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm font-medium text-gray-900"
               >
                 Field
               </label>
-              <select
-                id="field_select"
-                value={selectedFieldId}
-                onChange={handleFieldChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                {fields.map((field) => (
-                  <option key={field.fieldId} value={field.fieldId}>
-                    {field.label.title}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="field_select"
+                  value={selectedFieldId}
+                  onChange={handleFieldChange}
+                  className="w-full appearance-none p-2.5 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
+                >
+                  {fields.map((field) => (
+                    <option key={field.fieldId} value={field.fieldId}>
+                      {field.label.title}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-gray-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
             </form>
 
             {fields.find((field) => field.fieldId === selectedFieldId)
@@ -336,7 +354,7 @@ const AssignAvailabilities = () => {
             ) : (
               <button
                 onClick={() => setIsAddModalOpen(true)}
-                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-all duration-300"
+                className="bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition-all duration-300"
               >
                 Add Availability
               </button>
@@ -368,30 +386,51 @@ const AssignAvailabilities = () => {
             <h2 className="text-xl font-bold mb-4 text-center">
               Add Availability
             </h2>
-            <form onSubmit={handleAddFormSubmit}>
+            <form onSubmit={handleAddFormSubmit} className="space-y-6">
+              {/* Subfield Dropdown */}
               <label
-                for="subfield_select"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                htmlFor="subfield_select"
+                className="block text-sm font-medium text-gray-900"
               >
                 Subfield
               </label>
-              <select
-                id="subfield_select"
-                value={selectedSubfieldId}
-                onChange={(e) => setSelectedSubfieldId(e.target.value)}
-                className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                {fields
-                  .find((field) => field.fieldId === selectedFieldId)
-                  ?.subfields.map((subfield) => (
-                    <option key={subfield.id} value={subfield.id}>
-                      {subfield.label.title}
-                    </option>
-                  ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="subfield_select"
+                  value={selectedSubfieldId}
+                  onChange={(e) => setSelectedSubfieldId(e.target.value)}
+                  className="w-full appearance-none p-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
+                >
+                  {fields
+                    .find((field) => field.fieldId === selectedFieldId)
+                    ?.subfields.map((subfield) => (
+                      <option key={subfield.id} value={subfield.id}>
+                        {subfield.label.title}
+                      </option>
+                    ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-gray-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Start Date Input */}
               <label
-                for="start_date_input"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                htmlFor="start_date_input"
+                className="block text-sm font-medium text-gray-900"
               >
                 Start Date
               </label>
@@ -405,11 +444,13 @@ const AssignAvailabilities = () => {
                     startDate: e.target.value,
                   })
                 }
-                className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
               />
+
+              {/* End Date Input */}
               <label
-                for="end_date_input"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                htmlFor="end_date_input"
+                className="block text-sm font-medium text-gray-900"
               >
                 End Date
               </label>
@@ -423,15 +464,18 @@ const AssignAvailabilities = () => {
                     endDate: e.target.value,
                   })
                 }
-                className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200"
               />
+
+              {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-green-700 text-white p-3 rounded-md hover:bg-green-800 transition-all duration-300"
+                className="w-full bg-green-700 text-white p-3 rounded-lg shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300"
               >
                 Add Availability
               </button>
             </form>
+
             <button
               onClick={() => setIsAddModalOpen(false)}
               className="mt-4 w-full bg-gray-500 text-white p-3 rounded-md hover:bg-gray-600 transition-all duration-300"

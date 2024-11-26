@@ -1,4 +1,5 @@
 import React from "react";
+import samplefield from "../assets/samplefield.jpg";
 
 const FieldModal = ({
   isOpen,
@@ -93,11 +94,35 @@ const FieldModal = ({
               </li>
               <li>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Picture
+                </label>
+                <input
+                  type="text"
+                  value={selectedField?.picture || ""}
+                  onChange={(e) => handleFieldChange("picture", e.target.value)}
+                  className="block w-full p-2 border border-gray-200 rounded-lg"
+                />
+                {selectedField?.picture ? (
+                  <img
+                    src={selectedField?.picture}
+                    className="w-full h-40 object-cover rounded-lg mt-3"
+                  />
+                ) : (
+                  <img
+                    src={samplefield}
+                    className="w-full h-40 object-cover rounded-lg mt-3"
+                  />
+                )}
+              </li>
+              <li>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Description
                 </label>
                 <textarea
                   value={selectedField?.description || ""}
-                  onChange={(e) => handleFieldChange("description", e.target.value)}
+                  onChange={(e) =>
+                    handleFieldChange("description", e.target.value)
+                  }
                   className="block w-full p-2 border border-gray-200 rounded-lg"
                 />
               </li>
