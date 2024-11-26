@@ -19,7 +19,7 @@ const Profile = () => {
   const [newBio, setNewBio] = useState("")
   const [newUsername, setNewUsername] = useState("")
   const [newPic, setNewPic] = useState("")
-  const [balance, setBalance] = useState("Loading...");
+  const [balance, setBalance] = useState("10");
 
   const inputStyle = `w-3/5 text-center rounded-sm ${editing ? "outline outline-1 outline-neutral-300 focus:outline-green-400" : "focus:outline-none"}`
   const picIds = ["98", "19", "56", "35", "58", "91", "77", "42", "89", "44", "72", "85", "81", "21", "87", "41"]
@@ -82,20 +82,22 @@ const Profile = () => {
   }
 
   const getBalance = async () => {
-    try{
-      console.log(JSON.stringify({name: user.name}))
-      const response = await fetch(baseURL+"/api/get-balance-of-account-from-username", {
-        method: "POST",
-    headers: {
-        "Content-Type": "application/json", // Specify JSON format
-    },
-    body: JSON.stringify({name: user.name}),
-    });
-    const balance = await response.text();
-    setBalance(balance);
-    } catch (err){
-      console.log(err)
-    }
+try{
+  const res = await axios.get("/api/get-user")
+        // console.log(JSON.stringify({name: res.data.username}))
+        const response = await fetch(baseURL+"/api/get-balance-of-account-from-username", {
+          method: "POST",
+      headers: {
+          "Content-Type": "application/json", // Specify JSON format
+      },
+      body: JSON.stringify({name: res.data.username}),
+      });
+      const balance = await response.text();
+      setBalance(balance);
+      } catch (err){
+        console.log(err)
+      }
+  
   }
 
   useEffect(() => {
@@ -176,6 +178,7 @@ const Profile = () => {
                 max_players={game.maxPlayers}
                 location={game.field + ", " + game.subfield}
                 price={game.price}
+                organizerUsername={game.organizerUsername}
               />
             ))
           }

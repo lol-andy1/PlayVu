@@ -33,12 +33,15 @@ import com.stripe.model.Balance;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping(path = "api", produces = MediaType.APPLICATION_JSON_VALUE)
 // Allow all origins for simplicity, change for production.
 @CrossOrigin(origins = "*")
 public class StripeController {
+
+    private static ReentrantLock lock = new ReentrantLock();
 
     // @Value("${STRIPE_PUBLIC_KEY}")
 
@@ -53,13 +56,19 @@ public class StripeController {
     // String Client_BASE_URL = "http://localhost:3000"; // TODO: This may cause issues, convert to environment variable, and link to production build
     //
 
-    public static Customer findOrCreateCustomer(String email, String name)
+    public static Customer findOrCreateCustomer(String email, String name, String accountId)
         throws StripeException {
+        // Account ID is the account number, need to find/create account before coming here
+
+        RequestOptions options = RequestOptions.builder()
+            .setStripeAccount(accountId)
+            .build();
+
         CustomerSearchParams searchParams = CustomerSearchParams.builder()
             .setQuery("email:'" + email + "'")
             .build();
 
-        CustomerSearchResult result = Customer.search(searchParams);
+        CustomerSearchResult result = Customer.search(searchParams, options);
 
         Customer c;
 
@@ -74,7 +83,7 @@ public class StripeController {
             // createParams = createParams.setEmail(email);
             // createParams  = createParams.build();
 
-            c = Customer.create(createParams);
+            c = Customer.create(createParams, options);
         } else {
             c = result.getData().get(0);
         }
@@ -91,17 +100,28 @@ public class StripeController {
     // TODO: Get Email and Name from request
     // NOTE: THis is an integrated checkout (checkout box)
     @PostMapping("/checkout")
-    public String checkout(
-        HttpServletRequest request,
-        @RequestBody StripeRequestDTO requestDTO
-    )
-        throws URISyntaxException, IOException, InterruptedException, StripeException {
+    public String checkout(HttpServletRequest request,@RequestBody StripeRequestDTO requestDTO) throws URISyntaxException, IOException, InterruptedException, StripeException {
+        lock.lock();
+        try
+        {
         Stripe.apiKey = STRIPE_API_KEY;
+
+        String reciever = requestDTO.getReciever();
+
+        System.out.println(reciever);
+
+        String accountID = findOrCreateAccountNumber(reciever);
 
         Customer customer = findOrCreateCustomer(
             requestDTO.getEmail(),
-            requestDTO.getName()
+            requestDTO.getName(),
+            accountID
         );
+
+        RequestOptions options = RequestOptions.builder()
+            .setStripeAccount(accountID)
+            .build();
+
         // System.out.println(customer.getEmail());
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
             .setAmount(requestDTO.getPrice()) // This amount is in cents
@@ -109,19 +129,24 @@ public class StripeController {
             .setCustomer(customer.getId())
             .build();
 
-        PaymentIntent intent = PaymentIntent.create(params);
+        PaymentIntent intent = PaymentIntent.create(params, options);
 
         return intent.getClientSecret();
+        }
+        finally {
+            lock.unlock();
+        }
     }
 
     @GetMapping("/get-stripe-publishable-key")
     // This key is needed to get the checkout box to work, but is not secret, so can be hardcoded too
-    public String getStripePublishableKey() {
+    public String getStripePublishableKey(String accountID) throws StripeException {
+        
+        Stripe.apiKey = STRIPE_API_KEY;
         return STRIPE_PUBLISHABLE_KEY;
     }
 
-    @PostMapping("/find-account-number")
-    public String findOrCreateAccountNumber(HttpServletRequest request, @RequestBody String name) throws StripeException {
+    public String findOrCreateAccountNumber(String name) throws StripeException {
 
         Stripe.apiKey = STRIPE_API_KEY;
 
@@ -167,6 +192,9 @@ public class StripeController {
 
     @PostMapping("/get-balance-of-account-from-username")
     public Long getBalanceOfAccountFromUsername(HttpServletRequest request, @RequestBody UsernameAccountDTO name) throws StripeException {
+        lock.lock();
+        try 
+        {
         Stripe.apiKey = STRIPE_API_KEY;
 
         AccountListParams listParams = AccountListParams.builder().build();
@@ -175,6 +203,8 @@ public class StripeController {
 
         String accountID = "";
         boolean accountFound = false;
+
+        System.out.println(name.getName());
         
         for (Account account : accounts.getData()) {
             if (name.getName().equals(account.getBusinessProfile().getName()))
@@ -183,6 +213,8 @@ public class StripeController {
                 accountFound =  true;
             }
         }
+
+        System.out.println(accountFound);
 
         // No account so create acct
         if (!accountFound){
@@ -204,4 +236,8 @@ public class StripeController {
 
         return Balance.retrieve(options).getPending().get(0).getAmount()+Balance.retrieve(options).getAvailable().get(0).getAmount();
     }
+    finally
+    {
+        lock.unlock();  
+    }}
 }

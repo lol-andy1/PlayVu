@@ -25,7 +25,8 @@ const GameDetails = () => {
     end_date: '',
     team_1: [],
     team_2: [],
-    sideline: []
+    sideline: [],
+    organizerUsername: ''
   }); 
   const [isJoined, setIsJoined] = useState(false);
   const [allowConfirmation, setAllowConfirmation] = useState(false)
@@ -61,6 +62,7 @@ const GameDetails = () => {
           team_1: data.team_1,
           team_2: data.team_2,
           sideline: data.sideline,
+          organizerUsername: data.organizerUsername
         });
 
         const isUserJoined =
@@ -540,6 +542,7 @@ const GameDetails = () => {
       <Dialog open={joinClicked && !allowConfirmation} onClose={() => setJoinClicked(false)}>
         <StripePayment
           setAllowConfirmation={(status) => {
+            console.log(game.organizerUsername);
             setAllowConfirmation(status);
             if (status) {
               setJoinClicked(false);
@@ -548,6 +551,7 @@ const GameDetails = () => {
           amount={game.price * 100}
           email={user.email}
           name={user.name}
+          reciever={game.organizerUsername}
         />
       </Dialog>
       

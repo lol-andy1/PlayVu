@@ -10,7 +10,8 @@ const StripePayment = (props) => {
     const setAllowConfirmation = props.setAllowConfirmation;
     const baseURL = process.env.REACT_APP_BACKEND_URL;
     
-    const [stripePromise] = useState(() => loadStripe("pk_test_51QMaBkK6acT5v5wcVhkePxrwXrGRuwJT6HHT4hbsOEg1RuF8rlxHjZCLjkHuzcGnJDcKrWNay2vIKDGjkrLnpFH100SPJwopdj"));
+    const [stripePromise] = useState(() => loadStripe('pk_test_51QMaBkK6acT5v5wcVhkePxrwXrGRuwJT6HHT4hbsOEg1RuF8rlxHjZCLjkHuzcGnJDcKrWNay2vIKDGjkrLnpFH100SPJwopdj',
+{stripeAccount: 'acct_1QPHjLGag9j1fcEY',}));
     const [clientSecret, setClientSecret] = useState(null);
     
     useEffect(() => {
@@ -20,12 +21,13 @@ const StripePayment = (props) => {
             headers: {
                 "Content-Type": "application/json", // Specify JSON format
             },
-            body: JSON.stringify({price: props.amount, email: props.email, name: props.name}),
+            body: JSON.stringify({price: props.amount, email: props.email, name: props.name, reciever: props.reciever}),
             });
 
             // console.log("JSON param", props.amount);
 
             const clientSecret = await response.text();
+            console.log(clientSecret);
             setClientSecret(clientSecret);
         };
 
@@ -34,11 +36,12 @@ const StripePayment = (props) => {
             fetchClientSecret();
         }
 
-    }, [props.amount, props.email, props.name, baseURL]);
+    }, [props.amount, props.email, props.name, baseURL, props.reciever]);
 
     return (
         <div>
-            {stripePromise && clientSecret && (<Elements stripe={stripePromise} options={{clientSecret}}>
+            {console.log(stripePromise)}
+            {(stripePromise && clientSecret) && (<Elements stripe={stripePromise} options={{clientSecret}}>
             <StripeCheckout setAllowConfirmation={setAllowConfirmation} />
 </Elements>)}
         </div>
