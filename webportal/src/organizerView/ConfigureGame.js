@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Slider from '@mui/material/Slider';
 
 const ConfigureGame = () => {
-  const { setGameData, setCurrStep } = useContext( GameContext )
+  const { setGameData, setCurrStep } = useContext( GameContext );
   const { user } = useAuth0();
   const navigate = useNavigate();
 
