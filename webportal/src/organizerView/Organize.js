@@ -52,7 +52,7 @@ const Organize = () => {
   return (
     <GameContext.Provider value={{gameData, setGameData, subfield, setSubfield, currStep, setCurrStep}}>
       <div className="text-center py-2 border-b-2">
-        <h1 className="text-3xl font-semibold mb-4">Organize Game</h1>
+        <h1 className="text-3xl font-semibold my-4">Organize Game</h1>
 
         <div className="w-full p-2 my-2">
           <Stepper alternativeLabel activeStep={currStep}>
@@ -72,13 +72,12 @@ const Organize = () => {
       <Outlet/>
 
       {currStep >= 0 &&
-        <div className="absolute left-0 bottom-24 m-4">
+        <div className="absolute left-16 bottom-0 m-4">
           <Button onClick={handleCancel} disableElevation variant="contained" color="primary">
             Cancel
           </Button>
         </div>
       }
-      <hr className="border-t border-gray-300 w-full absolute bottom-24" />
 
     </GameContext.Provider>
   )

@@ -88,7 +88,7 @@ const ConfigureGame = () => {
         />
       </div>
       <hr className="border-t border-gray-300 mb-4" style={{ marginBottom: "20px" }} />
-      <div className="absolute bottom-24 right-0 p-4">
+      <div className="absolute bottom-0 right-20 p-4">
         <Button 
           onClick={handleSubmit} variant="contained" color="success" disableElevation 
         >

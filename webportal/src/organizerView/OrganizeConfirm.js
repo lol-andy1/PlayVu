@@ -92,7 +92,7 @@ const OrganizeConfirm = () => {
         </div>
       </div>
       </div>
-      <div className=" absolute right-0 bottom-24 p-4 ">
+      <div className=" absolute right-20 bottom-0 p-4 ">
         <div onClick={setPayment}>
           <Button variant="contained" color="success" disableElevation>
             Confirm
