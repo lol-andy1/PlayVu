@@ -126,8 +126,8 @@ const OrganizeConfirm = () => {
         <StripePayment 
           setAllowConfirmation={handleSubmit} 
           amount={Math.round(duration * gameData.organizerCost * 100)} 
-          email={user.email} 
-          name={user.name} 
+          email={"test@example.com"}
+          name={"Test"} 
           receiver={username}
         />
       </Dialog>
