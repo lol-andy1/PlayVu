@@ -18,6 +18,7 @@ const GameCard = ({ id, name, price, location, startDate, playerCount, max_playe
     const endTime = new Date(endDate);
     const diffInMs = endTime - startTime;
 
+
     const hours = Math.floor(diffInMs / (1000 * 60 * 60));
     const minutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
     const formattedDuration = minutes === 0 

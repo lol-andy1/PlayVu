@@ -8,7 +8,7 @@ import Games from "./Games";
 import Profile from "./Profile";
 import Search from "./Search";
 import Navbar from "./components/navbar";
-import GameDetails from "./components/GameDetails"
+import GameDetails from "./components/GameDetails";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import Organize from "./organizerView/Organize";
@@ -50,13 +50,11 @@ function App() {
         } catch (error) {
           console.error("Error fetching user role:", error);
         }
-      } else {
-        setRole(null);
       }
     };
 
     fetchUserRole();
-  }, [isAuthenticated, getAccessTokenSilently, setRole]);
+  }, [isAuthenticated, setRole]);
   return (
     <Router>
       <Navbar />
@@ -165,7 +163,7 @@ function App() {
           path="/game-details/:slug"
           element={
             //<ProtectedRoute allowedRoles={["player", "admin"]}>
-              <GameDetails/>
+            <GameDetails />
             //</ProtectedRoute>
           }
         />
