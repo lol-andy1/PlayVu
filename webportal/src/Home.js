@@ -114,7 +114,7 @@ const Home = () => {
         </div>
         <div className="flex justify-center">
           <button
-            onClick={() => (window.location.href = 'https://docs.google.com/forms/d/1I_mDvCTCtKZyuUH1ra9tnhd2H0Ru8dY9aHoY66At00w/prefill')}
+            onClick={() => (window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSejlg_UbHS6tMvuYGE_3vTVnYWKbsxrAHFoD_UKPHfAi4ZZng/viewform?usp=sf_link')}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition"
           >
             Request to Become a Partnered Field
