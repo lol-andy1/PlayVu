@@ -1,6 +1,7 @@
 package com.playvu.backend.controller;
 
 import com.playvu.backend.dto.StripeRequestDTO;
+import com.playvu.backend.dto.UsernameAccountDTO;
 // import org.springframework.web.multipart.MultipartFile;
 
 import com.stripe.Stripe;
@@ -21,6 +22,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.stripe.model.Account;
+import com.stripe.param.AccountListParams;
+import com.stripe.param.AccountCreateParams;
+import com.stripe.model.AccountCollection;
+import com.stripe.net.RequestOptions;
+import com.stripe.model.Balance;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -106,5 +118,90 @@ public class StripeController {
     // This key is needed to get the checkout box to work, but is not secret, so can be hardcoded too
     public String getStripePublishableKey() {
         return STRIPE_PUBLISHABLE_KEY;
+    }
+
+    @PostMapping("/find-account-number")
+    public String findOrCreateAccountNumber(HttpServletRequest request, @RequestBody String name) throws StripeException {
+
+        Stripe.apiKey = STRIPE_API_KEY;
+
+        AccountListParams listParams = AccountListParams.builder().build();
+
+        AccountCollection accounts =  Account.list(listParams);
+
+        for (Account account : accounts.getData()) {
+            if (name.equals(account.getBusinessProfile().getName()))
+            {
+                return account.getId();
+            }
+        }
+
+        // No account so create acct
+
+        AccountCreateParams createParams =  AccountCreateParams.builder()
+            .setCountry("US")
+            .setBusinessProfile(AccountCreateParams.BusinessProfile.builder()
+                .setName(name)
+                .build())
+            .build();
+
+        Account account = Account.create(createParams);
+
+        return account.getId();
+
+
+        // return ""; // No account found                    
+    }
+
+    @PostMapping("/get-balance-of-account")
+    public Long getBalanceOfAccount(HttpServletRequest request, @RequestBody String accountNumber) throws StripeException {
+
+        Stripe.apiKey = STRIPE_API_KEY;
+
+        RequestOptions options = RequestOptions.builder()
+            .setStripeAccount(accountNumber)
+            .build();
+
+        return Balance.retrieve(options).getPending().get(0).getAmount()+Balance.retrieve(options).getAvailable().get(0).getAmount();
+    }
+
+    @PostMapping("/get-balance-of-account-from-username")
+    public Long getBalanceOfAccountFromUsername(HttpServletRequest request, @RequestBody UsernameAccountDTO name) throws StripeException {
+        Stripe.apiKey = STRIPE_API_KEY;
+
+        AccountListParams listParams = AccountListParams.builder().build();
+
+        AccountCollection accounts =  Account.list(listParams);
+
+        String accountID = "";
+        boolean accountFound = false;
+        
+        for (Account account : accounts.getData()) {
+            if (name.getName().equals(account.getBusinessProfile().getName()))
+            {
+                accountID = account.getId();
+                accountFound =  true;
+            }
+        }
+
+        // No account so create acct
+        if (!accountFound){
+            AccountCreateParams createParams =  AccountCreateParams.builder()
+            .setCountry("US")
+            .setBusinessProfile(AccountCreateParams.BusinessProfile.builder()
+                .setName(name.getName())
+                .build())
+            .build();
+
+            Account account = Account.create(createParams);
+
+            accountID = account.getId();
+        }
+
+        RequestOptions options = RequestOptions.builder()
+            .setStripeAccount(accountID)
+            .build();
+
+        return Balance.retrieve(options).getPending().get(0).getAmount()+Balance.retrieve(options).getAvailable().get(0).getAmount();
     }
 }
