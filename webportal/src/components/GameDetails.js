@@ -371,6 +371,7 @@ const GameDetails = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className="w-1/3"
                 sx={{ color: 'white' }}
                 style={{ borderRadius: '5px 0 0 5px' }}
                 onClick={() => joinTeam(1)}
@@ -382,6 +383,7 @@ const GameDetails = () => {
               <Button
                 variant="contained"
                 color="secondary"
+                className="w-1/3"
                 sx={{ color: 'white' }}
                 style={{ borderRadius: 0 }}
                 onClick={() => joinTeam(2)}
@@ -393,6 +395,7 @@ const GameDetails = () => {
               <Button
                 variant="contained"
                 color="neutral"
+                className="w-1/3"
                 sx={{ color: 'white' }}
                 style={{ borderRadius: '0 5px 5px 0' }}
                 onClick={() => joinTeam(0)}
@@ -404,12 +407,12 @@ const GameDetails = () => {
           </>
           )}
           {isJoined && canJoinGame &&(
-      <div className="w-full max-w-md mt-4 px-4">
+      <div className="flex justify-center max-w-md mt-4 px-4">
         <Button
           variant="outlined"
           color="error"
           onClick={handleLeaveGame}
-          className="w-full"
+          className="w-1/2"
         >
           Leave Game
         </Button>

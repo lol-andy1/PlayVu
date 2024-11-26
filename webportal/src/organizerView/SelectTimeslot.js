@@ -212,7 +212,7 @@ const SelectTimeslot = () => {
         </div>
       </div>
 
-      <div className="h-[50vh] overflow-scroll border-y-2 border-gray-500 pt-2">
+      <div className="h-[45vh] overflow-scroll border-y-2 border-gray-500 pt-2">
         {timeslots ?
           (timeslots.length > 0 ?
             (timeslots.map((slot, index) => (
