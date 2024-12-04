@@ -183,7 +183,7 @@ const Navbar = () => {
                 </Link>
               </li>
             )}
-            {isAuthenticated && ["admin", "captain"].includes(role) && (
+            {isAuthenticated && ["admin", "player"].includes(role) && (
               <li>
                 <Link
                   to="/organize/games"
