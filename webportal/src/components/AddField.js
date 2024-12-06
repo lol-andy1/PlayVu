@@ -51,6 +51,7 @@ const AddField = ({ onSendField, lastId }) => {
   return (
     <div>
       <button
+        data-testid="add-field"
         onClick={() => setToggleForm(!toggleForm)}
         className={`bg-green-600 text-white px-4 py-2 w-full text-left flex items-center justify-between ${
           toggleForm ? "rounded-t-md" : "rounded-md"

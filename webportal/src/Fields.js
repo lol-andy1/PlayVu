@@ -206,7 +206,10 @@ const Fields = () => {
       />
 
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div
+          data-testid="delete-modal"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+        >
           <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
             <h2 className="text-lg font-bold mb-4">Are you sure?</h2>
             <p className="mb-6">
@@ -221,6 +224,7 @@ const Fields = () => {
                 Cancel
               </button>
               <button
+                data-testid="delete-modal-btn"
                 onClick={handleDeleteField}
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
               >

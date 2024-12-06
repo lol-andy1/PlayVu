@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link, useLocation } from "react-router-dom";
 import { useRole } from "../RoleContext";
-import logo from  "../assets/logo-nobg.png"
-import playvu from  "../assets/playvu-nobg.png"
+import logo from "../assets/logo-nobg.png";
+import playvu from "../assets/playvu-nobg.png";
 
 const Navbar = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
@@ -20,8 +20,8 @@ const Navbar = () => {
           to="/"
           className="flex items-center space-x-3 rtl:space-x-reverse lg:justify-start hidden lg:flex"
         >
-          <img src={logo} alt="Logo" className="h-16 w-auto"/>
-          <img src={playvu} alt="PlayVu" className="h-6 w-auto"/>    
+          <img src={logo} alt="Logo" className="h-16 w-auto" />
+          <img src={playvu} alt="PlayVu" className="h-6 w-auto" />
         </Link>
         <div className="flex md:order-2 space-x-3 rtl:space-x-reverse">
           {isAuthenticated ? (
@@ -119,6 +119,7 @@ const Navbar = () => {
             {isAuthenticated && ["field owner", "admin"].includes(role) && (
               <li>
                 <Link
+                  data-testid="owner-link"
                   to="/FieldOwner"
                   className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
                     location.pathname === "/FieldOwner"

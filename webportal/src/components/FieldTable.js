@@ -38,6 +38,7 @@ const FieldTable = ({ fields, onEditField, onDeleteField }) => {
               <td className="px-6 py-4 text-right">
                 <div className="flex justify-around">
                   <button
+                    data-testid="edit-field"
                     onClick={() => onEditField(field)}
                     className="bg-green-500 text-white p-2 rounded text-sm flex items-center"
                   >
@@ -54,6 +55,7 @@ const FieldTable = ({ fields, onEditField, onDeleteField }) => {
                     Edit
                   </button>
                   <button
+                    data-testid="delete-field"
                     onClick={() => onDeleteField(field)}
                     className="bg-red-500 text-white p-2 rounded text-sm flex items-center"
                   >
