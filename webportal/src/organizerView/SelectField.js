@@ -64,6 +64,7 @@ const SelectField = () => {
     <>
       <div className="flex justify-center py-2 mt-4">
         <input
+          name="search-field"
           ref={searchbarRef}
           placeholder="Search venues by name"
           className="p-2 rounded-2xl border-2 w-3/5 text-lg"
@@ -74,7 +75,7 @@ const SelectField = () => {
       
       {fields && (fields.length > 0 ?
         fields.map((field) => (
-          <div key={field.fieldId}>
+          <div key={field.fieldId} data-testid={`field${field.fieldId}`}>
             <Accordion disableGutters={true} elevation={0} expanded={field.subFields.length? undefined : false}> 
               <AccordionSummary 
                 id={field.fieldId} 
@@ -86,7 +87,7 @@ const SelectField = () => {
               <AccordionDetails sx={{paddingTop: 0, paddingBottom: 1}}>
                 {field.subFields &&
                   field.subFields.map((subfield, index) =>
-                    <div key={index} className="mb-1">
+                    <div key={index} data-testid={`subfield${subfield.subFieldId}`} className="mb-1">
                       <button className="w-full" onClick={() => selectSubfield(field, subfield)}>
                         <SubfieldCard subfield={subfield}/>
                       </button>

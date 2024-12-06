@@ -25,7 +25,6 @@ const OrganizeConfirm = () => {
 
   const getUsername = async () => {
     try{
-      // console.log(gameData.venue)
       const response = await fetch(baseURL+"/api/find-username-of-field-owner", {
         method: "POST",
         headers: {
@@ -115,8 +114,8 @@ const OrganizeConfirm = () => {
       </div>
       </div>
       <div className=" absolute right-20 bottom-0 p-4 ">
-        <div onClick={setPayment}>
-          <Button variant="contained" color="success" disableElevation>
+        <div onClick={handleSubmit}>
+          <Button variant="contained" color="success" disableElevation data-testid="confirm">
             Confirm
           </Button>
         </div>

@@ -76,6 +76,7 @@ const Organize = () => {
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-4">
         <div className="flex justify-center">
           <Button 
+            data-testid="create-game"
             onClick={createNewGame} variant="contained" color="neutral" sx={{ color: 'white'}} disableElevation 
           >
             Create New Game

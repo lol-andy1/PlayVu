@@ -54,6 +54,7 @@ const ConfigureGame = () => {
       <div className="flex items-center">
         <h1 className="w-1/3 text-lg">Game Name</h1>
         <input
+          name="game-name"
           value={gameName}
           onChange={changeGameName}
           placeholder="Enter a name"
@@ -64,6 +65,7 @@ const ConfigureGame = () => {
       <div className="flex items-center">
         <h1 className="w-1/3 text-lg">Max Players</h1>
         <Slider 
+          data-testid="player-count-slider"
           defaultValue={11}
           value={maxPlayers}
           onChange={changeTeamSize}
@@ -81,6 +83,7 @@ const ConfigureGame = () => {
       <div className="flex items-center">
         <h1 className="w-1/3 text-lg">Price</h1>
         <input
+          name="price"
           value={price}
           onChange={changePrice}
           placeholder="$0"
@@ -90,7 +93,7 @@ const ConfigureGame = () => {
       <hr className="border-t border-gray-300 mb-4" style={{ marginBottom: "20px" }} />
       <div className="absolute bottom-0 right-20 p-4">
         <Button 
-          onClick={handleSubmit} variant="contained" color="success" disableElevation 
+          onClick={handleSubmit} variant="contained" color="success" disableElevation data-testid="done"
         >
           Done
         </Button>

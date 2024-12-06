@@ -1,0 +1,15 @@
+[{
+  "address" : "Penberthy Blvd",
+  "city": "College Station",
+  "fieldId": 12,
+  "fieldName": "Penberthy Complex",
+  "picture": "https://recsports.tamu.edu/wp-content/uploads/MKTG_PEAP_1-1-scaled.jpg",
+  "price": 30,
+  "subFields": [
+    {"name": "Field 1", "data": [], "subFieldId": 38},
+    {"name": "Field 2", "data": [], "subFieldId": 39},
+    {"name": "Field 3", "data": [], "subFieldId": 40},
+    {"name": "Field 4", "data": [], "subFieldId": 41}
+  ],
+  "zipCode": "77840"
+}]
