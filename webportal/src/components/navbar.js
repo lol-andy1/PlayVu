@@ -208,6 +208,7 @@ const Navbar = () => {
               ["captain", "player", "admin"].includes(role) && (
                 <li>
                   <Link
+                    data-testid="search-link"
                     to="/search"
                     className={`block py-2 px-3 rounded-md text-gray-700 dark:text-white ${
                       location.pathname === "/search"

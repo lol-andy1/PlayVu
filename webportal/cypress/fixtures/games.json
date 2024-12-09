@@ -1,0 +1,35 @@
+[
+    {
+      "game_id": 1,
+      "location": "San Francisco, CA",
+      "name": "Conner's Soccer",
+      "start_date": "2024-12-15T18:00:00Z",
+      "end_date": "2024-12-15T20:00:00Z",
+      "price": 20,
+      "playerCount": 5,
+      "max_players": 10,
+      "picture": "https://via.placeholder.com/150"
+    },
+    {
+      "game_id": 2,
+      "location": "San Francisco, CA",
+      "name": "Pickup Soccer",
+      "start_date": "2024-12-12T10:00:00Z",
+      "end_date": "2024-12-12T12:00:00Z",
+      "price": 15,
+      "playerCount": 10,
+      "max_players": 20,
+      "picture": "https://via.placeholder.com/150"
+    },
+    {
+      "game_id": 3,
+      "location": "Oakland, CA",
+      "name": "Futsol",
+      "start_date": "2024-12-18T14:00:00Z",
+      "end_date": "2024-12-18T16:00:00Z",
+      "price": 10,
+      "playerCount": 6,
+      "max_players": 6,
+      "picture": "https://via.placeholder.com/150"
+    }
+  ]
