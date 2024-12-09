@@ -76,7 +76,7 @@ describe("Search Page Functionality", () => {
         body: {
           results: [
             {
-              geometry: { lat: 40.7128, lng: -74.006 },
+              geometry: { lat: 37.7749, lng: -122.4194 },
             },
           ],
         },
@@ -84,6 +84,10 @@ describe("Search Page Functionality", () => {
       cy.intercept("GET", "/api/get-games*", {
         fixture: "games.json",
       }).as("getGames");
+      cy.stubGeolocation({
+        latitude: 37.7749,
+        longitude: -122.4194,
+    });
       cy.get("input[type='text']")
         .type("San Francisco, CA")
         .should("have.value", "San Francisco, CA");
