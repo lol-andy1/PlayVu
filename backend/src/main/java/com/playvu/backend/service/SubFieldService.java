@@ -19,7 +19,6 @@ import com.playvu.backend.repository.FieldScheduleRepository;
 import com.playvu.backend.repository.GameRepository;
 import com.playvu.backend.repository.SubFieldRepository;
 
-import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class SubFieldService {
@@ -38,7 +37,7 @@ public class SubFieldService {
     @Autowired
     private FieldScheduleRepository fieldScheduleRepository;
 
-    public Integer addSubField(HttpServletRequest request, Integer fieldId, String name) throws URISyntaxException, IOException, InterruptedException{
+    public Integer addSubField(Integer fieldId, String name) throws URISyntaxException, IOException, InterruptedException{
 
         Users user = userService.getUserFromJwt();
 
@@ -56,7 +55,7 @@ public class SubFieldService {
 
     }
 
-    public void deleteSubField(HttpServletRequest request, Integer subFieldId) throws URISyntaxException, IOException, InterruptedException{
+    public void deleteSubField(Integer subFieldId) throws URISyntaxException, IOException, InterruptedException{
 
         Users user = userService.getUserFromJwt();
 

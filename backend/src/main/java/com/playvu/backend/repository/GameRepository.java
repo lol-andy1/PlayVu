@@ -36,8 +36,12 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
        nativeQuery = true)
     List< Map<String, Object> > findByGameParticipant(@Param("participantId") Integer participantId);
 
-    @Query(value = "SELECT g.game_id AS \"gameId\", g.max_players AS \"maxPlayers\", g.name, g.price, g.start_date AT TIME ZONE 'UTC' AS \"startDate\", g.end_date AT TIME ZONE 'UTC' AS \"endDate\" " +
+    @Query(value = "SELECT g.game_id AS \"gameId\", g.max_players AS \"maxPlayers\", g.name, g.price, " +
+               "g.start_date AT TIME ZONE 'UTC' AS \"startDate\", g.end_date AT TIME ZONE 'UTC' AS \"endDate\", " +
+               "mf.picture " +
                "FROM game g " +
+               "JOIN sub_field sf ON g.sub_field_id = sf.sub_field_id " +
+               "JOIN field mf ON sf.master_field_id = mf.field_id " +
                "WHERE g.organizer_id = :organizerId", 
        nativeQuery = true)
     List< Map<String, Object> > findByOrganizerId(@Param("organizerId") Integer organizerId);

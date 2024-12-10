@@ -36,7 +36,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
                    "bio AS \"bio\", " +
                    "profile_picture AS \"profilePicture\", " +
                    "role " +
-                   "FROM users ORDER BY user_id ASC", 
+                   "FROM users WHERE email != 'Deleted User' ORDER BY user_id ASC", 
            nativeQuery = true)
     List< Map<String, Object> > getUsers();
 }

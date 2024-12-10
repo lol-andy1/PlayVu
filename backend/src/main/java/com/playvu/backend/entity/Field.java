@@ -143,6 +143,14 @@ public class Field {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Field [fieldId=" + fieldId + ", ownerId=" + ownerId + ", name=" + name + ", address=" + address
+                + ", zipCode=" + zipCode + ", city=" + city + ", description=" + description + ", picture=" + picture
+                + ", latitude=" + latitude + ", longitude=" + longitude + ", price=" + price + ", available="
+                + available + "]";
     }  
     
     

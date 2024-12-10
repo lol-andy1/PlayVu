@@ -35,7 +35,7 @@ public class UserService {
         return user;
     }
 
-    public Map<String, Object> getUser(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException{
+    public Map<String, Object> getUser() throws URISyntaxException, IOException, InterruptedException{
         Users user = getUserFromJwt();
         return usersRepository.userDataByEmail(user.getEmail());
     }

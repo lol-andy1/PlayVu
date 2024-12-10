@@ -28,7 +28,6 @@ import com.playvu.backend.repository.FieldScheduleRepository;
 import com.playvu.backend.repository.GameRepository;
 import com.playvu.backend.repository.SubFieldRepository;
 
-import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class FieldService {
@@ -77,7 +76,8 @@ public class FieldService {
         return coordinates;
     }
 
-    public Integer addField(HttpServletRequest request, String name, String description, Float price, String picture, String address, String zipCode, String city) throws URISyntaxException, IOException, InterruptedException{
+    public Integer addField(String name, String description, Float price, String picture, String address, String zipCode, String city) throws URISyntaxException, IOException, InterruptedException{
+        
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -100,11 +100,13 @@ public class FieldService {
         newField.setLongitude(new_field_coordinates.get("longitude"));
         
         fieldRepository.save(newField);
+          // Debugging log
+      System.out.println("Saved Field: " + newField);
         return newField.getFieldId();
         
     }
 
-    public void editField(HttpServletRequest request, Integer field_id, String name, String description, String picture, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
+    public void editField(Integer field_id, String name, String description, Float price, String picture, String address, String zip_code, String city) throws URISyntaxException, IOException, InterruptedException{
         Users user = userService.getUserFromJwt();
         // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check everytime
         //     return;
@@ -132,6 +134,9 @@ public class FieldService {
         }
         if(city != null){
             field.setCity(city);
+        }
+        if(price != null){
+          field.setPrice(price);
         }
 
         if(address != null && zip_code != null && city != null){
@@ -164,7 +169,7 @@ public class FieldService {
         return;
     }
 
-    public Object getOwnerFields(HttpServletRequest request) throws URISyntaxException, IOException, InterruptedException {
+    public Object getOwnerFields() throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
       // if(user.getRole().toLowerCase().strip() != "field owner"){ // Stripping should be done when updating roles to not have to do the check every time
       //     return;
@@ -198,7 +203,7 @@ public class FieldService {
       return fields;
     }
 
-    public List<Map<String, Object>> getFieldSchedules(HttpServletRequest request, Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
+    public List<Map<String, Object>> getFieldSchedules(Integer fieldId) throws URISyntaxException, IOException, InterruptedException {
       Users user = userService.getUserFromJwt();
   
       if (fieldRepository.findById(fieldId).get().getOwnerId() != user.getUserId()) {

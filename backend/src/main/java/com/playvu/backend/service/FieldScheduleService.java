@@ -19,7 +19,6 @@ import com.playvu.backend.repository.FieldRepository;
 import com.playvu.backend.repository.FieldScheduleRepository;
 import com.playvu.backend.repository.SubFieldRepository;
 
-import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class FieldScheduleService {
@@ -35,7 +34,7 @@ public class FieldScheduleService {
     @Autowired
     private UserService userService;
 
-    public void addFieldSchedule(HttpServletRequest request, Integer subFieldId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
+    public void addFieldSchedule(Integer subFieldId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
 
         Users user = userService.getUserFromJwt();
 
@@ -70,7 +69,7 @@ public class FieldScheduleService {
         fieldScheduleRepository.save(newSchedule);
     }
 
-    public void editFieldSchedule(HttpServletRequest request, Integer fieldScheduleId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
+    public void editFieldSchedule(Integer fieldScheduleId, LocalDateTime startDate, LocalDateTime endDate) throws URISyntaxException, IOException, InterruptedException{
 
         Users user = userService.getUserFromJwt();
 
@@ -102,7 +101,7 @@ public class FieldScheduleService {
         fieldScheduleRepository.save(fieldSchedule);
     }
 
-    public void deleteFieldSchedule(HttpServletRequest request, Integer fieldScheduleId) throws URISyntaxException, IOException, InterruptedException{
+    public void deleteFieldSchedule(Integer fieldScheduleId) throws URISyntaxException, IOException, InterruptedException{
 
         Users user = userService.getUserFromJwt();
 
